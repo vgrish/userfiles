@@ -24,6 +24,11 @@ class UserFile extends xPDOSimpleObject
         'f'  => 'jpg'
     );
 
+    /**
+     * UserFile constructor.
+     *
+     * @param xPDO $xpdo
+     */
     public function __construct(xPDO & $xpdo)
     {
         parent:: __construct($xpdo);
@@ -40,6 +45,8 @@ class UserFile extends xPDOSimpleObject
                 'core_path' => $corePath
             )
         );
+
+        $this->UserFiles->initialize($this->modx->context->key);
     }
 
     /**
@@ -51,6 +58,11 @@ class UserFile extends xPDOSimpleObject
         echo __METHOD__ . ' says: ' . $n;
     }
 
+    /**
+     * @param array $ancestors
+     *
+     * @return bool
+     */
     public function remove(array $ancestors = array())
     {
         if (!$this->initialized()) {
@@ -66,6 +78,9 @@ class UserFile extends xPDOSimpleObject
         return parent::remove($ancestors);
     }
 
+    /**
+     * @return bool|string
+     */
     public function initialized()
     {
         $source = $this->get('source');
@@ -87,6 +102,56 @@ class UserFile extends xPDOSimpleObject
         return 'Could not initialize media source with id = ' . $source;
     }
 
+    /**
+     * @param array|string $k
+     * @param null         $format
+     * @param null         $formatTemplate
+     *
+     * @return mixed|string
+     */
+    public function get($k, $format = null, $formatTemplate = null)
+    {
+        switch ($k) {
+            case 'format_size':
+                $value = $this->formatFileSize($this->get('size'));
+                break;
+            case 'format_createdon':
+                $value = $this->formatFileCreatedon($this->get('createdon'));
+                break;
+            default:
+                $value = parent::get($k, $format, $formatTemplate);
+                break;
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param     $bytes
+     * @param int $precision
+     *
+     * @return string
+     */
+    public function formatFileSize($bytes, $precision = 2)
+    {
+        return $this->UserFiles->Tools->formatFileSize($bytes, $precision);
+    }
+
+
+    /**
+     * @param        $time
+     * @param string $format
+     *
+     * @return string
+     */
+    public function formatFileCreatedon($time, $format = '%d.%m.%Y')
+    {
+        return $this->UserFiles->Tools->formatFileCreatedon($time, $format);
+    }
+
+    /**
+     * @return bool
+     */
     public function generateThumbnails()
     {
         if (!$this->initialized()) {
@@ -125,6 +190,9 @@ class UserFile extends xPDOSimpleObject
         return true;
     }
 
+    /**
+     * @return array|bool|mixed
+     */
     public function getImageThumbnails()
     {
         if (!$this->initialized()) {
@@ -137,6 +205,9 @@ class UserFile extends xPDOSimpleObject
         return array();
     }
 
+    /**
+     * @return array|bool
+     */
     public function getImageExtensions()
     {
         if (!$this->initialized()) {
@@ -149,6 +220,9 @@ class UserFile extends xPDOSimpleObject
         return array();
     }
 
+    /**
+     * @return bool|string
+     */
     public function getThumbnailType()
     {
         if (!$this->initialized()) {
@@ -161,6 +235,11 @@ class UserFile extends xPDOSimpleObject
         return 'jpg';
     }
 
+    /**
+     * @param array $options
+     *
+     * @return bool|null
+     */
     public function makeThumbnail($options = array())
     {
         $this->mediaSource->errors = array();
@@ -226,6 +305,12 @@ class UserFile extends xPDOSimpleObject
         return false;
     }
 
+    /**
+     * @param       $thumbnail
+     * @param array $options
+     *
+     * @return bool
+     */
     public function saveThumbnail($thumbnail, $options = array())
     {
         $pls = array(
@@ -301,6 +386,9 @@ class UserFile extends xPDOSimpleObject
         }
     }
 
+    /**
+     * @return bool|string
+     */
     public function getThumbnailName()
     {
         if (!$this->initialized()) {
@@ -313,6 +401,11 @@ class UserFile extends xPDOSimpleObject
         return '{name}.{w}.{h}';
     }
 
+    /**
+     * @param null $cacheFlag
+     *
+     * @return bool
+     */
     public function save($cacheFlag = null)
     {
         if ($this->isNew()) {
@@ -348,6 +441,5 @@ class UserFile extends xPDOSimpleObject
 
         return $saved;
     }
-
 
 }

@@ -5,8 +5,9 @@ userfiles.view.Files = function(config) {
     Ext.applyIf(config, {
         url: userfiles.config.connector_url,
         fields: [
-            'id', 'parent', 'name', 'description', 'url', 'createdon', 'createdby', 'file', 'thumbnail', 'thumbnails', 'size',
-            'source', 'source_name', 'type', 'mime', 'rank', 'active', 'properties', 'class', 'cls', 'actions', 'dyn_thumbnail', 'dyn_url'
+            'id', 'parent', 'name', 'description', 'url', 'createdon', 'createdby', 'file', 'thumbnail', 'thumbnails',
+            'size', 'format_size', 'source', 'source_name', 'type', 'mime', 'rank', 'active', 'properties', 'class',
+            'cls', 'actions', 'dyn_thumbnail', 'dyn_url'
         ],
         id: 'userfiles-view-files',
         cls: 'userfiles-files',
@@ -244,11 +245,8 @@ Ext.extend(userfiles.view.Files, MODx.DataView, {
 
     formatData: function(data) {
         data.shortName = Ext.util.Format.ellipsis(data.name, 20);
-        data.createdon = userfiles.tools.formatDate(data.createdon);
-        data.formatSize = userfiles.tools.formatSize(data.size);
-
         data.qtip = String.format('<img src={0}>', data.dyn_url);
-        data.qtitle = String.format('{0} : {1} : {2}: {3}', data.name, data.class, data.parent, data.formatSize);
+        data.qtitle = String.format('{0} : {1} : {2}: {3}', data.name, data.class, data.parent, data.format_size);
 
         this.lookup['userfiles-resource-' + data.id] = data;
         return data;

@@ -49,6 +49,22 @@ interface UserFilesToolsInterface
      */
     public function addFilesController(modManagerController $controller, array $opts = array());
 
+    /**
+     * @param     $bytes
+     * @param int $precision
+     *
+     * @return string
+     */
+    public function formatFileSize($bytes, $precision = 2);
+
+    /**
+     * @param        $time
+     * @param string $format
+     *
+     * @return mixed
+     */
+    public function formatFileCreatedon($time, $format = '%d.%m.%Y');
+
 }
 
 /**
@@ -259,6 +275,40 @@ class Tools implements UserFilesToolsInterface
         return $this->UserFiles->cleanAndImplode($array, $delimiter);
     }
 
+    /**
+     * @param     $bytes
+     * @param int $precision
+     *
+     * @return string
+     */
+    public function formatFileSize($bytes, $precision = 2)
+    {
+        $units = array('B', 'KB', 'MB', 'GB', 'TB');
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, count($units) - 1);
+        $bytes /= pow(1024, $pow);
+
+        return round($bytes, $precision) . ' ' . $units[$pow];
+    }
+
+    /**
+     * @param        $time
+     * @param string $format
+     *
+     * @return string
+     */
+    public function formatFileCreatedon($time, $format = '%d.%m.%Y')
+    {
+        $time = preg_match('/^\d+$/', $time)
+            ? $time
+            : strtotime($time);
+
+        return strftime($format, $time);
+    }
+
+
+//$this->UserFiles->Tools->formatFileCreatedon($data, $format);
 
 }
 

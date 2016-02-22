@@ -152,6 +152,8 @@ class modUserFileGetListProcessor extends modObjectGetListProcessor
         }
         $row['dyn_url'] = $row['url'] . '?t=' . $row['size'];
 
+        $row['format_size'] = $this->UserFiles->Tools->formatFileSize($row['size']);
+        $row['format_createdon'] = $this->UserFiles->Tools->formatFileCreatedon($row['createdon']);
 
         $icon = 'x-menu-item-icon icon';
         $row['actions'] = array();
