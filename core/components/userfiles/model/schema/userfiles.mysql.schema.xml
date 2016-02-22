@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="userfiles" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" phpdoc-package="userfiles"
+	   version="1.1">
+
+	<object class="UserFile" table="user_files" extends="xPDOSimpleObject">
+		<field key="parent" dbtype="int" precision="10" phptype="integer" attributes="unsigned" null="false" default="0" />
+		<field key="class" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="list" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+
+
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" />
+		<field key="description" dbtype="text" phptype="string" null="true" />
+
+		<field key="path" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="file" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="mime" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="type" dbtype="varchar" precision="50" phptype="string" null="false" default="" />
+		<field key="url" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="hash" dbtype="char" precision="40" phptype="string" null="false" default="" />
+		<field key="session" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="size" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+
+		<field key="createdby" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="source" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="1" />
+		<field key="context" dbtype="varchar" precision="100" phptype="string" null="false" default="web" />
+
+		<field key="active" dbtype="tinyint" precision="1" phptype="boolean" attributes="unsigned" null="false" default="1" />
+		<field key="rank" dbtype="smallint" precision="3" attributes="unsigned" phptype="integer" null="false" default="0" />
+
+		<field key="createdon" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="properties" dbtype="text" phptype="json" null="true" />
+
+		<index alias="parent" name="parent" primary="false" unique="false" type="BTREE" >
+			<column key="parent" length="" collation="A" null="false" />
+		</index>
+		<index alias="class" name="class" primary="false" unique="false" type="BTREE" >
+			<column key="class" length="" collation="A" null="false" />
+		</index>
+		<index alias="list" name="list" primary="false" unique="false" type="BTREE" >
+			<column key="list" length="" collation="A" null="false" />
+		</index>
+		<index alias="path" name="path" primary="false" unique="false" type="BTREE" >
+			<column key="path" length="" collation="A" null="false" />
+		</index>
+		<index alias="mime" name="mime" primary="false" unique="false" type="BTREE" >
+			<column key="mime" length="" collation="A" null="false" />
+		</index>
+		<index alias="type" name="type" primary="false" unique="false" type="BTREE" >
+			<column key="type" length="" collation="A" null="false" />
+		</index>
+		<index alias="hash" name="hash" primary="false" unique="false" type="BTREE" >
+			<column key="hash" length="" collation="A" null="false" />
+		</index>
+		<index alias="session" name="session" primary="false" unique="false" type="BTREE" >
+			<column key="session" length="" collation="A" null="false" />
+		</index>
+		<index alias="createdby" name="createdby" primary="false" unique="false" type="BTREE" >
+			<column key="createdby" length="" collation="A" null="false" />
+		</index>
+		<index alias="source" name="source" primary="false" unique="false" type="BTREE" >
+			<column key="source" length="" collation="A" null="false" />
+		</index>
+		<index alias="context" name="context" primary="false" unique="false" type="BTREE" >
+			<column key="context" length="" collation="A" null="false" />
+		</index>
+
+		<index alias="active" name="active" primary="false" unique="false" type="BTREE">
+			<column key="active" length="" collation="A" null="false" />
+		</index>
+
+		<composite alias="Children" class="UserFile" local="id" foreign="parent" cardinality="many" owner="local">
+			<criteria target="local"><![CDATA[
+			{"class":"UserFile"}
+			]]></criteria>
+		</composite>
+		<aggregate alias="Parent" class="UserFile" local="parent" foreign="id" cardinality="one" owner="local">
+			<criteria target="local"><![CDATA[
+			{"class":"UserFile"}
+			]]></criteria>
+		</aggregate>
+
+		<aggregate alias="Source" class="modMediaSource" local="source" foreign="id" cardinality="one" owner="local" />
+		<aggregate alias="Context" class="modContext" local="context" foreign="key" cardinality="one" owner="local" />
+		<aggregate alias="Resource" class="modResource" local="parent" foreign="id" cardinality="one" owner="local">
+			<criteria target="local"><![CDATA[
+			{"class":"modResource"}
+			]]></criteria>
+		</aggregate>
+		<aggregate alias="User" class="modUser" local="parent" foreign="id" cardinality="one" owner="local">
+			<criteria target="local"><![CDATA[
+			{"class":"modUser"}
+			]]></criteria>
+		</aggregate>
+
+	</object>
+
+
+</model>
