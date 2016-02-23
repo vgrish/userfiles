@@ -52,24 +52,15 @@ class UserFiles
             'snippetsPath'   => $corePath . 'elements/snippets/',
             'processorsPath' => $corePath . 'processors/',
 
-            'replacePattern' => $this->getOption('replace_pattern', null, "#[\r\n\t]+#is"),
+            'replacePattern'  => $this->getOption('replace_pattern', null, "#[\r\n\t]+#is"),
             'prepareResponse' => true,
-            'jsonResponse' => true,
+            'jsonResponse'    => true,
 
         ), $config);
 
         $this->modx->addPackage('userfiles', $this->getOption('modelPath'));
         $this->modx->lexicon->load('userfiles:default');
         $this->namespace = $this->getOption('namespace', $config, 'userfiles');
-    }
-
-    /**
-     * @param       $n
-     * @param array $p
-     */
-    public function __call($n, array$p)
-    {
-        echo __METHOD__ . ' says: ' . $n;
     }
 
     /**
@@ -99,27 +90,12 @@ class UserFiles
     }
 
     /**
-     * Loads an instance of Tools
-     *
-     * @return boolean
+     * @param       $n
+     * @param array $p
      */
-    public function loadTools()
+    public function __call($n, array$p)
     {
-        if (!is_object($this->Tools) OR !($this->Tools instanceof UserFilesToolsInterface)) {
-            $toolsClass = $this->modx->loadClass('tools.Tools', $this->config['handlersPath'], true, true);
-            if ($derivedClass = $this->getOption('class_tools_handler', null, '')) {
-                if ($derivedClass = $this->modx->loadClass('tools.' . $derivedClass, $this->config['handlersPath'],
-                    true, true)
-                ) {
-                    $toolsClass = $derivedClass;
-                }
-            }
-            if ($toolsClass) {
-                $this->Tools = new $toolsClass($this->modx, $this->config);
-            }
-        }
-
-        return !empty($this->Tools) AND $this->Tools instanceof UserFilesToolsInterface;
+        echo __METHOD__ . ' says: ' . $n;
     }
 
     /**
@@ -149,27 +125,35 @@ class UserFiles
             default:
                 if (!defined('MODX_API_MODE') OR !MODX_API_MODE) {
                     $config = $this->modx->toJSON(array(
-                        'defaults'      => array(
-                            'yes'      => $this->lexicon('yes'),
-                            'no'       => $this->lexicon('no'),
-                            'message'  => array(
+                        'defaults' => array(
+                            'yes'     => $this->lexicon('yes'),
+                            'no'      => $this->lexicon('no'),
+                            'message' => array(
                                 'title' => array(
                                     'success' => $this->lexicon('title_ms_success'),
                                     'error'   => $this->lexicon('title_ms_error'),
                                     'info'    => $this->lexicon('title_ms_info'),
 
-                                ),
-                                'error' => array(
-                                    'date' => $this->lexicon('error_date'),
                                 )
                             ),
-                            'confirm'  => array(
+                            'confirm' => array(
                                 'title' => array(
                                     'success' => $this->lexicon('title_cms_success'),
                                     'error'   => $this->lexicon('title_cms_error'),
                                     'info'    => $this->lexicon('title_cms_info'),
                                 )
                             )
+                        ),
+                        'dropzone' => array(
+                            'dictDefaultMessage'           => '',
+                            'dictMaxFilesExceeded'         => $this->lexicon('dz_dictMaxFilesExceeded'),
+                            'dictFallbackMessage'          => $this->lexicon('dz_dictFallbackMessage'),
+                            'dictFileTooBi'                => $this->lexicon('dz_dictFileTooBig'),
+                            'dictInvalidFileType'          => $this->lexicon('dz_dictInvalidFileType'),
+                            'dictResponseError'            => $this->lexicon('dz_dictResponseError'),
+                            'dictCancelUpload'             => $this->lexicon('dz_dictCancelUpload'),
+                            'dictCancelUploadConfirmation' => $this->lexicon('dz_dictCancelUploadConfirmation'),
+                            'dictRemoveFile'               => $this->lexicon('dz_dictRemoveFile')
                         )
                     ));
 
@@ -187,6 +171,29 @@ class UserFiles
         return true;
     }
 
+    /**
+     * Loads an instance of Tools
+     *
+     * @return boolean
+     */
+    public function loadTools()
+    {
+        if (!is_object($this->Tools) OR !($this->Tools instanceof UserFilesToolsInterface)) {
+            $toolsClass = $this->modx->loadClass('tools.Tools', $this->config['handlersPath'], true, true);
+            if ($derivedClass = $this->getOption('class_tools_handler', null, '')) {
+                if ($derivedClass = $this->modx->loadClass('tools.' . $derivedClass, $this->config['handlersPath'],
+                    true, true)
+                ) {
+                    $toolsClass = $derivedClass;
+                }
+            }
+            if ($toolsClass) {
+                $this->Tools = new $toolsClass($this->modx, $this->config);
+            }
+        }
+
+        return !empty($this->Tools) AND $this->Tools instanceof UserFilesToolsInterface;
+    }
 
     /**
      * @param       $message
@@ -260,7 +267,8 @@ class UserFiles
     }
 
     /**
-     * from https://github.com/bezumkin/pdoTools/blob/19195925226e3f8cb0ba3c8d727567e9f3335673/core/components/pdotools/model/pdotools/pdotools.class.php#L320
+     * from
+     * https://github.com/bezumkin/pdoTools/blob/19195925226e3f8cb0ba3c8d727567e9f3335673/core/components/pdotools/model/pdotools/pdotools.class.php#L320
      *
      * @param array  $array
      * @param string $plPrefix
@@ -304,24 +312,6 @@ class UserFiles
      *
      * @return array|string
      */
-    public function failure($message = '', $data = array(), $placeholders = array())
-    {
-        $response = array(
-            'success' => false,
-            'message' => $this->lexicon($message, $placeholders),
-            'data'    => $data,
-        );
-
-        return $this->config['jsonResponse'] ? $this->modx->toJSON($response) : $response;
-    }
-
-    /**
-     * @param string $message
-     * @param array  $data
-     * @param array  $placeholders
-     *
-     * @return array|string
-     */
     public function success($message = '', $data = array(), $placeholders = array())
     {
         $response = array(
@@ -350,6 +340,7 @@ class UserFiles
         $processorsPath = !empty($this->config['processorsPath']) ? $this->config['processorsPath'] : MODX_CORE_PATH;
         /* @var modProcessorResponse $response */
         $response = $this->modx->runProcessor($action, $data, array('processors_path' => $processorsPath));
+
         return $this->config['prepareResponse'] ? $this->prepareResponse($response) : $response;
     }
 
@@ -376,7 +367,26 @@ class UserFiles
         } elseif (!$this->config['jsonResponse'] AND !is_array($output)) {
             $output = $this->modx->fromJSON($output);
         }
+
         return $output;
+    }
+
+    /**
+     * @param string $message
+     * @param array  $data
+     * @param array  $placeholders
+     *
+     * @return array|string
+     */
+    public function failure($message = '', $data = array(), $placeholders = array())
+    {
+        $response = array(
+            'success' => false,
+            'message' => $this->lexicon($message, $placeholders),
+            'data'    => $data,
+        );
+
+        return $this->config['jsonResponse'] ? $this->modx->toJSON($response) : $response;
     }
 
 }

@@ -36,7 +36,9 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
 
     public function process() {
 
-        return true;
+        return $this->modx->error->success('');
+        return $this->modx->error->failure('dfff');
+        //return true;
     }
 
 }

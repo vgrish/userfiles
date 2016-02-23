@@ -46,6 +46,10 @@ define('BUILD_SNIPPET_STATIC', false);
 define('BUILD_CHUNK_STATIC', false);
 define('BUILD_PLUGIN_STATIC', false);
 
+$BUILD_VALIDATORS = array(
+    'install',
+);
+
 $BUILD_RESOLVERS = array(
     'tables',
     'sources',

@@ -129,7 +129,7 @@ $tmp = array(
 
     'dropzone' => array(
         'type'  => 'textarea',
-        'value' => '{"maxFilesize":1,"maxFiles":2}',
+        'value' => '{"addRemoveLinks":true}',
     ),
 
 );
