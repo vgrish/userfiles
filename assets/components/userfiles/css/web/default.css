@@ -9,6 +9,7 @@
 .userfiles-form-clickable.dz-clickable {
     cursor: pointer;
     color: #0087F7;
+    line-height: 30px;
 }
 
 /*

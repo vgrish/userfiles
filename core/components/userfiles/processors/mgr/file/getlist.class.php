@@ -150,6 +150,10 @@ class modUserFileGetListProcessor extends modObjectGetListProcessor
         if (!empty($row['thumbnail'])) {
             $row['dyn_thumbnail'] = $row['thumbnail'] . '?t=' . $row['size'];
         }
+        else {
+            $row['dyn_thumbnail'] = null;
+        }
+
         $row['dyn_url'] = $row['url'] . '?t=' . $row['size'];
 
         $row['format_size'] = $this->UserFiles->Tools->formatFileSize($row['size']);

@@ -10,7 +10,7 @@ var UserFilesTemplate = {
             '<div class="dz-image"><img data-dz-thumbnail /></div>',
             '<div class="dz-details">',
             '<div class="dz-size"><span data-dz-size></span></div>',
-            '<div class="dz-filename" data-id=""><span data-dz-name></span></div>',
+            '<div class="dz-filename"><span data-dz-name></span></div>',
             '</div>',
             '<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>',
             '<div class="dz-error-message"><span data-dz-errormessage></span></div>',
@@ -82,7 +82,7 @@ var UserFilesForm = {
 
         if (!$.Dropzone) {
             document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/dropzone/dist/min/dropzone.min.css); </style>');
-            document.writeln('<script src="' + config.assetsUrl + 'vendor/dropzone/dist/min/dropzone.min.js"><\/script>');
+            document.writeln('<script src="' + config.assetsUrl + 'vendor/dropzone/dist/dropzone.js"><\/script>');
         }
 
         /*if (!$.pnotify) {
@@ -98,7 +98,6 @@ var UserFilesForm = {
         $(document).ready(function () {
 
             $('#' + config.propkey).each(function () {
-
                 if (!this.id) {
                     console.log('[UserFiles:Error] Initialization Error. Id required');
                     return;
@@ -117,13 +116,57 @@ var UserFilesForm = {
                     ctx: config.ctx
                 };
 
+                dropzoneConfig.init = function() {
+                    console.log('_init');
+
+                    var thisDropzone = this;
+
+                    $.ajax({
+                        type: 'GET',
+                        url: config.actionUrl,
+                        data: {
+                            action: 'file/getlist',
+                            propkey: config.propkey,
+                            ctx: config.ctx
+                        },
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function(r){
+                            if (!r.results) {
+                               return;
+                            }
+                            $.each(r.results, function(i, item){
+
+                                var addFile = {
+                                    name: item.file,
+                                    size: item.size,
+                                    type:item.mime
+                                };
+
+                                thisDropzone.options.addedfile.call(thisDropzone, addFile);
+                                if (item.dyn_thumbnail) {
+                                    thisDropzone.options.thumbnail.call(thisDropzone, addFile, item.dyn_thumbnail);
+                                }
+                                addFile.previewElement.classList.add('dz-complete');
+                                $(addFile.previewElement).attr('data-userfiles-id', item.id);
+                                thisDropzone.files.push(addFile);
+
+                                thisDropzone.options.maxFiles--;
+                            });
+
+
+
+                        }
+                    });
+
+                };
 
                 console.log(
                     dropzoneConfig
                 );
 
 
-                var dropzone = new Dropzone('#' + this.id, dropzoneConfig);
+                var dropzone = new Dropzone(this, dropzoneConfig);
 
                 var DropzoneEvents = ["drop", "dragstart", "dragend", "dragenter", "dragover", "dragleave", "addedfile",
                     "addedfiles", "removedfile", "thumbnail", "error", "errormultiple", "processing", "processingmultiple",
@@ -134,6 +177,7 @@ var UserFilesForm = {
                         dropzone.on(event, UserFilesForm['_' + event]);
                     }
                 }, this);
+
             });
 
             PNotify.prototype.options.styling = "bootstrap3";
@@ -197,37 +241,49 @@ var UserFilesForm = {
         }
         else {
 
-            $(file._removeLink).attr('data-userfiles-id', 555)
+            console.log(file);
+
+            $(file.previewElement).attr('data-userfiles-id', 555);
+
+            //$(file._removeLink).attr('data-userfiles-id', 555)
         }
     },
 
     _removedfile: function(file) {
 
         console.log('_removedfile');
-        console.log(file._removeLink);
 
-        console.log($(file._removeLink).attr('data-userfiles-id'));
-
-        console.log(file.xhr);
-        if (file.xhr) {
-            return $.ajax({
-                type: 'POST',
-                url: "" + ($("#media-dropzone").attr("action")) + "/" + (JSON.parse(file.xhr.response).id),
-
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function(r){
-
-                    console.log(data);
-
-
-                },
-                failure: function(r) {
-                    console.log(r);
-                }
-            });
+        var id = $(file.previewElement).attr('data-userfiles-id');
+        if (!id) {
+            return;
         }
 
+        console.log(id);
+
+        console.log(this);
+
+        this.options.maxFiles++;
+
+        return $.ajax({
+            type: 'POST',
+            url: this.options.url,
+            data: {
+                action: 'file/remove',
+                id:id,
+                propkey: this.options.params.propkey || '',
+                ctx: this.options.params.ctx || ''
+            },
+            dataType: "json",
+            success: function(r){
+
+
+                console.log(r);
+
+            },
+            failure: function(r) {
+                console.log(r);
+            }
+        });
     }
 
 };
