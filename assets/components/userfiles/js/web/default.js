@@ -39,7 +39,7 @@ var UserFilesForm = {
 
                 dropzoneConfig.url=  config.actionUrl;
                 dropzoneConfig.params = {
-                    action: 'web/file/upload',
+                    action: 'file/upload',
                     propkey: config.propkey,
                     ctx: config.ctx
                 };

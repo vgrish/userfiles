@@ -53,6 +53,8 @@ class UserFiles
             'processorsPath' => $corePath . 'processors/',
 
             'replacePattern' => $this->getOption('replace_pattern', null, "#[\r\n\t]+#is"),
+            'prepareResponse' => true,
+            'jsonResponse' => true,
 
         ), $config);
 
@@ -340,6 +342,41 @@ class UserFiles
     public function getChunk($name = '', array $properties = array())
     {
         return $this->Tools->getChunk($name, $properties);
+    }
+
+    public function runProcessor($action = '', $data = array())
+    {
+        $this->modx->error->reset();
+        $processorsPath = !empty($this->config['processorsPath']) ? $this->config['processorsPath'] : MODX_CORE_PATH;
+        /* @var modProcessorResponse $response */
+        $response = $this->modx->runProcessor($action, $data, array('processors_path' => $processorsPath));
+        return $this->config['prepareResponse'] ? $this->prepareResponse($response) : $response;
+    }
+
+    /**
+     * This method returns prepared response
+     *
+     * @param mixed $response
+     *
+     * @return array|string $response
+     */
+    public function prepareResponse($response)
+    {
+        if ($response instanceof modProcessorResponse) {
+            $output = $response->getResponse();
+        } else {
+            $message = $response;
+            if (empty($message)) {
+                $message = $this->lexicon('err_unknown');
+            }
+            $output = $this->failure($message);
+        }
+        if ($this->config['jsonResponse'] AND is_array($output)) {
+            $output = $this->modx->toJSON($output);
+        } elseif (!$this->config['jsonResponse'] AND !is_array($output)) {
+            $output = $this->modx->fromJSON($output);
+        }
+        return $output;
     }
 
 }
