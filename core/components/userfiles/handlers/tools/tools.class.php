@@ -47,7 +47,7 @@ interface UserFilesToolsInterface
      *
      * @return mixed
      */
-    public function addFilesController(modManagerController $controller, array $opts = array());
+    public function loadControllerJsCss(modManagerController $controller, array $opts = array());
 
     /**
      * @param     $bytes
@@ -64,6 +64,15 @@ interface UserFilesToolsInterface
      * @return mixed
      */
     public function formatFileCreatedon($time, $format = '%d.%m.%Y');
+
+    /**
+     * @param string $name
+     * @param array  $properties
+     *
+     * @return mixed
+     */
+    public function getChunk($name = '', array $properties = array());
+
 
 }
 
@@ -137,11 +146,73 @@ class Tools implements UserFilesToolsInterface
         return $this->UserFiles->success($message, $data, $placeholders);
     }
 
+
+    /**
+     * @param array $opts
+     */
+    public function loadResourceJsCss(array $opts = array())
+    {
+        $opts = array_merge($this->config, $opts);
+        $pls = $this->makePlaceholders($opts);
+
+        if ($opts['jqueryJs']) {
+            $this->modx->regClientScript(preg_replace($this->config['replacePattern'], '', '
+				<script type="text/javascript">
+					if(typeof jQuery == "undefined") {
+						document.write("<script src=\"' . str_replace($pls['pl'], $pls['vl'], $opts['jqueryJs']) . '\" type=\"text/javascript\"><\/script>");
+					}
+   				</script>
+			'), true);
+        }
+        if ($opts['frontendJs']) {
+            $this->modx->regClientScript(str_replace($pls['pl'], $pls['vl'], $opts['frontendJs']));
+        }
+        if ($opts['frontendCss']) {
+            $this->modx->regClientCSS(str_replace($pls['pl'], $pls['vl'], $opts['frontendCss']));
+        }
+
+        $config = $this->modx->toJSON(array(
+            'assetsUrl' => str_replace($pls['pl'], $pls['vl'], $opts['assetsUrl']),
+            'actionUrl' => str_replace($pls['pl'], $pls['vl'], $opts['actionUrl']),
+            'dropzone'  => $opts['dropzone'],
+            'propkey'   => "{$this->config['propkey']}",
+            'ctx'       => "{$this->modx->context->get('key')}"
+        ));
+        $this->modx->regClientScript(preg_replace($this->config['replacePattern'], '', '
+			<script type="text/javascript">
+				' . trim($opts['objectName']) . '.initialize(' . $config . ');
+   			</script>
+		'), true);
+
+
+        //$this->modx->log(1, print_r($opts, 1));
+
+    }
+
+    /**
+     * @param array  $array
+     * @param string $plPrefix
+     * @param string $prefix
+     * @param string $suffix
+     * @param bool   $uncacheable
+     *
+     * @return array
+     */
+    public function makePlaceholders(
+        array $array = array(),
+        $plPrefix = '',
+        $prefix = '[[+',
+        $suffix = ']]',
+        $uncacheable = true
+    ) {
+        return $this->UserFiles->makePlaceholders($array, $plPrefix, $prefix, $suffix, $uncacheable);
+    }
+
     /**
      * @param modManagerController $controller
      * @param array                $opts
      */
-    public function addFilesController(modManagerController $controller, array $opts = array())
+    public function loadControllerJsCss(modManagerController $controller, array $opts = array())
     {
         $controller->addLexiconTopic('userfiles:default');
 
@@ -172,7 +243,7 @@ class Tools implements UserFilesToolsInterface
         }
 
         if (!empty($opts['jquery'])) {
-            $controller->addLastJavascript($this->config['assetsUrl'] . 'vendor/jquery/custom/jquery.js');
+            $controller->addLastJavascript($this->config['assetsUrl'] . 'vendor/jquery/dist/jquery.min.js');
         }
 
         if (!empty($opts['cropper'])) {
@@ -207,7 +278,6 @@ class Tools implements UserFilesToolsInterface
             $controller->addLastJavascript($this->config['jsUrl'] . 'mgr/inject/user.tab.js');
             $controller->addLastJavascript($this->config['jsUrl'] . 'mgr/inject/user.panel.js');
         }
-
     }
 
     /**
@@ -275,6 +345,8 @@ class Tools implements UserFilesToolsInterface
         return $this->UserFiles->cleanAndImplode($array, $delimiter);
     }
 
+    //
+
     /**
      * @param     $bytes
      * @param int $precision
@@ -308,7 +380,29 @@ class Tools implements UserFilesToolsInterface
     }
 
 
-//$this->UserFiles->Tools->formatFileCreatedon($data, $format);
+    /**
+     * @param string $name
+     * @param array  $properties
+     *
+     * @return mixed|string
+     */
+    public function getChunk($name = '', array $properties = array())
+    {
+        if (class_exists('pdoTools') AND $pdo = $this->modx->getService('pdoTools')) {
+            $output = $pdo->getChunk($name, $properties);
+        } elseif (strpos($name, '@INLINE ') !== false) {
+            $content = str_replace('@INLINE', '', $name);
+            /** @var modChunk $chunk */
+            $chunk = $this->modx->newObject('modChunk', array('name' => 'inline-' . uniqid()));
+            $chunk->setCacheable(false);
+            $output = $chunk->process($properties, $content);
+        } else {
+            $output = $this->modx->getChunk($name, $properties);
+        }
+
+        return $output;
+    }
+
 
 }
 

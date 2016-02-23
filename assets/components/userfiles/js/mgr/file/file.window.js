@@ -147,6 +147,7 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
         var listeners = {
             show: {
                 fn: function() {
+                    var uf$ = jQuery.noConflict();
                     this.$cropperEl = uf$('#' + this.id + ' ' + config.cropperSelector);
                     var cropperOptions = {};
                     cropperOptions.crop = function(data) {

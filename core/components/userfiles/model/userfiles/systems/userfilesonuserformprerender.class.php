@@ -20,7 +20,7 @@ class UserFilesOnUserFormPrerender extends UserFilesPlugin
           }*/
 
         $controller = &$this->modx->controller;
-        $this->UserFiles->Tools->addFilesController($controller, array(
+        $this->UserFiles->Tools->loadControllerJsCss($controller, array(
             'css'         => true,
             'config'      => true,
             'tools'       => true,

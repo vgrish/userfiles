@@ -50,7 +50,10 @@ class UserFiles
             'chunksPath'     => $corePath . 'elements/chunks/',
             'templatesPath'  => $corePath . 'elements/templates/',
             'snippetsPath'   => $corePath . 'elements/snippets/',
-            'processorsPath' => $corePath . 'processors/'
+            'processorsPath' => $corePath . 'processors/',
+
+            'replacePattern' => $this->getOption('replace_pattern', null, "#[\r\n\t]+#is"),
+
         ), $config);
 
         $this->modx->addPackage('userfiles', $this->getOption('modelPath'));
@@ -144,9 +147,6 @@ class UserFiles
             default:
                 if (!defined('MODX_API_MODE') OR !MODX_API_MODE) {
                     $config = $this->modx->toJSON(array(
-                        'assetsBaseUrl' => $this->getOption('assetsBaseUrl', $this->config),
-                        'assetsUrl'     => $this->getOption('assetsUrl', $this->config),
-                        'actionUrl'     => $this->getOption('actionUrl', $this->config),
                         'defaults'      => array(
                             'yes'      => $this->lexicon('yes'),
                             'no'       => $this->lexicon('no'),
@@ -166,16 +166,12 @@ class UserFiles
                                     'success' => $this->lexicon('title_cms_success'),
                                     'error'   => $this->lexicon('title_cms_error'),
                                     'info'    => $this->lexicon('title_cms_info'),
-
                                 )
-                            ),
-                            'selector' => array(
-                                'view' => $this->getOption('selector_view', $this->config, '.payandsee-view', true)
                             )
                         )
                     ));
 
-                    $script = "<script type=\"text/javascript\">paymentsystemConfig={$config}</script>";
+                    $script = "<script type=\"text/javascript\">UserFilesLexicon={$config}</script>";
                     if (!isset($this->modx->jscripts[$script])) {
                         $this->modx->regClientStartupScript($script, true);
                     }
@@ -191,13 +187,12 @@ class UserFiles
 
 
     /**
-     * return lexicon message if possibly
+     * @param       $message
+     * @param array $placeholders
      *
-     * @param string $message
-     *
-     * @return string $message
+     * @return string
      */
-    public function lexicon($message, $placeholders = array())
+    public function lexicon($message, array $placeholders = array())
     {
         $key = '';
         if ($this->modx->lexicon->exists($message)) {
@@ -212,25 +207,6 @@ class UserFiles
         return $message;
     }
 
-    /**
-     * @param string $name
-     * @param array  $properties
-     *
-     * @return mixed|string
-     */
-    public function getChunk($name = '', array $properties = array())
-    {
-        if (strpos($name, '@INLINE ') !== false) {
-            $content = str_replace('@INLINE', '', $name);
-            /** @var modChunk $chunk */
-            $chunk = $this->modx->newObject('modChunk', array('name' => 'inline-' . uniqid()));
-            $chunk->setCacheable(false);
-
-            return $chunk->process($properties, $content);
-        }
-
-        return $this->modx->getChunk($name, $properties);
-    }
 
     /** @inheritdoc} */
     public function getPropertiesKey(array $properties = array())
@@ -282,6 +258,44 @@ class UserFiles
     }
 
     /**
+     * from https://github.com/bezumkin/pdoTools/blob/19195925226e3f8cb0ba3c8d727567e9f3335673/core/components/pdotools/model/pdotools/pdotools.class.php#L320
+     *
+     * @param array  $array
+     * @param string $plPrefix
+     * @param string $prefix
+     * @param string $suffix
+     * @param bool   $uncacheable
+     *
+     * @return array
+     */
+    public function makePlaceholders(
+        array $array = array(),
+        $plPrefix = '',
+        $prefix = '[[+',
+        $suffix = ']]',
+        $uncacheable = true
+    ) {
+        $result = array('pl' => array(), 'vl' => array());
+        $uncachedPrefix = str_replace('[[', '[[!', $prefix);
+        foreach ($array as $k => $v) {
+            if (is_array($v)) {
+                $result = array_merge_recursive($result,
+                    $this->makePlaceholders($v, $plPrefix . $k . '.', $prefix, $suffix, $uncacheable));
+            } else {
+                $pl = $plPrefix . $k;
+                $result['pl'][$pl] = $prefix . $pl . $suffix;
+                $result['vl'][$pl] = $v;
+                if ($uncacheable) {
+                    $result['pl']['!' . $pl] = $uncachedPrefix . $pl . $suffix;
+                    $result['vl']['!' . $pl] = $v;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * @param string $message
      * @param array  $data
      * @param array  $placeholders
@@ -317,5 +331,15 @@ class UserFiles
         return $this->config['jsonResponse'] ? $this->modx->toJSON($response) : $response;
     }
 
+    /**
+     * @param string $name
+     * @param array  $properties
+     *
+     * @return mixed|string
+     */
+    public function getChunk($name = '', array $properties = array())
+    {
+        return $this->Tools->getChunk($name, $properties);
+    }
 
 }

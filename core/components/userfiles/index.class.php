@@ -21,7 +21,7 @@ abstract class UserFilesMainController extends modExtraManagerController
         $this->UserFiles = new UserFiles($this->modx);
         $this->UserFiles->initialize($this->modx->context->key);
 
-        $this->UserFiles->Tools->addFilesController($this, array(
+        $this->UserFiles->Tools->loadControllerJsCss($this, array(
             'css'    => true,
             'config' => true,
             'tools'  => true,

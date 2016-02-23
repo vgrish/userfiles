@@ -13,3 +13,7 @@ $_lang['userfiles_files_intro'] = 'Панель управления Файла�
 
 $_lang['userfiles_yes'] = 'Да';
 $_lang['userfiles_no'] = 'Нет';
+
+$_lang['userfiles_msg_select_files'] = 'Select files';
+$_lang['userfiles_msg_needsclick'] = 'Drop files here or click to upload';
+$_lang['userfiles_msg_note_needsclick'] = '(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)';

@@ -28,7 +28,7 @@ class UserFilesMainManagerController extends UserFilesMainController
     public function loadCustomCssJs()
     {
 
-        $this->UserFiles->Tools->addFilesController($this, array(
+        $this->UserFiles->Tools->loadControllerJsCss($this, array(
             'main'     => true,
             'file'     => true,
             'jquery'   => true,

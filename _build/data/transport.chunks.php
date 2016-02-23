@@ -5,6 +5,8 @@ $chunks = array();
 $tmp = array(
     'uf.link.file'  => array('file' => 'link_file'),
     'uf.link.image' => array('file' => 'link_image'),
+    'uf.form'       => array('file' => 'form'),
+
 );
 
 // Save chunks for setup options

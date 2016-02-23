@@ -3,10 +3,7 @@
 $snippets = array();
 
 $tmp = array(
-    'userfiles' => array(
-        'file'        => 'userfiles',
-        'description' => '',
-    ),
+    'ufForm' => array('file' => 'form'),
 );
 
 foreach ($tmp as $k => $v) {
