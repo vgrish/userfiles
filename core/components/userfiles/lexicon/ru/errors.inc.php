@@ -33,4 +33,3 @@ $_lang['userfiles_err_field_nf'] = 'Не указано поле "[[+field]]"';
 $_lang['UserFile_err_save'] = 'Ошибка "Файл" не сохранен';
 $_lang['UserFile_err_nfs'] = 'Ошибка "Файл" не найден';
 
-$_lang['object_err_nfs'] = 'Ошибка "Объект" не найден';

@@ -1,6 +1,8 @@
 <?php
 
-class modUserFileUploadProcessor extends modObjectCreateProcessor
+require_once dirname(dirname(dirname(__FILE__))) . '/mgr/file/upload.class.php';
+
+class modWebUserFileUploadProcessor extends modUserFileUploadProcessor
 {
     public $classKey = 'UserFile';
     public $objectType = 'UserFile';
@@ -24,23 +26,33 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
 
     public function initialize()
     {
-        if (!$this->modx->hasPermission($this->permission)) {
-            return $this->modx->lexicon('access_denied');
+        $this->UserFiles = $this->modx->getService('userfiles');
+        $this->UserFiles->initialize();
+        $this->Tools = $this->UserFiles->Tools;
+
+        $propKey = $this->getProperty('propkey');
+        if (empty($propKey)) {
+            return $this->UserFiles->lexicon('err_propkey_ns');
         }
 
-        $this->modx->log(1, print_r('modUserFileUploadProcessor' ,1));
-        $this->modx->log(1, print_r($this->getProperties() ,1));
+        $properties = $this->UserFiles->getProperties($propKey);
+        if (empty($properties)) {
+            return $this->UserFiles->lexicon('err_properties_ns');
+        }
 
-        return true;
-    }
+        //$this->modx->log(1, print_r($properties ,1));
 
-    public function process() {
+        foreach (array('class', 'parent', 'list', 'source', 'anonym') as $key) {
+            $this->setProperty($key, $properties[$key]);
+        }
 
-        return $this->modx->error->success('');
-        return $this->modx->error->failure('dfff');
-        //return true;
+        if(!$this->getProperty('anonym', false) AND empty($this->modx->user->id)) {
+            return $this->UserFiles->lexicon('err_lock');
+        }
+
+        return parent::initialize();
     }
 
 }
 
-return 'modUserFileUploadProcessor';
+return 'modWebUserFileUploadProcessor';

@@ -127,6 +127,21 @@ class modUserFileGetListProcessor extends modObjectGetListProcessor
             $c->where(array("{$this->classKey}.class" => $class));
         }
 
+        $active = $this->getProperty('active');
+        if ($active) {
+            $c->where(array("{$this->classKey}.active" => $active));
+        }
+
+        $createdby = $this->getProperty('createdby');
+        if ($createdby) {
+            $c->where(array("{$this->classKey}.createdby" => $createdby));
+        }
+
+        $session = $this->getProperty('session');
+        if ($session) {
+            $c->where(array("{$this->classKey}.session" => $session));
+        }
+
         $query = trim($this->getProperty('query'));
         if (!empty($query)) {
             $c->where(array(

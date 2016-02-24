@@ -1,11 +1,6 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('error_reporting', -1);
-
-
 /** @var array $scriptProperties */
-
 $corePath = $modx->getOption('userfiles_core_path', null,
     $modx->getOption('core_path', null, MODX_CORE_PATH) . 'components/userfiles/');
 /** @var UserFiles $UserFiles */
@@ -22,8 +17,7 @@ if (!$UserFiles) {
     return 'Could not load UserFiles class!';
 }
 
-
-$class = $scriptProperties['class'] = $modx->getOption('class', $scriptProperties, 'modResource');
+$class = $scriptProperties['class'] = $UserFiles->getOption('class', $scriptProperties, 'modResource', true);
 $parent = $scriptProperties['parent'] = $modx->getOption('parent', $scriptProperties);
 
 switch (true) {
@@ -36,14 +30,19 @@ switch (true) {
         break;
 }
 
-$list = $scriptProperties['list'] = $modx->getOption('list', $scriptProperties, 'default');
-$createdby = $scriptProperties['createdby'] = $modx->getOption('createdby', $scriptProperties, $modx->user->id);
+$list = $scriptProperties['list'] = $UserFiles->getOption('list', $scriptProperties, 'default', true);
+$createdby = $scriptProperties['createdby'] = $UserFiles->getOption('createdby', $scriptProperties, $modx->user->id);
 
 
+$source = $scriptProperties['source'] = $UserFiles->getOption('source', $scriptProperties,
+    $UserFiles->getOption('source_default', null, 1, true), true);
 
-$tplForm = $scriptProperties['tplForm'] = $modx->getOption('tplForm', $scriptProperties, 'uf.form');
-$objectName = $scriptProperties['objectName'] = $modx->getOption('objectName', $scriptProperties, 'UserFilesForm');
+$active = $scriptProperties['active'] = (bool) $UserFiles->getOption('active', $scriptProperties, true, true);
+$anonym = $scriptProperties['anonym'] = (bool) $UserFiles->getOption('anonym', $scriptProperties, false, true);
 
+$tplForm = $scriptProperties['tplForm'] = $UserFiles->getOption('tplForm', $scriptProperties, 'uf.form', true);
+$objectName = $scriptProperties['objectName'] = $UserFiles->getOption('objectName', $scriptProperties, 'UserFilesForm',
+    true);
 
 $dropzone = trim($modx->getOption('dropzone', $scriptProperties, '{}'));
 $dropzone = $scriptProperties['dropzone'] = strpos($dropzone, '{') === 0
@@ -53,28 +52,13 @@ $dropzone = $scriptProperties['dropzone'] = strpos($dropzone, '{') === 0
 $propkey = $scriptProperties['propkey'] = $modx->getOption('propkey', $scriptProperties,
     sha1(serialize($scriptProperties)), true);
 
-
-//echo "<pre>";print_r($scriptProperties);
-
 $UserFiles->initialize($modx->context->key, $scriptProperties);
 $UserFiles->saveProperties($scriptProperties);
 $UserFiles->Tools->loadResourceJsCss($scriptProperties);
 
-
 $row = array(
     'propkey' => $propkey,
 );
-
-
-//$dropzoneConfig = array(
-//    'maxFilesize' => 1,
-//    'maxFiles' => 1,
-//
-//);
-
-//$row['dropzone_config'] = $modx->toJSON($dropzoneConfig);
-
-//'{' . join(',', $properties) . '}';
 
 $output = $UserFiles->getChunk($tplForm, $row);
 

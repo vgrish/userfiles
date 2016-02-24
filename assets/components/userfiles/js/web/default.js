@@ -58,16 +58,15 @@ var UserFilesForm = {
             dictCancelUploadConfirmation: UserFilesLexicon.dropzone.dictCancelUploadConfirmation || '',
             dictRemoveFile: UserFilesLexicon.dropzone.dictRemoveFile || '',
             dictMaxFilesExceeded: UserFilesLexicon.dropzone.dictMaxFilesExceeded || '',
-
             dictDefaultCanceled: UserFilesLexicon.dropzone.dictDefaultCanceled || '',
 
             maxFilesize: 1,
-            maxFiles: 2,
+            maxFiles: 1,
             parallelUploads:1,
             addRemoveLinks: true,
 
             createImageThumbnails: true,
-            maxThumbnailFilesize: 2,
+            maxThumbnailFilesize: 9999999999,
             thumbnailWidth: 120,
             thumbnailHeight: 90,
 
@@ -165,6 +164,51 @@ var UserFilesForm = {
                 };
 
 
+                dropzoneConfig.removedfile = function(file) {
+
+                    var _ref;
+                    var thisDropzone = this;
+
+                    if (!file.previewElement) {
+                        return;
+                    }
+
+                    var id = $(file.previewElement).attr('data-userfiles-id');
+                    if (!id && (_ref = file.previewElement) != null) {
+                        _ref.parentNode.removeChild(file.previewElement);
+                        return;
+                    }
+
+                    thisDropzone.files.push(file);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: this.options.url,
+                        data: {
+                            action: 'file/remove',
+                            id:id,
+                            propkey: this.options.params.propkey || '',
+                            ctx: this.options.params.ctx || ''
+                        },
+                        dataType: "json",
+                        success: function(r){
+                            if (!r.success) {
+                                UserFilesMessage.error('', r.message);
+                            }
+                            else {
+                                if ((_ref = file.previewElement) != null) {
+                                    _ref.parentNode.removeChild(file.previewElement);
+                                }
+                                thisDropzone.options.maxFiles++;
+                                return thisDropzone._updateMaxFilesReachedClass();
+                            }
+                        },
+                        failure: function(r) {
+
+                        }
+                    });
+                };
+
                 dropzoneConfig.canceled = function(file) {
                     return this.emit("error", file, dropzoneConfig.dictDefaultCanceled);
                 };
@@ -200,6 +244,32 @@ var UserFilesForm = {
         console.log('_addedfile');
     },
 
+    _queuecomplete: function () {
+        if (this.errors.length > 0) {
+            UserFilesMessage.error('', this.errors.join('<br>'));
+        }
+    },
+
+    _error: function (file, message) {
+        UserFilesMessage.error('', message);
+
+        setTimeout(function() {
+            this.removeFile(file);
+        }.bind(this), 1000);
+    },
+
+    _success: function(file, response) {
+        response = response ? JSON.parse(response) : {};
+        if (response.success == false && response.message != '') {
+            this.errors.push(file.name + ': ' + response.message);
+            setTimeout(function() {
+                this.removeFile(file);
+            }.bind(this), 1000);
+        }
+        else {
+            $(file.previewElement).attr('data-userfiles-id', response.object.id);
+        }
+    },
 
     _processing: function (file) {
 
@@ -213,89 +283,8 @@ var UserFilesForm = {
 
     },
 
-    _queuecomplete: function () {
-        if (this.errors.length > 0) {
-            UserFilesMessage.error('', this.errors.join('<br>'));
-        }
-    },
-
-    _error: function (file, message) {
-
-        console.log('_error');
-
-        console.log(message);
-
-        console.log(this);
-
-        UserFilesMessage.error('', message);
-
-        setTimeout(function() {
-            this.removeFile(file);
-        }.bind(this), 1000);
-    },
-
-    _success: function(file, response) {
-
-        console.log('_success');
-        console.log(response);
-
-        response = response ? JSON.parse(response) : {};
-
-        if (response.success == false && response.message != '') {
-            this.errors.push(file.name + ': ' + response.message);
-            setTimeout(function() {
-                this.removeFile(file);
-            }.bind(this), 1000);
-        }
-        else {
-
-            console.log(file);
-
-            $(file.previewElement).attr('data-userfiles-id', 555);
-
-            //$(file._removeLink).attr('data-userfiles-id', 555)
-        }
-    },
-
     _removedfile: function(file) {
 
-        console.log('_removedfile');
-
-        var id = $(file.previewElement).attr('data-userfiles-id');
-        if (!id) {
-            return;
-        }
-
-        console.log(id);
-
-        console.log(this);
-
-        this.options.maxFiles++;
-
-        return $.ajax({
-            type: 'POST',
-            url: this.options.url,
-            data: {
-                action: 'file/remove',
-                id:id,
-                propkey: this.options.params.propkey || '',
-                ctx: this.options.params.ctx || ''
-            },
-            dataType: "json",
-            success: function(r){
-
-
-                console.log(r);
-
-                if (!r.success) {
-                    UserFilesMessage.error('', r.message);
-                }
-
-            },
-            failure: function(r) {
-                console.log(r);
-            }
-        });
     }
 
 };

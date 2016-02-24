@@ -7,7 +7,7 @@ $tmp = array(
         'type'  => 'textfield',
         'value' => 'uf.form',
     ),
-    'class'       => array(
+    'class'   => array(
         'type'    => 'list',
         'options' => array(
             array('text' => 'modResource', 'value' => 'modResource'),
@@ -15,35 +15,33 @@ $tmp = array(
         ),
         'value'   => 'modResource',
     ),
-    'parent'      => array(
+    'parent'  => array(
         'type'  => 'textfield',
         'value' => '',
     ),
-    'list'        => array(
+    'list'    => array(
         'type'  => 'textfield',
         'value' => 'default',
     ),
-    /* 'listMaxCount'         => array(
-         'type'  => 'numberfield',
-         'value' => '5',
-     ),
-     'active'               => array(
-         'type'  => 'combo-boolean',
-         'value' => true
-     ),*/
-    'allowAnonym' => array(
+
+    'source' => array(
+        'type'  => 'numberfield',
+        'value' => 0,
+    ),
+
+    'active'  => array(
+        'type'  => 'combo-boolean',
+        'value' => true
+    ),
+    'anonym'  => array(
         'type'  => 'combo-boolean',
         'value' => false
     ),
-    /* 'onlyCreatedby'        => array(
-         'type'  => 'combo-boolean',
-         'value' => false
-     ),*/
-    'sortby'      => array(
+    'sortby'  => array(
         'type'  => 'textfield',
         'value' => 'rank'
     ),
-    'sortdir'     => array(
+    'sortdir' => array(
         'type'    => 'list',
         'options' => array(
             array('text' => 'ASC', 'value' => 'ASC'),
@@ -51,55 +49,6 @@ $tmp = array(
         ),
         'value'   => 'ASC',
     ),
-
-    /*'allowedFiles'         => array(
-        'type'  => 'textfield',
-        'value' => 'jpg,jpeg,png,gif,doc,pdf,txt',
-    ),
-    'source'               => array(
-        'type'  => 'numberfield',
-        'value' => 0,
-    ),
-    'tplFile'              => array(
-        'type'  => 'textfield',
-        'value' => 'tpl.UF.form.file',
-    ),
-    'tplFiles'             => array(
-        'type'  => 'textfield',
-        'value' => 'tpl.UF.form.files',
-    ),
-    'tplImage'             => array(
-        'type'  => 'textfield',
-        'value' => 'tpl.UF.form.image',
-    ),
-    'tplUserNoAuth'        => array(
-        'type'  => 'textfield',
-        'value' => '@INLINE <h5>[[%uf_no_auth]]</h5>',
-    ),
-    'tplUserNoPermissions' => array(
-        'type'  => 'textfield',
-        'value' => '@INLINE <h5>[[%uf_no_permissions]]</h5>',
-    ),
-    'tplWrapper'           => array(
-        'type'  => 'textfield',
-        'value' => ''
-    ),
-    'gravatarIcon'         => array(
-        'type'  => 'textfield',
-        'value' => 'mm',
-    ),
-    'gravatarSize'         => array(
-        'type'  => 'numberfield',
-        'value' => '64',
-    ),
-    'frontendCss'          => array(
-        'type'  => 'textfield',
-        'value' => '[[+assetsUrl]]css/web/default.css',
-    ),
-    'frontendJs'           => array(
-        'type'  => 'textfield',
-        'value' => '[[+assetsUrl]]js/web/default.js',
-    ),*///
 
     'objectName'    => array(
         'type'  => 'textfield',

@@ -22,9 +22,6 @@ class modWebUserFileGetListProcessor extends modUserFileGetListProcessor
     {
         $initialize =  parent::initialize();
 
-        $this->modx->log(1, print_r('=======' ,1));
-       // $this->modx->log(1, print_r($this->getProperties() ,1));
-
         $propKey = $this->getProperty('propkey');
         if (empty($propKey)) {
             return $this->UserFiles->lexicon('err_propkey_ns');
@@ -35,34 +32,13 @@ class modWebUserFileGetListProcessor extends modUserFileGetListProcessor
             return $this->UserFiles->lexicon('err_properties_ns');
         }
 
-        $this->modx->log(1, print_r($properties ,1));
-
-        foreach (array('class', 'parent', 'list', 'createdby') as $key) {
+        foreach (array('class', 'parent', 'list', 'createdby', 'source', 'active', 'anonym', 'session') as $key) {
             $this->setProperty($key, $properties[$key]);
         }
 
-        /*
-         * [tplForm] => uf.form
-    [class] => modResource
-    [parent] =>
-    [list] => default
-    [allowAnonym] =>
-    [sortby] => rank
-    [sortdir] => ASC
-    [objectName] => UserFilesForm
-    [frontendCss] => [[+assetsUrl]]css/web/default.css
-    [frontendJs] => [[+assetsUrl]]js/web/default.js
-    [jqueryJs] => [[+assetsUrl]]vendor/jquery/dist/jquery.min.js
-    [actionUrl] => [[+assetsUrl]]action.php
-    [toPlaceholder] =>
-    [dropzone] => Array
-        (
-            [addRemoveLinks] => 1
-        )
-
-    [selector] => .userfiles-form
-    [propkey] => 25b61462cc9eac7b164238226c476393a14c0b66
-         */
+        if(empty($this->modx->user->id)) {
+            $this->setProperty('session', session_id());
+        }
 
         return $initialize;
     }

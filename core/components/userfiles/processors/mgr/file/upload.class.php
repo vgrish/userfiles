@@ -187,6 +187,18 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
             'list'   => $this->object->get('list'),
             'hash'   => $this->object->get('hash'),
         ));
+
+        if (!empty($this->modx->user->id)) {
+            $q->where(array(
+                'createdby' => $this->modx->user->id,
+            ));
+        }
+        else {
+            $q->where(array(
+                'session' => session_id(),
+            ));
+        }
+
         if ($this->modx->getCount($this->classKey, $q)) {
             return $this->UserFiles->lexicon('err_file_exists', array('file' => $this->data['name']));
         }
