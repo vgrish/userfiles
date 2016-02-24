@@ -1,6 +1,6 @@
 
 .userfiles-dropzone {
-    min-height: 150px;
+    min-height: 140px;
     border: 2px dashed #0087F7;
     border-radius: 5px;
     background: #FFF;
@@ -70,7 +70,8 @@
     text-align: center;
     display: block;
     cursor: pointer;
-    border: none; }
+    border: none;
+    line-height: 30px;}
 .userfiles-dropzone .dz-preview .dz-remove:hover {
     text-decoration: underline; }
 .userfiles-dropzone .dz-preview:hover .dz-details {
