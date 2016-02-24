@@ -4,6 +4,7 @@
     border: 2px dashed #0087F7;
     border-radius: 5px;
     background: #FFF;
+    padding: 5px;
 }
 
 .userfiles-form-clickable.dz-clickable {
@@ -44,14 +45,14 @@
     position: relative;
     display: inline-block;
     vertical-align: top;
-    margin: 16px;
+    margin: 10px;
     min-height: 100px; }
 .userfiles-dropzone .dz-preview:hover {
     z-index: 1000; }
 .userfiles-dropzone .dz-preview:hover .dz-details {
     opacity: 1; }
 .userfiles-dropzone .dz-preview.dz-file-preview .dz-image {
-    border-radius: 20px;
+    border-radius: 5px;
     background: #999;
     background: linear-gradient(to bottom, #eee, #ddd); }
 .userfiles-dropzone .dz-preview.dz-file-preview .dz-details {
@@ -83,7 +84,7 @@
     font-size: 13px;
     min-width: 100%;
     max-width: 100%;
-    padding: 2em 1em;
+    padding: 1.5em 1em;
     text-align: center;
     color: rgba(0, 0, 0, 0.9);
     line-height: 150%; }
@@ -113,10 +114,10 @@
     -webkit-filter: blur(8px);
     filter: blur(8px); }
 .userfiles-dropzone .dz-preview .dz-image {
-    border-radius: 20px;
+    border-radius: 5px;
     overflow: hidden;
     width: 120px;
-    height: 120px;
+    height: 90px;
     position: relative;
     display: block;
     z-index: 10; }

@@ -67,7 +67,7 @@ var UserFilesForm = {
             createImageThumbnails: true,
             maxThumbnailFilesize: 2,
             thumbnailWidth: 120,
-            thumbnailHeight: 120,
+            thumbnailHeight: 90,
 
             errors: []
         }
