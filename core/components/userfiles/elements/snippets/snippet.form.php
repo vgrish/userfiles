@@ -23,9 +23,26 @@ if (!$UserFiles) {
 }
 
 
-$selector = $scriptProperties['selector'] = $modx->getOption('selector', $scriptProperties, '.userfiles-form');
-$objectName = $scriptProperties['objectName'] = $modx->getOption('objectName', $scriptProperties, 'UserFilesForm');
+$class = $scriptProperties['class'] = $modx->getOption('class', $scriptProperties, 'modResource');
+$parent = $scriptProperties['parent'] = $modx->getOption('parent', $scriptProperties);
+
+switch (true) {
+    default:
+    case empty($parent) AND $class == 'modResource':
+        $parent = $scriptProperties['parent'] = $modx->resource->id;
+        break;
+    case empty($parent) AND $class == 'modUser':
+        $parent = $scriptProperties['parent'] = $modx->user->id;
+        break;
+}
+
+$list = $scriptProperties['list'] = $modx->getOption('list', $scriptProperties, 'default');
+$createdby = $scriptProperties['createdby'] = $modx->getOption('createdby', $scriptProperties, $modx->user->id);
+
+
+
 $tplForm = $scriptProperties['tplForm'] = $modx->getOption('tplForm', $scriptProperties, 'uf.form');
+$objectName = $scriptProperties['objectName'] = $modx->getOption('objectName', $scriptProperties, 'UserFilesForm');
 
 
 $dropzone = trim($modx->getOption('dropzone', $scriptProperties, '{}'));
@@ -33,13 +50,14 @@ $dropzone = $scriptProperties['dropzone'] = strpos($dropzone, '{') === 0
     ? $modx->fromJSON($dropzone)
     : array();
 
-$propkey = $scriptProperties['propkey'] = $modx->getOption('propkey', $scriptProperties, sha1(serialize($scriptProperties)), true);
+$propkey = $scriptProperties['propkey'] = $modx->getOption('propkey', $scriptProperties,
+    sha1(serialize($scriptProperties)), true);
 
 
 //echo "<pre>";print_r($scriptProperties);
 
 $UserFiles->initialize($modx->context->key, $scriptProperties);
-
+$UserFiles->saveProperties($scriptProperties);
 $UserFiles->Tools->loadResourceJsCss($scriptProperties);
 
 

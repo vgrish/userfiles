@@ -132,29 +132,30 @@ var UserFilesForm = {
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function(r){
-                            if (!r.results) {
-                               return;
+
+                            if (r.success && r.results) {
+                                $.each(r.results, function(i, item){
+
+                                    var addFile = {
+                                        name: item.file,
+                                        size: item.size,
+                                        type:item.mime
+                                    };
+
+                                    thisDropzone.options.addedfile.call(thisDropzone, addFile);
+                                    if (item.dyn_thumbnail) {
+                                        thisDropzone.options.thumbnail.call(thisDropzone, addFile, item.dyn_thumbnail);
+                                    }
+                                    addFile.previewElement.classList.add('dz-complete');
+                                    $(addFile.previewElement).attr('data-userfiles-id', item.id);
+                                    thisDropzone.files.push(addFile);
+
+                                    thisDropzone.options.maxFiles--;
+                                });
                             }
-                            $.each(r.results, function(i, item){
-
-                                var addFile = {
-                                    name: item.file,
-                                    size: item.size,
-                                    type:item.mime
-                                };
-
-                                thisDropzone.options.addedfile.call(thisDropzone, addFile);
-                                if (item.dyn_thumbnail) {
-                                    thisDropzone.options.thumbnail.call(thisDropzone, addFile, item.dyn_thumbnail);
-                                }
-                                addFile.previewElement.classList.add('dz-complete');
-                                $(addFile.previewElement).attr('data-userfiles-id', item.id);
-                                thisDropzone.files.push(addFile);
-
-                                thisDropzone.options.maxFiles--;
-                            });
-
-
+                            else if (!r.success) {
+                                UserFilesMessage.error('', r.message);
+                            }
 
                         }
                     });

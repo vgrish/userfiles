@@ -7,7 +7,6 @@ $tmp = array(
         'type'  => 'textfield',
         'value' => 'uf.form',
     ),
-
     'class'       => array(
         'type'    => 'list',
         'options' => array(

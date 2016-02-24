@@ -20,7 +20,7 @@ $_lang['userfiles_err_file_ns'] = 'Ошибка обработки указан�
 
 
 $_lang['userfiles_err_action_ns'] = 'Не указан ключ (action)';
-$_lang['userfiles_err_form_key_ns'] = 'Не указан ключ формы (form_key)';
+$_lang['userfiles_err_propkey_ns'] = 'Не указан ключ (propkey)';
 $_lang['userfiles_err_properties_ns'] = 'Не указаны свойства (properties)';
 $_lang['userfiles_err_action_un'] = 'Неизвестный ключ (action)';
 $_lang['userfiles_err_chunk_ns'] = 'Не указан чанк для обработки';
