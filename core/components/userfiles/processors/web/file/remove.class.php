@@ -1,12 +1,13 @@
 <?php
 
+require_once dirname(dirname(dirname(__FILE__))) . '/mgr/file/remove.class.php';
+
 /**
  * Remove a UserFile
  */
-class modUserFileRemoveProcessor extends modObjectRemoveProcessor
+class modWebUserFileRemoveProcessor extends modUserFileRemoveProcessor
 {
     public $classKey = 'UserFile';
-    public $objectType = 'UserFile';
     public $languageTopics = array('userfiles');
     public $permission = '';
 
@@ -27,4 +28,4 @@ class modUserFileRemoveProcessor extends modObjectRemoveProcessor
     }
 }
 
-return 'modUserFileRemoveProcessor';
+return 'modWebUserFileRemoveProcessor';

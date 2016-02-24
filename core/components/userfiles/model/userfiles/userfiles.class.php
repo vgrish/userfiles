@@ -153,7 +153,8 @@ class UserFiles
                             'dictResponseError'            => $this->lexicon('dz_dictResponseError'),
                             'dictCancelUpload'             => $this->lexicon('dz_dictCancelUpload'),
                             'dictCancelUploadConfirmation' => $this->lexicon('dz_dictCancelUploadConfirmation'),
-                            'dictRemoveFile'               => $this->lexicon('dz_dictRemoveFile')
+                            'dictRemoveFile'               => $this->lexicon('dz_dictRemoveFile'),
+                            'dictDefaultCanceled'          => $this->lexicon('dz_dictDefaultCanceled'),
                         )
                     ));
 

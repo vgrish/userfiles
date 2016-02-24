@@ -59,6 +59,8 @@ var UserFilesForm = {
             dictRemoveFile: UserFilesLexicon.dropzone.dictRemoveFile || '',
             dictMaxFilesExceeded: UserFilesLexicon.dropzone.dictMaxFilesExceeded || '',
 
+            dictDefaultCanceled: UserFilesLexicon.dropzone.dictDefaultCanceled || '',
+
             maxFilesize: 1,
             maxFiles: 2,
             parallelUploads:1,
@@ -160,6 +162,11 @@ var UserFilesForm = {
                         }
                     });
 
+                };
+
+
+                dropzoneConfig.canceled = function(file) {
+                    return this.emit("error", file, dropzoneConfig.dictDefaultCanceled);
                 };
 
                 console.log(
@@ -279,6 +286,10 @@ var UserFilesForm = {
 
 
                 console.log(r);
+
+                if (!r.success) {
+                    UserFilesMessage.error('', r.message);
+                }
 
             },
             failure: function(r) {

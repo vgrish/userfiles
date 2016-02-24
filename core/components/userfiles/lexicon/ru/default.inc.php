@@ -23,10 +23,8 @@ $_lang['userfiles_title_cms_success'] = 'Подтверждение';
 $_lang['userfiles_title_cms_error'] = 'Подтверждение!';
 $_lang['userfiles_title_cms_info'] = 'Подтверждение';
 
-$_lang['userfiles_msg_select_files'] = 'Select files';
-$_lang['userfiles_msg_needsclick'] = 'Drop files here or click to upload';
-$_lang['userfiles_msg_note_needsclick'] = '(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)';
-
+$_lang['userfiles_msg_select_files'] = 'Выберите файлы';
+$_lang['userfiles_msg_needsclick'] = 'Переместите файлы сюда или нажмите, чтобы загрузить';
 
 $_lang['userfiles_dz_dictMaxFilesExceeded'] = 'Вы не можете загрузить еще больше файлов';
 $_lang['userfiles_dz_dictFallbackMessage'] = 'Ваш браузер не поддерживает загрузки перетаскиванием файлов';
@@ -36,4 +34,4 @@ $_lang['userfiles_dz_dictResponseError'] = 'Ошибка ответа, код: {
 $_lang['userfiles_dz_dictCancelUpload'] = 'Отмена загрузки';
 $_lang['userfiles_dz_dictCancelUploadConfirmation'] = 'Вы уверены, что хотите отменить эту загрузку?';
 $_lang['userfiles_dz_dictRemoveFile'] = 'Удалить файл';
-
+$_lang['userfiles_dz_dictDefaultCanceled'] = 'Загрузка отменена';

@@ -25,8 +25,6 @@ $_lang['userfiles_title_cms_info'] = 'Подтверждение';
 
 $_lang['userfiles_msg_select_files'] = 'Select files';
 $_lang['userfiles_msg_needsclick'] = 'Drop files here or click to upload';
-$_lang['userfiles_msg_note_needsclick'] = '(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)';
-
 
 $_lang['userfiles_dz_dictMaxFilesExceeded'] = 'You can not upload any more files';
 $_lang['userfiles_dz_dictFallbackMessage'] = 'Your browser does not support drag\'n\'drop file uploads';
@@ -36,3 +34,4 @@ $_lang['userfiles_dz_dictResponseError'] = 'Server responded with {{statusCode}}
 $_lang['userfiles_dz_dictCancelUpload'] = 'Cancel upload';
 $_lang['userfiles_dz_dictCancelUploadConfirmation'] = 'Are you sure you want to cancel this upload?';
 $_lang['userfiles_dz_dictRemoveFile'] = 'Remove file';
+$_lang['userfiles_dz_dictDefaultCanceled'] = 'Upload canceled';
