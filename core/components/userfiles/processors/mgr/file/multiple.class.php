@@ -6,9 +6,14 @@
 class modUserFileMultipleProcessor extends modProcessor
 {
     public $classKey = 'UserFile';
+    public $permission = 'userfiles_file_list';
 
     public function process()
     {
+        if (!$this->modx->hasPermission($this->permission)) {
+            return $this->modx->lexicon('userfiles_err_permission_denied');
+        }
+
         if (!$method = $this->getProperty('method', false)) {
             return $this->failure();
         }

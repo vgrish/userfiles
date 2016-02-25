@@ -28,8 +28,9 @@ $_lang['userfiles_err_chunk_nf'] = 'Не могу найти указанный 
 $_lang['userfiles_err_snippet_ns'] = 'Не указан сниппет для обработки';
 $_lang['userfiles_err_snippet_nf'] = 'Не могу найти указанный сниппет "[[+name]]" для обработки';
 $_lang['userfiles_err_field_nf'] = 'Не указано поле "[[+field]]"';
-
+$_lang['userfiles_err_permission_denied'] = 'Доступ запрещён!';
 
 $_lang['UserFile_err_save'] = 'Ошибка "Файл" не сохранен';
 $_lang['UserFile_err_nfs'] = 'Ошибка "Файл" не найден';
+
 

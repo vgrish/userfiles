@@ -6,7 +6,7 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
     public $objectType = 'UserFile';
     public $primaryKeyField = 'id';
     public $languageTopics = array('userfiles');
-    public $permission = '';
+    public $permission = 'userfiles_file_upload';
 
     /** @var UserFile $object */
     public $object;
@@ -25,7 +25,7 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
     public function initialize()
     {
         if (!$this->modx->hasPermission($this->permission)) {
-            return $this->modx->lexicon('access_denied');
+            return $this->modx->lexicon('userfiles_err_permission_denied');
         }
 
         $primaryKey = $this->getProperty($this->primaryKeyField, false);
@@ -108,7 +108,7 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
             'width'      => $width,
             'height'     => $height,
             'hash'       => $hash,
-            'properties' => $this->toJSON(array(
+            'properties' => $this->modx->toJSON(array(
                 'w' => $width,
                 'h' => $height,
                 'f' => $type
@@ -155,11 +155,10 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
                 break;
         }
 
-        $this->setProperty('properties', $this->getProperty('properties', '{}'));
-        $this->setProperty('file', $name . '.' . $this->getProperty('type'));
         $this->setProperty('parent', $this->getProperty('parent', 0));
         $this->setProperty('class', $this->getProperty('class', 'modResource'));
         $this->setProperty('list', $this->getProperty('list', 'default'));
+        $this->setProperty('context', $this->getProperty('context', 'web'));
 
         $path = array();
         $path[] = $this->getProperty('list');
@@ -168,6 +167,48 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
         $path[] = null;
         $path = strtolower(implode('/', $path));
         $this->setProperty('path', $path);
+
+        $pls = array(
+            'pl' => array(
+                '{name}',
+                '{id}',
+                '{class}',
+                '{list}',
+                '{session}',
+                '{createdby}',
+                '{source}',
+                '{context}',
+                '{w}',
+                '{h}',
+                '{q}',
+                '{zc}',
+                '{bg}',
+                '{ext}',
+                '{rand}'
+            ),
+            'vl' => array(
+                $name,
+                0,
+                $this->getProperty('class'),
+                $this->getProperty('list'),
+                session_id(),
+                $this->modx->user->id,
+                $this->getProperty('source'),
+                $this->getProperty('context'),
+                '',
+                '',
+                '',
+                '',
+                '',
+                $this->getProperty('type'),
+                strtolower(strtr(base64_encode(openssl_random_pseudo_bytes(2)), "+/=", "zzz"))
+            )
+        );
+
+        $filename = $this->object->getFileName();
+        $filename = strtolower(str_replace($pls['pl'], $pls['vl'], $filename));
+
+        $this->setProperty('file', $filename);
 
         return parent::beforeSet();
     }

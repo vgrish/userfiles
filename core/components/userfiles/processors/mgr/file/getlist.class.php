@@ -5,8 +5,8 @@ class modUserFileGetListProcessor extends modObjectGetListProcessor
     public $classKey = 'UserFile';
     public $defaultSortField = 'rank';
     public $defaultSortDirection = 'ASC';
-    public $languageTopics = array('userfiles');
-    public $permission = '';
+    public $languageTopics = array('userfiles', 'core:file');
+    public $permission = 'userfiles_file_list';
 
     /** @var UserFile $object */
     public $object;
@@ -19,7 +19,7 @@ class modUserFileGetListProcessor extends modObjectGetListProcessor
     public function initialize()
     {
         if (!$this->modx->hasPermission($this->permission)) {
-            return $this->modx->lexicon('access_denied');
+            return $this->modx->lexicon('userfiles_err_permission_denied');
         }
         $this->UserFiles = $this->modx->getService('userfiles');
         $this->UserFiles->initialize();

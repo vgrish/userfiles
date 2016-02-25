@@ -328,7 +328,8 @@ class UserFile extends xPDOSimpleObject
                 '{q}',
                 '{zc}',
                 '{bg}',
-                '{ext}'
+                '{ext}',
+                '{rand}'
             ),
             'vl' => array(
                 rtrim(str_replace($this->get('type'), '', $this->get('file')), '.'),
@@ -344,7 +345,8 @@ class UserFile extends xPDOSimpleObject
                 $options['q'],
                 $options['zc'],
                 $options['bg'],
-                $options['f']
+                $options['f'],
+                strtolower(strtr(base64_encode(openssl_random_pseudo_bytes(2)), '+/=', 'zzz'))
             )
         );
 
@@ -389,6 +391,21 @@ class UserFile extends xPDOSimpleObject
     /**
      * @return bool|string
      */
+    public function getFileName()
+    {
+        if (!$this->initialized()) {
+            return false;
+        }
+        if (isset($this->mediaSourceProperties['fileName']) AND !empty($this->mediaSourceProperties['fileName'])) {
+            return $this->mediaSourceProperties['fileName'];
+        }
+
+        return '{name}.{rand}.{ext}';
+    }
+
+    /**
+     * @return bool|string
+     */
     public function getThumbnailName()
     {
         if (!$this->initialized()) {
@@ -398,7 +415,7 @@ class UserFile extends xPDOSimpleObject
             return $this->mediaSourceProperties['thumbnailName'];
         }
 
-        return '{name}.{w}.{h}';
+        return '{name}.{rand}.{w}.{h}.{ext}';
     }
 
     /**

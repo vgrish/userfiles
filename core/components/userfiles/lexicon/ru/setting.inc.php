@@ -11,18 +11,29 @@ $_lang['userfiles_source_maxUploadSize_desc'] = 'Максимальный раз
 $_lang['userfiles_source_imageNameType_desc'] = 'Этот параметр указывает, как нужно переименовать файл при загрузке. Hash - это генерация уникального имени, в зависимости от содержимого файла. Friendly - генерация имени по алгоритму дружественных url страниц сайта (они управляются системными настройками).';
 
 $_lang['userfiles_source_thumbnail_name_desc'] = 'Шаблон имени превью изображения. <br>
-%name - name изображения.<br>
-%id - id изображения.<br>
-%class - class изображения.<br>
-%list - list изображения.<br>
-%session - session изображения.<br>
-%createdby - createdby изображения.<br>
-%source - source изображения.<br>
-%context - context изображения.<br>
+{name} - name изображения.<br>
+{id} - id изображения.<br>
+{class} - class изображения.<br>
+{list} - list изображения.<br>
+{session} - session изображения.<br>
+{createdby} - createdby изображения.<br>
+{source} - source изображения.<br>
+{context} - context изображения.<br>
+{rand} - случайная строка.<br>
 
-%w - ширина превью.<br>
-%h - высота превью.<br>
-%q - качество превью.<br>
-%f - расширение превью.<br>
+{w} - ширина превью.<br>
+{h} - высота превью.<br>
+{q} - качество превью.<br>
+{f} - расширение превью.<br>
 
+';
+
+$_lang['userfiles_source_file_name_desc'] = 'Шаблон имени файла. <br>
+{name} - name файла.<br>
+{class} - class файла.<br>
+{list} - list файла.<br>
+{session} - session файла.<br>
+{createdby} - createdby файла.<br>
+{source} - source файла.<br>
+{rand} - случайная строка.<br>
 ';

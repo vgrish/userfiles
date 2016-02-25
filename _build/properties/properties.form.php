@@ -74,7 +74,6 @@ $tmp = array(
         'type'  => 'textfield',
         'value' => ''
     ),
-
     'dropzone' => array(
         'type'  => 'textarea',
         'value' => '{"addRemoveLinks":true}',

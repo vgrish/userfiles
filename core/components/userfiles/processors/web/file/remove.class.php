@@ -10,7 +10,7 @@ class modWebUserFileRemoveProcessor extends modUserFileRemoveProcessor
     public $classKey = 'UserFile';
     public $objectType = 'UserFile';
     public $languageTopics = array('userfiles');
-    public $permission = '';
+    public $permission = 'userfiles_file_remove';
 
     /** @var UserFiles $UserFiles */
     public $UserFiles;

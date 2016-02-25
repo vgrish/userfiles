@@ -33,12 +33,11 @@ switch (true) {
 $list = $scriptProperties['list'] = $UserFiles->getOption('list', $scriptProperties, 'default', true);
 $createdby = $scriptProperties['createdby'] = $UserFiles->getOption('createdby', $scriptProperties, $modx->user->id);
 
-
 $source = $scriptProperties['source'] = $UserFiles->getOption('source', $scriptProperties,
     $UserFiles->getOption('source_default', null, 1, true), true);
 
-$active = $scriptProperties['active'] = (bool) $UserFiles->getOption('active', $scriptProperties, true, true);
-$anonym = $scriptProperties['anonym'] = (bool) $UserFiles->getOption('anonym', $scriptProperties, false, true);
+$active = $scriptProperties['active'] = (bool)$UserFiles->getOption('active', $scriptProperties, true, true);
+$anonym = $scriptProperties['anonym'] = (bool)$UserFiles->getOption('anonym', $scriptProperties, false, true);
 
 $tplForm = $scriptProperties['tplForm'] = $UserFiles->getOption('tplForm', $scriptProperties, 'uf.form', true);
 $objectName = $scriptProperties['objectName'] = $UserFiles->getOption('objectName', $scriptProperties, 'UserFilesForm',
@@ -62,7 +61,7 @@ $row = array(
 
 $output = $UserFiles->getChunk($tplForm, $row);
 
-if (!empty($tplWrapper) && (!empty($wrapIfEmpty) || !empty($output))) {
+if (!empty($tplWrapper) AND (!empty($wrapIfEmpty) OR !empty($output))) {
     $output = $UserFiles->getChunk($tplWrapper, array('output' => $output));
 }
 if (!empty($toPlaceholder)) {

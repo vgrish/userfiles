@@ -10,7 +10,7 @@ class modUserFileSetPropertyProcessor extends modObjectUpdateProcessor
     public $objectType = 'UserFile';
     public $classKey = 'UserFile';
     public $languageTopics = array('mlmsystem');
-    public $permission = '';
+    public $permission = 'userfiles_file_update';
 
     /** {@inheritDoc} */
     public function beforeSet()

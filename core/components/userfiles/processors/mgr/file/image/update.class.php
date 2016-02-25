@@ -9,7 +9,8 @@ class modUserFileImageUpdateProcessor extends modUserFileUploadProcessor
         $this->mediaSource->errors = array();
         $this->mediaSource->removeObject($this->object->get('path') . $this->object->get('file'));
         if (empty($this->mediaSource->errors['file'])) {
-            $file = rtrim(str_replace($this->object->get('type'), '', $this->object->get('file')), '.');
+
+            $file = $this->object->get('name');
             $type = 'png';
 
             $this->data['name'] = $file;

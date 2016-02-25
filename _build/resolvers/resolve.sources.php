@@ -85,7 +85,14 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
                     'desc'    => 'userfiles_source_thumbnail_name_desc',
                     'type'    => 'textfield',
                     'lexicon' => 'userfiles:setting',
-                    'value'   => '{name}.{w}.{h}.{ext}',
+                    'value'   => '{name}.{rand}.{w}.{h}.{ext}',
+                ),
+                'fileName'    => array(
+                    'name'    => 'fileName',
+                    'desc'    => 'userfiles_source_file_name_desc',
+                    'type'    => 'textfield',
+                    'lexicon' => 'userfiles:setting',
+                    'value'   => '{name}.{rand}.{ext}',
                 ),
             )
             ,

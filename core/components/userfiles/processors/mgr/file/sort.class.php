@@ -3,7 +3,7 @@
 class modUserFileSortProcessor extends modObjectProcessor
 {
     public $classKey = 'UserFile';
-    public $permission = '';
+    public $permission = 'userfiles_file_update';
 
     /**
      * from
@@ -13,6 +13,10 @@ class modUserFileSortProcessor extends modObjectProcessor
      */
     public function process()
     {
+        if (!$this->modx->hasPermission($this->permission)) {
+            return $this->modx->lexicon('userfiles_err_permission_denied');
+        }
+
         /* @var UserFile $source */
         $source = $this->modx->getObject($this->classKey, $this->getProperty('source'));
         /* @var UserFile $target */

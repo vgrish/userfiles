@@ -8,7 +8,7 @@ class modWebUserFileUploadProcessor extends modUserFileUploadProcessor
     public $objectType = 'UserFile';
     public $primaryKeyField = 'id';
     public $languageTopics = array('userfiles');
-    public $permission = '';
+    public $permission = 'userfiles_file_upload';
 
     /** @var UserFile $object */
     public $object;
