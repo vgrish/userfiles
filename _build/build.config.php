@@ -55,6 +55,6 @@ $BUILD_RESOLVERS = array(
     'tables',
     'sources',
     'settings',
-    'chunks',
-    //'setup',
+    'policy',
+    'chunks'
 );

@@ -5,7 +5,7 @@ class modUserFileGetListProcessor extends modObjectGetListProcessor
     public $classKey = 'UserFile';
     public $defaultSortField = 'rank';
     public $defaultSortDirection = 'ASC';
-    public $languageTopics = array('userfiles', 'core:file');
+    public $languageTopics = array('userfiles');
     public $permission = 'userfiles_file_list';
 
     /** @var UserFile $object */

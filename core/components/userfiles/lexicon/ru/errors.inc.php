@@ -30,7 +30,8 @@ $_lang['userfiles_err_snippet_nf'] = 'Не могу найти указанны�
 $_lang['userfiles_err_field_nf'] = 'Не указано поле "[[+field]]"';
 $_lang['userfiles_err_permission_denied'] = 'Доступ запрещён!';
 
+
 $_lang['UserFile_err_save'] = 'Ошибка "Файл" не сохранен';
 $_lang['UserFile_err_nfs'] = 'Ошибка "Файл" не найден';
 
-
+$_lang['permission_denied'] = 'Доступ запрещён!';
