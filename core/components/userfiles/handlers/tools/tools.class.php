@@ -172,11 +172,12 @@ class Tools implements UserFilesToolsInterface
         }
 
         $config = $this->modx->toJSON(array(
-            'assetsUrl' => str_replace($pls['pl'], $pls['vl'], $opts['assetsUrl']),
-            'actionUrl' => str_replace($pls['pl'], $pls['vl'], $opts['actionUrl']),
-            'dropzone'  => $opts['dropzone'],
-            'propkey'   => "{$this->config['propkey']}",
-            'ctx'       => "{$this->modx->context->get('key')}"
+            'assetsBaseUrl' => str_replace($pls['pl'], $pls['vl'], $opts['assetsBaseUrl']),
+            'assetsUrl'     => str_replace($pls['pl'], $pls['vl'], $opts['assetsUrl']),
+            'actionUrl'     => str_replace($pls['pl'], $pls['vl'], $opts['actionUrl']),
+            'dropzone'      => $opts['dropzone'],
+            'propkey'       => "{$this->config['propkey']}",
+            'ctx'           => "{$this->modx->context->get('key')}"
         ));
         $this->modx->regClientScript(preg_replace($this->config['replacePattern'], '', '
 			<script type="text/javascript">

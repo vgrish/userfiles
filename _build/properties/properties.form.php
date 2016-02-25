@@ -76,7 +76,7 @@ $tmp = array(
     ),
     'dropzone' => array(
         'type'  => 'textarea',
-        'value' => '{"addRemoveLinks":true}',
+        'value' => '{"addRemoveLinks":true,"template":"base"}',
     ),
 
 );
