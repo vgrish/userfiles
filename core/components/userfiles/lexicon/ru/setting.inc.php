@@ -1,6 +1,8 @@
 <?php
 
 $_lang['area_userfiles_main'] = 'Основные';
+$_lang['area_userfiles_phpThumb'] = 'phpThumb';
+$_lang['area_userfiles_links'] = 'Ссылки';
 
 $_lang['setting_userfiles_source_default'] = 'Источник медиа для UserFiles';
 $_lang['setting_userfiles_source_default_desc'] = 'Выберите источник медиа, который будет использован по умолчанию для загрузки файлов пользователя.';
@@ -37,3 +39,14 @@ $_lang['userfiles_source_file_name_desc'] = 'Шаблон имени файла.
 {source} - source файла.<br>
 {rand} - случайная строка.<br>
 ';
+
+
+$_lang['setting_userfiles_phpThumb_config_max_source_pixels'] = 'Настройка "max_source_pixels" для phpThumb';
+$_lang['setting_userfiles_phpThumb_config_cache_directory'] = 'Настройка "cache_directory" для phpThumb';
+
+$_lang['setting_userfiles_working_templates'] = 'Активные шаблоны';
+$_lang['setting_userfiles_working_templates_desc'] = 'Список id шаблонов через запятую, для которых нужно активировать вкладку с файлами пользователя.';
+
+$_lang['setting_userfiles_chunk_link_file'] = 'Чанк ссылки на файл';
+$_lang['setting_userfiles_chunk_link_image'] = 'Чанк ссылки на изображение';
+

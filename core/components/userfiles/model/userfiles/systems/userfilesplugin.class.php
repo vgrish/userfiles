@@ -18,8 +18,12 @@ abstract class UserFilesPlugin
         if (!is_object($this->UserFiles) OR !($this->UserFiles instanceof UserFiles)) {
             $corePath = $this->modx->getOption('userfiles_core_path', null,
                 $this->modx->getOption('core_path', null, MODX_CORE_PATH) . 'components/userfiles/');
-            $this->UserFiles = $this->modx->getService('UserFiles', 'UserFiles', $corePath . 'model/userfiles/',
-                $this->scriptProperties);
+            $this->UserFiles = $this->modx->getService(
+                'UserFiles',
+                'UserFiles',
+                $corePath . 'model/userfiles/',
+                $this->scriptProperties
+            );
         }
 
         if (!$this->UserFiles->initialized[$this->modx->context->key]) {

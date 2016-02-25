@@ -242,7 +242,6 @@ Ext.reg('userfiles-window-image-edit', userfiles.window.ImageEdit);
 
 
 
-
 userfiles.window.FileLink = function(config) {
     config = config || {};
 
@@ -384,43 +383,10 @@ Ext.extend(userfiles.window.FileUpdate, MODx.Window, {
 
     getLeftFields: function(config) {
         return [];
-
-        return [{
-            xtype: 'userfiles-combo-payment-type',
-            custm: true,
-            clear: true,
-            fieldLabel: _('userfiles_type'),
-            name: 'type',
-            anchor: '99%',
-            allowBlank: false
-        }, {
-            xtype: 'textfield',
-            fieldLabel: _('userfiles_tax'),
-            maskRe: /[0123456789\.\-%]/,
-            name: 'tax',
-            anchor: '99%',
-            allowBlank: false
-        }];
     },
 
     getRightFields: function(config) {
-
         return [];
-        return [{
-            xtype: 'userfiles-combo-browser',
-            //custm: true,
-            //clear: true,
-            fieldLabel: _('userfiles_logo'),
-            name: 'logo',
-            anchor: '99%',
-            allowBlank: true
-        }, {
-            xtype: 'textfield',
-            fieldLabel: _('userfiles_class'),
-            name: 'class',
-            anchor: '99%',
-            allowBlank: false
-        }];
     }
 
 });

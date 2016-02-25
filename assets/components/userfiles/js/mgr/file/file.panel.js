@@ -98,7 +98,11 @@ Ext.extend(userfiles.panel.Files,MODx.Panel, {
 
 		var config = {
 			url: userfiles.config.connector_url,
-			params: {action:'mgr/file/upload',ctx: 'mgr',HTTP_MODAUTH: MODx.siteId},
+			params: {
+				action:'mgr/file/upload',
+				ctx: 'mgr',
+				HTTP_MODAUTH: MODx.siteId
+			},
 			maxFilesize: 999999999,
 			createImageThumbnails: false,
 			clickable: '.userfiles-dropzonejs-upload-btn'
@@ -159,7 +163,7 @@ Ext.extend(userfiles.panel.Files,MODx.Panel, {
 	},
 
 	_error: function(file, message) {
-		console.log(message);
+
 	},
 
 	_success: function(file, response) {
@@ -181,20 +185,15 @@ Ext.extend(userfiles.panel.Files,MODx.Panel, {
 
 		switch (true) {
 			case !!userfiles.config.resource:
-				console.log('resource');
-
-				//component1.remove('button');
-
+				/*component1.remove('button');*/
 				component2 = [];
 				break;
 			case !!userfiles.config.user:
-				console.log('user');
 				component2 = [];
 				break;
 			default:
 				break;
 		}
-
 
 		var add = {
 			button: {
@@ -361,7 +360,7 @@ Ext.extend(userfiles.panel.Files,MODx.Panel, {
 				layout: 'fit',
 				items: [{
 					xtype: 'spacer',
-					//style: 'width:1px;'
+					/*style: 'width:1px;'*/
 				}]
 			}
 		};

@@ -52,7 +52,6 @@ Ext.extend(userfiles.view.Files, MODx.DataView, {
 
     templates: {},
     windows: {},
-    linkToCopy: '',
 
     onSort: function(o) {
         var el = this.getEl();

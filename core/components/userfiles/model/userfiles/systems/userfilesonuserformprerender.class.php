@@ -5,8 +5,6 @@ class UserFilesOnUserFormPrerender extends UserFilesPlugin
 {
     public function run()
     {
-
-
         $id = $this->modx->getOption('id', $this->scriptProperties, 0, true);
         $mode = $this->modx->getOption('mode', $this->scriptProperties, modSystemEvent::MODE_NEW, true);
         if ($mode == modSystemEvent::MODE_NEW OR empty($id)) {

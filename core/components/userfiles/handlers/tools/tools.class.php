@@ -184,10 +184,6 @@ class Tools implements UserFilesToolsInterface
 				' . trim($opts['objectName']) . '.initialize(' . $config . ');
    			</script>
 		'), true);
-
-
-        //$this->modx->log(1, print_r($opts, 1));
-
     }
 
     /**

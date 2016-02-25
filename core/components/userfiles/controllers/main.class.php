@@ -17,7 +17,7 @@ class UserFilesMainManagerController extends UserFilesMainController
 
     public function getPageTitle()
     {
-        return $this->modx->lexicon('userfiles') . ' :: ' . $this->modx->lexicon('userfiles_main');
+        return $this->modx->lexicon('userfiles') . ' :: ' . $this->modx->lexicon('userfiles_desc');
     }
 
     public function getLanguageTopics()
@@ -27,7 +27,6 @@ class UserFilesMainManagerController extends UserFilesMainController
 
     public function loadCustomCssJs()
     {
-
         $this->UserFiles->Tools->loadControllerJsCss($this, array(
             'main'     => true,
             'file'     => true,

@@ -16,12 +16,20 @@ if (file_exists($productionConfig)) {
 require_once MODX_CORE_PATH . 'config/' . MODX_CONFIG_KEY . '.inc.php';
 /** @noinspection PhpIncludeInspection */
 require_once MODX_CONNECTORS_PATH . 'index.php';
-/** @var userfiles $userfiles */
-$userfiles = $modx->getService('userfiles', 'userfiles', $modx->getOption('userfiles_core_path', null,
-        $modx->getOption('core_path') . 'components/userfiles/') . 'model/userfiles/');
-$modx->lexicon->load('userfiles:default');
 
-// handle request
+$corePath = $modx->getOption('userfiles_core_path', null,
+    $modx->getOption('core_path', null, MODX_CORE_PATH) . 'components/userfiles/');
+/** @var UserFiles $UserFiles */
+$UserFiles = $modx->getService(
+    'userfiles',
+    'userfiles',
+    $corePath . 'model/userfiles/',
+    array(
+        'core_path' => $corePath
+    )
+);
+$modx->lexicon->load('userfiles:default');
+/* handle request*/
 $corePath = $modx->getOption('userfiles_core_path', null, $modx->getOption('core_path') . 'components/userfiles/');
 $path = $modx->getOption('processorsPath', $userfiles->config, $corePath . 'processors/');
 $modx->request->handleRequest(array(

@@ -1,13 +1,10 @@
-Changelog for userfiles.
+Changelog for UserFiles.
 
-1.0.0-beta
+2.0.1-beta (25.02.2016)
 ==============
-- Opimized for MODX 2.3
-- Improved processors
-- Disabled plugin and system settings
-- Improved UI
-- Added grid actions
-- Added icons in menu
-- Added search in grid
-- Grid sorting
-- Enable and disable actions
+- Add lexicon
+- Add settings
+
+2.0.0-beta
+==============
+- Initial
