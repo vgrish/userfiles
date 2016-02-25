@@ -13,12 +13,6 @@ class UserFilesOnUserFormPrerender extends UserFilesPlugin
             return;
         }
 
-        /** @var modResource $resource */
-        /*  $resource = $this->modx->getOption('resource', $this->scriptProperties, null, true);
-          if (!$this->UserFiles->Tools->isWorkingTemplates($resource)) {
-              return;
-          }*/
-
         $controller = &$this->modx->controller;
         $this->UserFiles->Tools->loadControllerJsCss($controller, array(
             'css'         => true,

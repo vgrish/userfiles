@@ -16,7 +16,6 @@ $tmp = array(
         'area'  => 'userfiles_main',
     ),
 
-
     'phpThumb_config_max_source_pixels' => array(
         'value' => '90000000',
         'xtype' => 'textfield',
@@ -40,7 +39,6 @@ $tmp = array(
         'area'  => 'userfiles_links',
     ),
 
-    //
     //временные
 
     'assets_path' => array(
