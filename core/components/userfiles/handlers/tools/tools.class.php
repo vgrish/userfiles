@@ -50,6 +50,11 @@ interface UserFilesToolsInterface
     public function loadControllerJsCss(modManagerController $controller, array $opts = array());
 
     /**
+     * @param array $opts
+     */
+    public function loadResourceJsCss(array $opts = array());
+
+    /**
      * @param     $bytes
      * @param int $precision
      *
@@ -252,10 +257,6 @@ class Tools implements UserFilesToolsInterface
             $controller->addLastJavascript($this->config['assetsUrl'] . 'vendor/dropzone/dist/dropzone.js');
         }
 
-        if (!empty($opts['clipboard'])) {
-            $controller->addLastJavascript($this->config['assetsUrl'] . 'vendor/clipboard/dist/clipboard.js');
-        }
-
         if (!empty($opts['main'])) {
             $controller->addLastJavascript($this->config['jsUrl'] . 'mgr/main/main.panel.js');
         }
@@ -399,7 +400,6 @@ class Tools implements UserFilesToolsInterface
 
         return $output;
     }
-
 
 }
 
