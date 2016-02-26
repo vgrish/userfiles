@@ -147,7 +147,10 @@ class modUserFileGetListProcessor extends modObjectGetListProcessor
             $c->where(array(
                 "{$this->classKey}.file:LIKE"           => "%{$query}%",
                 "OR:{$this->classKey}.name:LIKE"        => "%{$query}%",
-                "OR:{$this->classKey}.description:LIKE" => "%{$query}%"
+                "OR:{$this->classKey}.description:LIKE" => "%{$query}%",
+                "OR:{$this->classKey}.parent:LIKE"      => "%{$query}%",
+                "OR:{$this->classKey}.class:LIKE"       => "%{$query}%",
+                "OR:{$this->classKey}.session:LIKE"     => "%{$query}%"
             ));
         }
 
@@ -164,8 +167,7 @@ class modUserFileGetListProcessor extends modObjectGetListProcessor
 
         if (!empty($row['thumbnail'])) {
             $row['dyn_thumbnail'] = $row['thumbnail'] . '?t=' . $row['size'];
-        }
-        else {
+        } else {
             $row['dyn_thumbnail'] = null;
         }
 

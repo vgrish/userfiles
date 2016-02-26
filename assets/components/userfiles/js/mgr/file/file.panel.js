@@ -405,11 +405,13 @@ Ext.extend(userfiles.panel.Files,MODx.Panel, {
 	_doSearch: function (cb) {
 		this.view.getStore().baseParams.query = cb.getValue();
 		this.getBottomToolbar().changePage(1);
+		userfiles.tools.Hash.add('query', cb.getValue());
 	},
 
 	_clearSearch: function () {
 		this.view.getStore().baseParams.query = '';
 		this.getBottomToolbar().changePage(1);
+		userfiles.tools.Hash.remove('query');
 	},
 
 

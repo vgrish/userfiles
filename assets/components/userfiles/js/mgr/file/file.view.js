@@ -24,7 +24,15 @@ userfiles.view.Files = function(config) {
         tpl: this.templates.thumb,
 
         itemSelector: 'div.modx-browser-thumb-wrap',
-        listeners: {},
+        listeners: {
+            afterrender: function(grid) {
+                var params = userfiles.tools.Hash.get();
+                if (!!params['query']) {
+                    this.getStore().baseParams['query'] = params['query'];
+                    this.store.reload();
+                }
+            }
+        },
         prepareData: this.formatData.createDelegate(this)
     });
     userfiles.view.Files.superclass.constructor.call(this, config);
