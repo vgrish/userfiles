@@ -1,5 +1,11 @@
 Changelog for UserFiles.
 
+2.0.2-beta (26.02.2016)
+==============
+- Add ModPNotify
+- Add update.class.php
+- Add install validator
+
 2.0.1-beta (25.02.2016)
 ==============
 - Add lexicon

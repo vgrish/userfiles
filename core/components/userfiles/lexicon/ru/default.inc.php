@@ -26,7 +26,7 @@ $_lang['userfiles_title_cms_info'] = 'Подтверждение';
 $_lang['userfiles_msg_select_files'] = 'Выберите файлы';
 $_lang['userfiles_msg_needsclick'] = 'Переместите файлы сюда или нажмите, чтобы загрузить';
 
-$_lang['userfiles_dz_dictMaxFilesExceeded'] = 'Вы не можете загрузить еще больше файлов';
+$_lang['userfiles_dz_dictMaxFilesExceeded'] = 'Вы не можете загрузить больше файлов.';
 $_lang['userfiles_dz_dictFallbackMessage'] = 'Ваш браузер не поддерживает загрузки перетаскиванием файлов';
 $_lang['userfiles_dz_dictFileTooBig'] = 'Файл слишком большой ({{filesize}}MiB). Максимальный размер: {{maxFilesize}}MiB';
 $_lang['userfiles_dz_dictInvalidFileType'] = 'Вы не можете загружать файлы этого типа';

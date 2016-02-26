@@ -148,7 +148,7 @@ class UserFiles
                             'dictDefaultMessage'           => '',
                             'dictMaxFilesExceeded'         => $this->lexicon('dz_dictMaxFilesExceeded'),
                             'dictFallbackMessage'          => $this->lexicon('dz_dictFallbackMessage'),
-                            'dictFileTooBi'                => $this->lexicon('dz_dictFileTooBig'),
+                            'dictFileTooBig'                => $this->lexicon('dz_dictFileTooBig'),
                             'dictInvalidFileType'          => $this->lexicon('dz_dictInvalidFileType'),
                             'dictResponseError'            => $this->lexicon('dz_dictResponseError'),
                             'dictCancelUpload'             => $this->lexicon('dz_dictCancelUpload'),

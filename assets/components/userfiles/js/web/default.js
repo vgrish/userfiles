@@ -108,6 +108,7 @@ var UserFilesForm = {
                 if (dropzoneConfig.clickable && !$(dropzoneConfig.clickable).get(0)) {
                     delete dropzoneConfig.clickable;
                 }
+
                 dropzoneConfig.previewTemplate = UserFilesTemplate.get(dropzoneConfig.template || 'base');
 
                 dropzoneConfig.init = function() {
@@ -147,7 +148,6 @@ var UserFilesForm = {
                             } else if (!r.success) {
                                 UserFilesMessage.error('', r.message);
                             }
-
                         }
                     });
 
