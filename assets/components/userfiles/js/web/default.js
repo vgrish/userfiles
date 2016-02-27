@@ -91,10 +91,10 @@ var UserFilesForm = {
             document.writeln('<script src="' + config.assetsBaseUrl + 'components/modpnotify/build/pnotify.custom.js"><\/script>');
         }
 
-        /* if (!$.pnotify) {
-         document.writeln('<style data-compiled-css>@import url(assets/components/modpnotify/build/pnotify.custom.css); </style>');
-         document.writeln('<script src="assets/components/modpnotify/build/pnotify.custom.js"><\/script>');
-         }*/
+        if (!$.ui) {
+            document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/jqueryui/custom/jquery-ui.min.css); </style>');
+            document.writeln('<script src="' + config.assetsUrl + 'vendor/jqueryui/custom/jquery-ui.min.js"><\/script>');
+        }
 
         $(document).ready(function() {
 
@@ -220,6 +220,74 @@ var UserFilesForm = {
                     }
                 }, this);
 
+                /* add sort */
+                if (!!dropzoneConfig.sorting) {
+
+                    $(this).sortable({
+                        items:'.dz-preview',
+                        cursor: 'move',
+                        opacity: 0.5,
+                        containment: 'parent',
+                        distance: 20,
+                        tolerance: 'pointer',
+
+                        start: function (e, ui) {
+                            var start = [];
+                            $($(e.target).get(0)).children().each(function (i) {
+                                var $this = $(this);
+                                if (!$this.data('userfilesId')) {
+                                    return true;
+                                }
+                                start.push($this.data('userfilesId'));
+                            });
+
+                            $(this).data().uiSortable.start = start;
+                        },
+
+                        update: function(e, ui) {
+                            var start = $(this).data().uiSortable.start || [];
+                            var end = [];
+
+                            $($(e.target).get(0)).children().each(function (i) {
+                                var $this = $(this);
+
+                                if (!$this.data('userfilesId')) {
+                                    return true;
+                                }
+
+                                end.push($this.data('userfilesId'));
+                            });
+
+                            var ids =UserFilesForm._array_diff_assoc(
+                                start, end
+                            );
+
+                            if (ids.length >= 2) {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: dropzoneConfig.url,
+                                    data: {
+                                        action: 'file/sort',
+                                        ids: ids,
+                                        propkey: dropzoneConfig.params.propkey || '',
+                                        ctx: dropzoneConfig.params.ctx || ''
+                                    },
+                                    dataType: "json",
+                                    success: function(r) {
+                                        if (!r.success) {
+                                            UserFilesMessage.error('', r.message);
+                                        }
+                                    },
+                                    failure: function(r) {
+
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+
+
             });
 
             PNotify.prototype.options.styling = "bootstrap3";
@@ -272,7 +340,18 @@ var UserFilesForm = {
 
     _removedfile: function(file) {
 
+    },
+
+    _array_diff_assoc: function(arr1, arr2) {
+        var results = [];
+        for (var i = 0; i < arr1.length; i++) {
+            if (arr1[i] != arr2[i]) {
+                results.push(arr2[i]);
+            }
+        }
+        return results;
     }
+
 
 };
 
