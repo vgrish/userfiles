@@ -1,11 +1,11 @@
 <?php
 
-if (!$object->xpdo) {
-    return false;
+/** @var $modx modX */
+if (!$modx = $object->xpdo AND !$object->xpdo instanceof modX) {
+    return true;
 }
-/** @var modX $modx */
-$modx =& $object->xpdo;
 
+/** @var $options */
 switch ($options[xPDOTransport::PACKAGE_ACTION]) {
     case xPDOTransport::ACTION_INSTALL:
     case xPDOTransport::ACTION_UPGRADE:
