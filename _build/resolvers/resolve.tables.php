@@ -21,6 +21,11 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
             $manager->createObjectContainer($tmp);
         }
 
+        $level = $modx->getLogLevel();
+        $modx->setLogLevel(xPDO::LOG_LEVEL_FATAL);
+        $manager->addField('UserFile', 'mime', array('after' => 'file'));
+        $modx->setLogLevel($level);
+
         break;
     case xPDOTransport::ACTION_UNINSTALL:
         break;

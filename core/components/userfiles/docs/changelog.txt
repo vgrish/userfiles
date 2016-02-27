@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.0.3-beta (27.02.2016)
+==============
+- Improved compatibility with the old table
+
 2.0.2-beta (26.02.2016)
 ==============
 - Add ModPNotify
