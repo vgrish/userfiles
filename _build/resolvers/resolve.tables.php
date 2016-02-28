@@ -23,7 +23,11 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
 
         $level = $modx->getLogLevel();
         $modx->setLogLevel(xPDO::LOG_LEVEL_FATAL);
+
         $manager->addField('UserFile', 'mime', array('after' => 'file'));
+        $manager->addField('UserFile', 'context', array('after' => 'file'));
+        $manager->addField('UserFile', 'rank', array('after' => 'file'));
+
         $modx->setLogLevel($level);
 
         break;

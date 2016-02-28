@@ -1,5 +1,13 @@
 Changelog for UserFiles.
 
+2.0.5-beta (28.02.2016)
+==============
+- Improved compatibility with the old table
+- Add setting for duplicate search
+- Fix copy link
+- Fix get mime-type for thumbnails
+- Fix work with remote sources
+
 2.0.4-beta (27.02.2016)
 ==============
 - Add sort

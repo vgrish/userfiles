@@ -221,20 +221,19 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
             return $this->UserFiles->lexicon('err_file_ns');
         }
 
+        $dsFields = $this->UserFiles->getOption('duplicate_search_fields', null, 'parent,class,list,hash,source', true);
+        $dsFields = $this->UserFiles->explodeAndClean($dsFields);
+
         $q = $this->modx->newQuery($this->classKey);
-        $q->where(array(
-            'parent' => $this->object->get('parent'),
-            'class'  => $this->object->get('class'),
-            'list'   => $this->object->get('list'),
-            'hash'   => $this->object->get('hash'),
-        ));
+        foreach ($dsFields as $k) {
+            $q->where(array($k => $this->object->get($k)));
+        }
 
         if (!empty($this->modx->user->id)) {
             $q->where(array(
                 'createdby' => $this->modx->user->id,
             ));
-        }
-        else {
+        } else {
             $q->where(array(
                 'session' => session_id(),
             ));
@@ -244,6 +243,11 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
             return $this->UserFiles->lexicon('err_file_exists', array('file' => $this->data['name']));
         }
 
+        $path = '';
+        foreach (explode('/', rtrim($this->object->get('path'), '/')) as $dir) {
+            $path .= $dir . '/';
+            $this->mediaSource->createContainer($path, '/');
+        }
         $this->mediaSource->createContainer($this->object->get('path'), '/');
         $this->mediaSource->errors = array();
         if ($this->mediaSource instanceof modFileMediaSource) {
@@ -256,8 +260,17 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
                 copy($this->data['tmp_name'], urldecode($file));
             }
         } else {
-            $this->data['name'] = $this->object->get('name');
-            $file = $this->mediaSource->uploadObjectsToContainer($this->object->get('path'), array($this->data));
+
+
+            $file = $this->mediaSource->uploadObjectsToContainer(
+                $this->object->get('path'),
+                array(
+                    array(
+                        'name'     => $this->object->get('file'),
+                        'tmp_name' => $this->data['tmp_name']
+                    )
+                )
+            );
         }
         unlink($this->data['tmp_name']);
 

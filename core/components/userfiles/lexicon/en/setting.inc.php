@@ -50,3 +50,6 @@ $_lang['setting_userfiles_working_templates_desc'] = 'Список id шабло
 $_lang['setting_userfiles_chunk_link_file'] = 'Чанк ссылки на файл';
 $_lang['setting_userfiles_chunk_link_image'] = 'Чанк ссылки на изображение';
 
+$_lang['setting_duplicate_search_fields'] = 'Поиск дубликатов';
+$_lang['setting_duplicate_search_fields_desc'] = 'Список ключей таблицы "UserFile" через запятую, для поиска дубликатов файлов. По умолчанию "parent,class,list,hash,source"';
+

@@ -328,6 +328,7 @@ Ext.extend(userfiles.view.Files, MODx.DataView, {
                                             m.add({
                                                 cls: 'userfiles-menu-item-link',
                                                 text: data.text,
+                                                link: data.link,
                                                 listeners: {
                                                     click: {
                                                         fn: function() {
@@ -343,7 +344,7 @@ Ext.extend(userfiles.view.Files, MODx.DataView, {
                                                                 }
 
                                                                 var textareaId = 'userfiles-textarea-copy';
-                                                                Ext.DomHelper.append(div, ['<textarea id="', textareaId, '">', data.link, '</textarea>'].join(''), true);
+                                                                Ext.DomHelper.append(div, ['<textarea id="', textareaId, '">', this.link, '</textarea>'].join(''), true);
 
                                                                 var cut = document.querySelector('#' + textareaId);
                                                                 cut.select();

@@ -5,14 +5,19 @@ $settings = array();
 $tmp = array(
 
 
-    'working_templates' => array(
+    'working_templates'       => array(
         'value' => '1,2,3',
         'xtype' => 'textfield',
         'area'  => 'userfiles_main',
     ),
-    'source_default'    => array(
+    'source_default'          => array(
         'value' => '0',
         'xtype' => 'modx-combo-source',
+        'area'  => 'userfiles_main',
+    ),
+    'duplicate_search_fields' => array(
+        'value' => 'parent,class,list,hash,source',
+        'xtype' => 'textarea',
         'area'  => 'userfiles_main',
     ),
 
@@ -41,26 +46,24 @@ $tmp = array(
     ),
 
 
-
-
     //временные
-/*
-    'assets_path' => array(
-        'value' => '{base_path}userfiles/assets/components/userfiles/',
-        'xtype' => 'textfield',
-        'area'  => 'userfiles_temp',
-    ),
-    'assets_url'  => array(
-        'value' => '/userfiles/assets/components/userfiles/',
-        'xtype' => 'textfield',
-        'area'  => 'userfiles_temp',
-    ),
-    'core_path'   => array(
-        'value' => '{base_path}userfiles/core/components/userfiles/',
-        'xtype' => 'textfield',
-        'area'  => 'userfiles_temp',
-    ),
-*/
+    /*
+        'assets_path' => array(
+            'value' => '{base_path}userfiles/assets/components/userfiles/',
+            'xtype' => 'textfield',
+            'area'  => 'userfiles_temp',
+        ),
+        'assets_url'  => array(
+            'value' => '/userfiles/assets/components/userfiles/',
+            'xtype' => 'textfield',
+            'area'  => 'userfiles_temp',
+        ),
+        'core_path'   => array(
+            'value' => '{base_path}userfiles/core/components/userfiles/',
+            'xtype' => 'textfield',
+            'area'  => 'userfiles_temp',
+        ),
+    */
 
     //временные
 );
