@@ -27,9 +27,19 @@ class modWebUserFileGetListProcessor extends modUserFileGetListProcessor
             return $this->UserFiles->lexicon('err_propkey_ns');
         }
 
-        $properties = $this->UserFiles->getProperties($propKey);
+        $properties = $this->getProperty('properties', $this->UserFiles->getProperties($propKey));
+        $properties = (is_string($properties) AND strpos($properties, '{') === 0)
+            ? $this->modx->fromJSON($properties)
+            : $properties;
         if (empty($properties)) {
             return $this->UserFiles->lexicon('err_properties_ns');
+        }
+
+        if (
+            $this->UserFiles->getOption('salt', $properties, '12345678', true) !=
+            $this->UserFiles->getOption('salt', null, '12345678', true)
+        ) {
+            return $this->UserFiles->lexicon('err_lock');
         }
 
         foreach (array('class', 'parent', 'list', 'createdby', 'source', 'active', 'anonym', 'session') as $key) {

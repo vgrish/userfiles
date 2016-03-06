@@ -21,12 +21,13 @@ $class = $scriptProperties['class'] = $UserFiles->getOption('class', $scriptProp
 $parent = $scriptProperties['parent'] = $modx->getOption('parent', $scriptProperties);
 
 switch (true) {
-    default:
     case empty($parent) AND $class == 'modResource':
         $parent = $scriptProperties['parent'] = $modx->resource->id;
         break;
     case empty($parent) AND $class == 'modUser':
         $parent = $scriptProperties['parent'] = $modx->user->id;
+        break;
+    default:
         break;
 }
 
@@ -42,6 +43,7 @@ $anonym = $scriptProperties['anonym'] = (bool)$UserFiles->getOption('anonym', $s
 $tplForm = $scriptProperties['tplForm'] = $UserFiles->getOption('tplForm', $scriptProperties, 'uf.form', true);
 $objectName = $scriptProperties['objectName'] = $UserFiles->getOption('objectName', $scriptProperties, 'UserFilesForm',
     true);
+$salt = $scriptProperties['salt'] = $UserFiles->getOption('salt', $scriptProperties, '12345678', true);
 
 $dropzone = trim($modx->getOption('dropzone', $scriptProperties, '{}'));
 $dropzone = $scriptProperties['dropzone'] = strpos($dropzone, '{') === 0

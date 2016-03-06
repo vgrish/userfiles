@@ -35,9 +35,19 @@ class modWebUserFileUploadProcessor extends modUserFileUploadProcessor
             return $this->UserFiles->lexicon('err_propkey_ns');
         }
 
-        $properties = $this->UserFiles->getProperties($propKey);
+        $properties = $this->getProperty('properties', $this->UserFiles->getProperties($propKey));
+        $properties = (is_string($properties) AND strpos($properties, '{') === 0)
+            ? $this->modx->fromJSON($properties)
+            : $properties;
         if (empty($properties)) {
             return $this->UserFiles->lexicon('err_properties_ns');
+        }
+
+        if (
+            $this->UserFiles->getOption('salt', $properties, '12345678', true) !=
+            $this->UserFiles->getOption('salt', null, '12345678', true)
+        ) {
+            return $this->UserFiles->lexicon('err_lock');
         }
 
         //$this->modx->log(1, print_r($properties ,1));
@@ -46,7 +56,7 @@ class modWebUserFileUploadProcessor extends modUserFileUploadProcessor
             $this->setProperty($key, $properties[$key]);
         }
 
-        if(!$this->getProperty('anonym', false) AND empty($this->modx->user->id)) {
+        if (!$this->getProperty('anonym', false) AND empty($this->modx->user->id)) {
             return $this->UserFiles->lexicon('err_lock');
         }
 

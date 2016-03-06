@@ -20,6 +20,11 @@ $tmp = array(
         'xtype' => 'textarea',
         'area'  => 'userfiles_main',
     ),
+   /* 'salt' => array(
+        'value' => '12345678',
+        'xtype' => 'textfield',
+        'area'  => 'userfiles_main',
+    ),*/
 
 
     'phpThumb_config_max_source_pixels' => array(

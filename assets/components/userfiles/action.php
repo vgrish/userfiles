@@ -46,6 +46,7 @@ if ($modx->error->hasError() OR !($UserFiles instanceof UserFiles)) {
     @session_write_close();
     die('Error');
 }
+
 $UserFiles->initialize($ctx);
 $UserFiles->config['processorsPath'] = $UserFiles->config['processorsPath'] . 'web/';
 if (!$response = $UserFiles->runProcessor($_REQUEST['action'], $_REQUEST)) {
