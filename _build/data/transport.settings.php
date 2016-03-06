@@ -47,7 +47,7 @@ $tmp = array(
 
 
     //временные
-
+/*
         'assets_path' => array(
             'value' => '{base_path}userfiles/assets/components/userfiles/',
             'xtype' => 'textfield',
@@ -62,8 +62,8 @@ $tmp = array(
             'value' => '{base_path}userfiles/core/components/userfiles/',
             'xtype' => 'textfield',
             'area'  => 'userfiles_temp',
-        ),
-
+        ),*/
+ 
 
     //временные
 );
