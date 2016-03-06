@@ -1,3 +1,4 @@
+
 Ext.override(MODx.panel.Resource, {
 
     originals: {
@@ -22,4 +23,25 @@ Ext.override(MODx.panel.Resource, {
         return fields;
     }
 
+});
+
+Ext.ComponentMgr.onAvailable('modx-resource-tabs', function() {
+
+    var tabs = this;
+    tabs.on('beforerender', function() {
+        var is = tabs.items.items.filter(function(row) {
+            if (row.id == 'userfiles-panel-resource') {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        if (is.length == 0) {
+            tabs.add({
+                xtype: 'userfiles-panel-resource-file',
+                title: _('userfiles')
+            });
+        }
+    });
 });
