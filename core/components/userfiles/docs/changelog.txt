@@ -1,5 +1,10 @@
 Changelog for UserFiles.
 
+2.0.9-beta (10.03.2016)
+==============
+- Add template "edit"
+
+
 2.0.8-beta (10.03.2016)
 ==============
 - Remove local vendors
