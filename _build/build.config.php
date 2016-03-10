@@ -4,7 +4,7 @@
 define('PKG_NAME', 'UserFiles');
 define('PKG_NAME_LOWER', strtolower(PKG_NAME));
 
-define('PKG_VERSION', '2.0.7');
+define('PKG_VERSION', '2.0.8');
 define('PKG_RELEASE', 'beta');
 define('PKG_AUTO_INSTALL', true);
 define('PKG_NAMESPACE_PATH', '{core_path}components/' . PKG_NAME_LOWER . '/');
@@ -57,5 +57,6 @@ $BUILD_RESOLVERS = array(
     'sources',
     'settings',
     'policy',
-    'chunks'
+    'chunks',
+    'vendors',
 );

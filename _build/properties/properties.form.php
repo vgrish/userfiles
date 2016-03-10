@@ -64,7 +64,7 @@ $tmp = array(
     ),
     'jqueryJs'      => array(
         'type'  => 'textfield',
-        'value' => '[[+assetsUrl]]vendor/jquery/dist/jquery.min.js',
+        'value' => '[[+assetsUrl]]vendor/jquery/jquery.min.js',
     ),
     'actionUrl'     => array(
         'type'  => 'textfield',

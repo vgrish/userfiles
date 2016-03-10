@@ -245,7 +245,7 @@ class Tools implements UserFilesToolsInterface
         }
 
         if (!empty($opts['jquery'])) {
-            $controller->addLastJavascript($this->config['assetsUrl'] . 'vendor/jquery/dist/jquery.min.js');
+            $controller->addLastJavascript($this->config['assetsUrl'] . 'vendor/jquery/jquery.min.js');
         }
 
         if (!empty($opts['cropper'])) {

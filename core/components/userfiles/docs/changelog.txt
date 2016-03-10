@@ -1,5 +1,10 @@
 Changelog for UserFiles.
 
+2.0.8-beta (10.03.2016)
+==============
+- Remove local vendors
+- Add remote vendors
+
 2.0.7-beta (06.03.2016)
 ==============
 - Improved web processors

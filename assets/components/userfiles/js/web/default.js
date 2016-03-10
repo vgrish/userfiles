@@ -1,5 +1,5 @@
 /*
- * v 2.0.0
+ * v 2.0.8
  */
 
 var UserFilesTemplate = {
@@ -92,8 +92,7 @@ var UserFilesForm = {
         }
 
         if (!$.ui) {
-            document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/jqueryui/custom/jquery-ui.min.css); </style>');
-            document.writeln('<script src="' + config.assetsUrl + 'vendor/jqueryui/custom/jquery-ui.min.js"><\/script>');
+            document.writeln('<script src="' + config.assetsUrl + 'vendor/jqueryui/jquery-ui.min.js"><\/script>');
         }
 
         $(document).ready(function() {
