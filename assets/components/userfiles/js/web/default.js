@@ -110,15 +110,97 @@ var UserFilesTemplate = {
         var template = [];
         var all = {
             base: [{
-                label: '<span class="fa fa-arrows"></span>',
-                cssClass: '',
+                label: '',
+                icon: 'fa fa-arrows',
+                cssClass: 'userfiles-modal-btn-action',
                 hotkey: null,
-                action: null
+                action: function(d){
+                    UserFilesForm._setDragMode('setDragMode', 'move', this);
+                }
             }, {
-                label: '<span class="fa fa-crop"></span>',
+                label: '',
+                icon: 'fa fa-crop',
+                cssClass: 'userfiles-modal-btn-action',
+                hotkey: null,
+                action: function(d){
+                    UserFilesForm._setDragMode('setDragMode', 'crop', this);
+                }
+            }, {
+                label: '',
+                icon: 'fa fa-search-plus',
+                cssClass: 'userfiles-modal-btn-action',
+                hotkey: null,
+                action: function(d){
+                    UserFilesForm._setDragMode('zoom', 0.1, this);
+                }
+            }, {
+                label: '',
+                icon: 'fa fa-search-minus',
+                cssClass: 'userfiles-modal-btn-action',
+                hotkey: null,
+                action: function(d){
+                    UserFilesForm._setDragMode('zoom', -0.1, this);
+                }
+            }, {
+                label: '',
+                icon: 'fa fa-rotate-left',
+                cssClass: 'userfiles-modal-btn-action',
+                hotkey: null,
+                action: function(d){
+                    UserFilesForm._setDragMode('rotate', -90, this);
+                }
+            }, {
+                label: '',
+                icon: 'fa fa-rotate-right',
+                cssClass: 'userfiles-modal-btn-action',
+                hotkey: null,
+                action: function(d){
+                    UserFilesForm._setDragMode('rotate', 90, this);
+                }
+            }, {
+                label: '',
+                icon: 'fa fa-arrows-h',
+                cssClass: 'userfiles-modal-btn-action',
+                hotkey: null,
+                action: function(d){
+                    UserFilesForm._setDragMode('scaleX', -1, this);
+                }
+            }, {
+                label: '',
+                icon: 'fa fa-arrows-v',
+                cssClass: 'userfiles-modal-btn-action',
+                hotkey: null,
+                action: function(d){
+                    UserFilesForm._setDragMode('scaleY', -1, this);
+                }
+            }, {
+                label: '',
+                icon: 'fa fa-remove',
+                cssClass: 'userfiles-modal-btn-action',
+                hotkey: null,
+                action: function(d){
+                    UserFilesForm._setDragMode('clear', null, this);
+                }
+            }, {
+                cssClass: 'userfiles-modal-btn-break',
+            }, {
+                label: 'отменить',
+                icon: '',
                 cssClass: '',
                 hotkey: null,
-                action: null
+                action: function(d){
+                    d.close();
+                }
+            }, {
+                label: 'сохранить',
+                icon: '',
+                cssClass: 'btn-primary',
+                hotkey: null,
+                action: function(d){
+                    d.enableButtons(false);
+                    d.setClosable(false);
+                    UserFilesForm._save(this);
+                }
             }
             ]
         };
@@ -159,94 +241,6 @@ var UserFilesForm = {
             errors: []
         }
     },
-
-    _fileShow: function($this, config) {
-        var id = $this.parents('.dz-preview').data('userfiles-id');
-
-        $.ajax({
-            type: 'GET',
-            url: config.actionUrl,
-            data: {
-                action: 'file/get',
-                id: id,
-                propkey: config.propkey,
-                ctx: config.ctx
-            },
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function(r) {
-                if (r.success && r.object) {
-                    if (r.object.dyn_url) {
-                        window.open(r.object.dyn_url);
-                    }
-                } else if (!r.success) {
-                    UserFilesMessage.error('', r.message);
-                }
-            }
-        });
-    },
-
-    _fileEdit: function($this, config) {
-        var id = $this.parents('.dz-preview').data('userfiles-id');
-        $.ajax({
-            type: 'GET',
-            url: config.actionUrl,
-            data: {
-                action: 'file/get',
-                id: id,
-                propkey: config.propkey,
-                ctx: config.ctx
-            },
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function(r) {
-                if (r.success && r.object) {
-
-                    console.log(r.object);
-
-                    BootstrapDialog.show({
-                        title: null,
-                        message: UserFilesTemplate.getModal('base',r.object),
-                        buttons: UserFilesTemplate.getModalButtons('base', config),
-
-                        onshown: function(dialogRef){
-                            var $image = $('.user-files-img-edit');
-
-                            $image.cropper('destroy');
-                            $image.on({
-                                'build.cropper': function (e) {
-                                    $('.user-files-img-container').css({
-                                        'height': $(window).height() / 2
-                                    });
-                                },
-                                'built.cropper': function (e) {
-
-                                }
-                            }).cropper({
-                                aspectRatio: 1,
-                            });
-
-                            if (!$image.data('cropper')) {
-                                return;
-                            }
-
-                           /* blobURL = URL.createObjectURL(file);
-                            $image.one('built.cropper', function () {
-                                URL.revokeObjectURL(blobURL);
-                            }).cropper('reset').cropper('replace', blobURL);*/
-
-                        },
-                    }).getModalHeader().hide();
-
-                    return r.object;
-                } else if (!r.success) {
-                    UserFilesMessage.error('', r.message);
-                }
-            }
-        });
-    },
-
-
 
     initialize: function(opts) {
         var config = $.extend(true, {}, this.config, opts);
@@ -482,6 +476,7 @@ var UserFilesForm = {
                     });
                 }
 
+                Dropzone.options[config.propkey] = dropzone;
 
             });
 
@@ -490,7 +485,7 @@ var UserFilesForm = {
         });
 
 
-        $(document).on('click', 'a.user-files-action', function(e) {
+        $(document).on('click', '#' + config.propkey + ' a.user-files-action', function(e) {
             var $this = $(this);
             var action = $this.data('action');
 
@@ -501,7 +496,6 @@ var UserFilesForm = {
             e.preventDefault();
             return false;
         });
-
     },
 
     _addedfile: function(file) {
@@ -563,8 +557,144 @@ var UserFilesForm = {
             }
         }
         return results;
-    }
+    },
 
+
+    _setDragMode: function(action, param, $this) {
+        var $param = $this.dialog.options.$cropperEl.data(action);
+
+        switch (true) {
+            case action == 'scaleX' && param == $param && param > 0:
+                param = -1;
+                break;
+            case action == 'scaleX' && param == $param && param < 0:
+                param = 1;
+                break;
+            case action == 'scaleY' && param == $param && param > 0:
+                param = -1;
+                break;
+            case action == 'scaleY' && param == $param && param < 0:
+                param = 1;
+                break;
+        }
+
+        $this.dialog.options.$cropperEl.data(action, param).attr('data-' + action, param);
+        $this.dialog.options.$cropperEl.cropper(action, param);
+    },
+
+    _save: function($this) {
+
+        var data = $this.dialog.options.$cropperEl.cropper('getData');
+        var config =  $this.dialog.options.config;
+        var record =  $this.dialog.options.record;
+        if (!data) {
+            return;
+        }
+
+        $this.dialog.options.$cropperEl.cropper('getCroppedCanvas', data).toBlob(function (file) {
+
+            var formData = new FormData();
+
+            formData.append('file', file, 'file.png');
+            formData.append('action', 'file/image/update');
+            formData.append('data', JSON.stringify(data));
+            formData.append('id', record.id);
+            formData.append('propkey', config.propkey);
+            formData.append('ctx', config.ctx);
+            formData.append('crop', true);
+
+            $.ajax({
+                url: config.actionUrl,
+                dataType: 'json',
+                delay: 200,
+                type: 'POST',
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    $('#'+config.propkey).find('.dz-preview').remove();
+                    Dropzone.options[config.propkey].init();
+                    $this.dialog.close();
+                }
+            });
+        },'image/png');
+    },
+
+    _fileShow: function($this, config) {
+        var id = $this.parents('.dz-preview').data('userfiles-id');
+
+        $.ajax({
+            type: 'GET',
+            url: config.actionUrl,
+            data: {
+                action: 'file/get',
+                id: id,
+                propkey: config.propkey,
+                ctx: config.ctx
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(r) {
+                if (r.success && r.object) {
+                    if (r.object.dyn_url) {
+                        window.open(r.object.dyn_url);
+                    }
+                } else if (!r.success) {
+                    UserFilesMessage.error('', r.message);
+                }
+            }
+        });
+    },
+
+    _fileEdit: function($this, config) {
+        var id = $this.parents('.dz-preview').data('userfiles-id');
+        $.ajax({
+            type: 'GET',
+            url: config.actionUrl,
+            data: {
+                action: 'file/get',
+                id: id,
+                propkey: config.propkey,
+                ctx: config.ctx
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(r) {
+                if (r.success && r.object) {
+
+                    BootstrapDialog.show({
+                        title: null,
+                        message: UserFilesTemplate.getModal('base',r.object),
+                        buttons: UserFilesTemplate.getModalButtons('base', config),
+                        config: config,
+                        record: r.object,
+                        onshown: function(dialogRef){
+                            this.$cropperEl = $('.user-files-img-edit');
+                            this.$cropperEl.cropper('destroy');
+
+                            this.$cropperEl.on({
+                                'build.cropper': function (e) {
+                                    $('.user-files-img-container').css({
+                                        'height': $(window).height() / 2
+                                    });
+                                },
+                                'built.cropper': function (e) {
+
+                                }
+                            }).cropper({
+                            });
+
+                        },
+                    }).getModalHeader().hide();
+
+                    return r.object;
+                } else if (!r.success) {
+                    UserFilesMessage.error('', r.message);
+                }
+            }
+        });
+    },
 
 };
 

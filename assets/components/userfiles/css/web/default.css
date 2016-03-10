@@ -28,12 +28,32 @@
     display: none;
 }
 
-.dz-preview.dz-image-preview a, .dz-preview.dz-processing a {
+.dz-preview a, .dz-preview.dz-processing a {
     margin-top: 5px;
 }
 
 .userfiles-form .dz-preview.dz-processing.dz-success.dz-complete .user-files-action {
     display: block;
+}
+
+.modal .bootstrap-dialog-footer-buttons {
+    display: inline-flex;
+}
+
+.modal .bootstrap-dialog-footer-buttons .btn.userfiles-modal-btn-action {
+    width: 38px;
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    float: left;
+}
+
+.modal .bootstrap-dialog-footer-buttons .btn.userfiles-modal-btn-break {
+    visibility: hidden;
+}
+
+.modal .bootstrap-dialog-footer-buttons .btn.userfiles-modal-btn-action:hover {
+    color: #3697cd;
 }
 
 
