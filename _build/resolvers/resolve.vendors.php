@@ -15,6 +15,8 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
         }
 
         $cacheManager = $modx->getCacheManager();
+        $cacheManager->deleteTree(MODX_ASSETS_PATH . 'components/userfiles/vendor/',
+            array_merge(array('deleteTop' => true, 'skipDirs' => false, 'extensions' => array())));
 
         $vendors = array(
             array(
@@ -39,6 +41,30 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
                 'jqueryui',
                 'jqueryui',
                 'https://github.com/components/jqueryui/archive/master.zip',
+                MODX_ASSETS_PATH . 'components/userfiles/vendor/'
+            ),
+            array(
+                'bs3modal',
+                'bs3modal',
+                'https://github.com/vgrish/bootstrap-modal/archive/master.zip',
+                MODX_ASSETS_PATH . 'components/userfiles/vendor/'
+            ),
+            array(
+                'bs3dialog',
+                'bs3dialog',
+                'https://github.com/nakupanda/bootstrap3-dialog/archive/master.zip',
+                MODX_ASSETS_PATH . 'components/userfiles/vendor/'
+            ),
+            array(
+                'canvastoblob',
+                'canvastoblob',
+                'https://github.com/blueimp/JavaScript-Canvas-to-Blob/archive/master.zip',
+                MODX_ASSETS_PATH . 'components/userfiles/vendor/'
+            ),
+            array(
+                'fontawesome',
+                'fontawesome',
+                'https://github.com/FortAwesome/Font-Awesome/archive/master.zip',
                 MODX_ASSETS_PATH . 'components/userfiles/vendor/'
             ),
 

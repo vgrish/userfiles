@@ -1,10 +1,14 @@
 /*
- * v 2.0.9
+ * v 2.1.0
  */
 
 var UserFilesTemplate = {
 
-    get: function(name) {
+    get: function(name, data) {
+
+        if (!data) {
+            data = [];
+        }
         var template = [];
         var all = {
             base: [
@@ -78,6 +82,51 @@ var UserFilesTemplate = {
         }
 
         return template.join('');
+    },
+
+    getModal: function(name, data) {
+        if (!data) {
+            data = [];
+        }
+        var template = [];
+        var all = {
+            base: [
+                '<div class="user-files-img-container">',
+                '<img class="user-files-img-edit" src="'+data.dyn_url+'" alt="">',
+                '</div>'
+            ],
+        };
+
+        if (all[name]) {
+            template = all[name];
+        }
+        return template.join('');
+    },
+
+    getModalButtons: function(name, data) {
+        if (!data) {
+            data = [];
+        }
+        var template = [];
+        var all = {
+            base: [{
+                label: '<span class="fa fa-arrows"></span>',
+                cssClass: '',
+                hotkey: null,
+                action: null
+            }, {
+                label: '<span class="fa fa-crop"></span>',
+                cssClass: '',
+                hotkey: null,
+                action: null
+            }
+            ]
+        };
+
+        if (all[name]) {
+            template = all[name];
+        }
+        return template;
     }
 
 };
@@ -127,8 +176,8 @@ var UserFilesForm = {
             dataType: "json",
             success: function(r) {
                 if (r.success && r.object) {
-                    if (r.object.url) {
-                        window.open(r.object.url);
+                    if (r.object.dyn_url) {
+                        window.open(r.object.dyn_url);
                     }
                 } else if (!r.success) {
                     UserFilesMessage.error('', r.message);
@@ -155,6 +204,40 @@ var UserFilesForm = {
 
                     console.log(r.object);
 
+                    BootstrapDialog.show({
+                        title: null,
+                        message: UserFilesTemplate.getModal('base',r.object),
+                        buttons: UserFilesTemplate.getModalButtons('base', config),
+
+                        onshown: function(dialogRef){
+                            var $image = $('.user-files-img-edit');
+
+                            $image.cropper('destroy');
+                            $image.on({
+                                'build.cropper': function (e) {
+                                    $('.user-files-img-container').css({
+                                        'height': $(window).height() / 2
+                                    });
+                                },
+                                'built.cropper': function (e) {
+
+                                }
+                            }).cropper({
+                                aspectRatio: 1,
+                            });
+
+                            if (!$image.data('cropper')) {
+                                return;
+                            }
+
+                           /* blobURL = URL.createObjectURL(file);
+                            $image.one('built.cropper', function () {
+                                URL.revokeObjectURL(blobURL);
+                            }).cropper('reset').cropper('replace', blobURL);*/
+
+                        },
+                    }).getModalHeader().hide();
+
                     return r.object;
                 } else if (!r.success) {
                     UserFilesMessage.error('', r.message);
@@ -168,19 +251,40 @@ var UserFilesForm = {
     initialize: function(opts) {
         var config = $.extend(true, {}, this.config, opts);
 
-        if (!$.Dropzone) {
+        if (!jQuery.Dropzone) {
             document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/dropzone/dist/min/dropzone.min.css); </style>');
             document.writeln('<script src="' + config.assetsUrl + 'vendor/dropzone/dist/dropzone.js"><\/script>');
         }
 
-        if (!$.pnotify) {
+        if (!jQuery.pnotify) {
             document.writeln('<style data-compiled-css>@import url(' + config.assetsBaseUrl + 'components/modpnotify/build/pnotify.custom.css); </style>');
             document.writeln('<script src="' + config.assetsBaseUrl + 'components/modpnotify/build/pnotify.custom.js"><\/script>');
         }
 
-        if (!$.ui) {
+        if (!jQuery.ui) {
             document.writeln('<script src="' + config.assetsUrl + 'vendor/jqueryui/jquery-ui.min.js"><\/script>');
         }
+
+        if (!jQuery.cropper) {
+            document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/cropper/dist/cropper.min.css); </style>');
+            document.writeln('<script src="' + config.assetsUrl + 'vendor/cropper/dist/cropper.min.js"><\/script>');
+        }
+
+        if (!jQuery().toBlob) {
+            document.writeln('<script src="' + config.assetsUrl + 'vendor/canvastoblob/js/canvas-to-blob.min.js"><\/script>');
+        }
+
+        if (!jQuery.Modal) {
+            document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/bs3modal/dist/css/bootstrap-modal.css); </style>');
+            document.writeln('<script src="' + config.assetsUrl + 'vendor/bs3modal/dist/js/bootstrap-modal.js"><\/script>');
+        }
+
+        if (!jQuery.BootstrapDialogModal) {
+            document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/bs3dialog/dist/css/bootstrap-dialog.min.css); </style>');
+            document.writeln('<script src="' + config.assetsUrl + 'vendor/bs3dialog/dist/js/bootstrap-dialog.min.js"><\/script>');
+        }
+
+        document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/fontawesome/css/font-awesome.min.css); </style>');
 
 
         $(document).ready(function() {

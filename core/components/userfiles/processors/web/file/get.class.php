@@ -21,6 +21,14 @@ class modWebUserFileGetProcessor extends modObjectGetProcessor
         return parent::process();
     }
 
+    public function cleanup()
+    {
+        $row = $this->object->toArray();
+        $row['dyn_url'] = $row['url'] . '?t=' . $row['size'];
+
+        return $this->success('', $row);
+    }
+
 }
 
 return 'modWebUserFileGetProcessor';

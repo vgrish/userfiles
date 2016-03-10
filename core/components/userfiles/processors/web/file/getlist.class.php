@@ -68,16 +68,6 @@ class modWebUserFileGetListProcessor extends modUserFileGetListProcessor
         $row['format_size'] = $this->UserFiles->Tools->formatFileSize($row['size']);
         $row['format_createdon'] = $this->UserFiles->Tools->formatFileCreatedon($row['createdon']);
 
-
-       /* $row['actions'] = array();
-
-        $row['actions'][] = 'fileShow';
-
-        if (strpos($row['mime'], 'image') !== false) {
-            $row['actions'][] = 'fileEdit';
-            $row['actions'][] = 'thumbnailCreate';
-        }*/
-
         return $row;
     }
 
