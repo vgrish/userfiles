@@ -180,7 +180,8 @@ class Tools implements UserFilesToolsInterface
             'assetsBaseUrl' => str_replace($pls['pl'], $pls['vl'], $opts['assetsBaseUrl']),
             'assetsUrl'     => str_replace($pls['pl'], $pls['vl'], $opts['assetsUrl']),
             'actionUrl'     => str_replace($pls['pl'], $pls['vl'], $opts['actionUrl']),
-            'dropzone'      => $opts['dropzone'],
+            'dropzone'      => (array)$opts['dropzone'],
+            'modal'         => (array)$opts['modal'],
             'propkey'       => "{$this->config['propkey']}",
             'ctx'           => "{$this->modx->context->get('key')}"
         ));

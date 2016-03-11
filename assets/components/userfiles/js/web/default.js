@@ -92,7 +92,7 @@ var UserFilesTemplate = {
         var all = {
             base: [
                 '<div class="user-files-img-container">',
-                '<img class="user-files-img-edit" src="'+data.dyn_url+'" alt="">',
+                '<img class="user-files-img-edit" src="' + data.dyn_url + '" alt="">',
                 '</div>'
             ],
         };
@@ -114,7 +114,7 @@ var UserFilesTemplate = {
                 icon: 'fa fa-arrows',
                 cssClass: 'userfiles-modal-btn-action',
                 hotkey: null,
-                action: function(d){
+                action: function(d) {
                     UserFilesForm._setDragMode('setDragMode', 'move', this);
                 }
             }, {
@@ -122,7 +122,7 @@ var UserFilesTemplate = {
                 icon: 'fa fa-crop',
                 cssClass: 'userfiles-modal-btn-action',
                 hotkey: null,
-                action: function(d){
+                action: function(d) {
                     UserFilesForm._setDragMode('setDragMode', 'crop', this);
                 }
             }, {
@@ -130,7 +130,7 @@ var UserFilesTemplate = {
                 icon: 'fa fa-search-plus',
                 cssClass: 'userfiles-modal-btn-action',
                 hotkey: null,
-                action: function(d){
+                action: function(d) {
                     UserFilesForm._setDragMode('zoom', 0.1, this);
                 }
             }, {
@@ -138,7 +138,7 @@ var UserFilesTemplate = {
                 icon: 'fa fa-search-minus',
                 cssClass: 'userfiles-modal-btn-action',
                 hotkey: null,
-                action: function(d){
+                action: function(d) {
                     UserFilesForm._setDragMode('zoom', -0.1, this);
                 }
             }, {
@@ -146,7 +146,7 @@ var UserFilesTemplate = {
                 icon: 'fa fa-rotate-left',
                 cssClass: 'userfiles-modal-btn-action',
                 hotkey: null,
-                action: function(d){
+                action: function(d) {
                     UserFilesForm._setDragMode('rotate', -90, this);
                 }
             }, {
@@ -154,7 +154,7 @@ var UserFilesTemplate = {
                 icon: 'fa fa-rotate-right',
                 cssClass: 'userfiles-modal-btn-action',
                 hotkey: null,
-                action: function(d){
+                action: function(d) {
                     UserFilesForm._setDragMode('rotate', 90, this);
                 }
             }, {
@@ -162,7 +162,7 @@ var UserFilesTemplate = {
                 icon: 'fa fa-arrows-h',
                 cssClass: 'userfiles-modal-btn-action',
                 hotkey: null,
-                action: function(d){
+                action: function(d) {
                     UserFilesForm._setDragMode('scaleX', -1, this);
                 }
             }, {
@@ -170,7 +170,7 @@ var UserFilesTemplate = {
                 icon: 'fa fa-arrows-v',
                 cssClass: 'userfiles-modal-btn-action',
                 hotkey: null,
-                action: function(d){
+                action: function(d) {
                     UserFilesForm._setDragMode('scaleY', -1, this);
                 }
             }, {
@@ -178,7 +178,7 @@ var UserFilesTemplate = {
                 icon: 'fa fa-remove',
                 cssClass: 'userfiles-modal-btn-action',
                 hotkey: null,
-                action: function(d){
+                action: function(d) {
                     UserFilesForm._setDragMode('clear', null, this);
                 }
             }, {
@@ -188,7 +188,7 @@ var UserFilesTemplate = {
                 icon: 'fa fa-times',
                 cssClass: 'btn-danger',
                 hotkey: null,
-                action: function(d){
+                action: function(d) {
                     d.close();
                 }
             }, {
@@ -196,13 +196,13 @@ var UserFilesTemplate = {
                 icon: 'fa fa-upload',
                 cssClass: 'btn-primary',
                 hotkey: null,
-                action: function(d){
+                autospin: true,
+                action: function(d) {
                     d.enableButtons(false);
                     d.setClosable(false);
                     UserFilesForm._save(this);
                 }
-            }
-            ]
+            }]
         };
 
         if (all[name]) {
@@ -413,16 +413,16 @@ var UserFilesForm = {
                 if (!!dropzoneConfig.sorting) {
 
                     $(this).sortable({
-                        items:'.dz-preview',
+                        items: '.dz-preview',
                         cursor: 'move',
                         opacity: 0.5,
                         containment: 'parent',
                         distance: 20,
                         tolerance: 'pointer',
 
-                        start: function (e, ui) {
+                        start: function(e, ui) {
                             var start = [];
-                            $($(e.target).get(0)).children().each(function (i) {
+                            $($(e.target).get(0)).children().each(function(i) {
                                 var $this = $(this);
                                 if (!$this.data('userfilesId')) {
                                     return true;
@@ -437,7 +437,7 @@ var UserFilesForm = {
                             var start = $(this).data().uiSortable.start || [];
                             var end = [];
 
-                            $($(e.target).get(0)).children().each(function (i) {
+                            $($(e.target).get(0)).children().each(function(i) {
                                 var $this = $(this);
 
                                 if (!$this.data('userfilesId')) {
@@ -447,7 +447,7 @@ var UserFilesForm = {
                                 end.push($this.data('userfilesId'));
                             });
 
-                            var ids =UserFilesForm._array_diff_assoc(
+                            var ids = UserFilesForm._array_diff_assoc(
                                 start, end
                             );
 
@@ -585,13 +585,13 @@ var UserFilesForm = {
     _save: function($this) {
 
         var data = $this.dialog.options.$cropperEl.cropper('getData');
-        var config =  $this.dialog.options.config;
-        var record =  $this.dialog.options.record;
+        var config = $this.dialog.options.config;
+        var record = $this.dialog.options.record;
         if (!data) {
             return;
         }
 
-        $this.dialog.options.$cropperEl.cropper('getCroppedCanvas', data).toBlob(function (file) {
+        $this.dialog.options.$cropperEl.cropper('getCroppedCanvas', data).toBlob(function(file) {
 
             var formData = new FormData();
 
@@ -613,12 +613,12 @@ var UserFilesForm = {
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    $('#'+config.propkey).find('.dz-preview').remove();
+                    $('#' + config.propkey).find('.dz-preview').remove();
                     Dropzone.options[config.propkey].init();
                     $this.dialog.close();
                 }
             });
-        },'image/png');
+        }, 'image/png');
     },
 
     _fileShow: function($this, config) {
@@ -649,6 +649,7 @@ var UserFilesForm = {
 
     _fileEdit: function($this, config) {
         var id = $this.parents('.dz-preview').data('userfiles-id');
+
         $.ajax({
             type: 'GET',
             url: config.actionUrl,
@@ -665,25 +666,24 @@ var UserFilesForm = {
 
                     BootstrapDialog.show({
                         title: null,
-                        message: UserFilesTemplate.getModal('base',r.object),
-                        buttons: UserFilesTemplate.getModalButtons('base', config),
+                        message: UserFilesTemplate.getModal(config.modal.template || 'base', r.object),
+                        buttons: UserFilesTemplate.getModalButtons(config.modal.buttons || 'base', config),
                         config: config,
                         record: r.object,
-                        onshown: function(dialogRef){
+                        onshown: function(dialogRef) {
                             this.$cropperEl = $('.user-files-img-edit');
                             this.$cropperEl.cropper('destroy');
 
                             this.$cropperEl.on({
-                                'build.cropper': function (e) {
+                                'build.cropper': function(e) {
                                     $('.user-files-img-container').css({
                                         'height': $(window).height() / 2
                                     });
                                 },
-                                'built.cropper': function (e) {
+                                'built.cropper': function(e) {
 
                                 }
-                            }).cropper({
-                            });
+                            }).cropper({});
 
                         },
                     }).getModalHeader().hide();

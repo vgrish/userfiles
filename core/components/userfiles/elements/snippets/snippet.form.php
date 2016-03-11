@@ -49,6 +49,10 @@ $dropzone = trim($modx->getOption('dropzone', $scriptProperties, '{}'));
 $dropzone = $scriptProperties['dropzone'] = strpos($dropzone, '{') === 0
     ? $modx->fromJSON($dropzone)
     : array();
+$modal = trim($modx->getOption('modal', $scriptProperties, '{}'));
+$modal = $scriptProperties['modal'] = strpos($modal, '{') === 0
+    ? $modx->fromJSON($modal)
+    : array();
 
 $propkey = $scriptProperties['propkey'] = $modx->getOption('propkey', $scriptProperties,
     sha1(serialize($scriptProperties)), true);
