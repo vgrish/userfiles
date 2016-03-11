@@ -36,9 +36,9 @@
     display: block;
 }
 
-.modal .bootstrap-dialog-footer-buttons {
+/*.modal .bootstrap-dialog-footer-buttons {
     display: inline-flex;
-}
+}*/
 
 .modal .bootstrap-dialog-footer-buttons .btn.userfiles-modal-btn-action {
     width: 38px;
@@ -55,6 +55,11 @@
 .modal .bootstrap-dialog-footer-buttons .btn.userfiles-modal-btn-action:hover {
     color: #3697cd;
 }
+
+.modal .user-files-img-container {
+    overflow: hidden;
+}
+
 
 
 /*

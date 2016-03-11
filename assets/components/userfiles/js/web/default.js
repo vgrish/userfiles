@@ -184,16 +184,16 @@ var UserFilesTemplate = {
             }, {
                 cssClass: 'userfiles-modal-btn-break',
             }, {
-                label: 'отменить',
-                icon: '',
-                cssClass: '',
+                label: '',
+                icon: 'fa fa-times',
+                cssClass: 'btn-danger',
                 hotkey: null,
                 action: function(d){
                     d.close();
                 }
             }, {
-                label: 'сохранить',
-                icon: '',
+                label: '',
+                icon: 'fa fa-upload',
                 cssClass: 'btn-primary',
                 hotkey: null,
                 action: function(d){
