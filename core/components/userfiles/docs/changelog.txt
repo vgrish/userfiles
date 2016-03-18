@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.1.2-beta (18.03.2016)
+==============
+- Add setting "imageMainThumbnail"
+
 2.1.1-beta (18.03.2016)
 ==============
 - Fix resource tab (AjaxManager)

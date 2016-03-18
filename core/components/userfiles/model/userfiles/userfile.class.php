@@ -235,16 +235,32 @@ class UserFile extends xPDOSimpleObject
         return 'jpg';
     }
 
+
+    /**
+     * @return bool|mixed
+     */
+    public function getMainThumbnail()
+    {
+        if (!$this->initialized()) {
+            return false;
+        }
+        if (isset($this->mediaSourceProperties['imageMainThumbnail']) AND !empty($this->mediaSourceProperties['imageMainThumbnail'])) {
+            return $this->modx->fromJSON($this->mediaSourceProperties['imageMainThumbnail']);
+        }
+
+        return false;
+    }
+
     /**
      * @param array $options
      *
      * @return bool|null
      */
-    public function makeThumbnail($options = array())
+    public function makeThumbnail($options = array(), $contents = null)
     {
         $this->mediaSource->errors = array();
         $filename = $this->get('path') . $this->get('file');
-        $contents = $this->mediaSource->getObjectContents($filename);
+        $contents = $contents ?:$this->mediaSource->getObjectContents($filename);
 
         if (!is_array($contents)) {
             return "[UserFiles] Could not retrieve contents of file {$filename} from media source.";

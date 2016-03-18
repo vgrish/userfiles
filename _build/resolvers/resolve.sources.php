@@ -62,6 +62,13 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
                     'lexicon' => 'userfiles:setting',
                     'value'   => '[{"w":120,"h":90,"q":90,"zc":"1","bg":"fff"}]',
                 ),
+                /*'imageMainThumbnail'  => array(
+                    'name'    => 'imageMainThumbnail',
+                    'desc'    => 'userfiles_source_main_thumbnail_desc',
+                    'type'    => 'textarea',
+                    'lexicon' => 'userfiles:setting',
+                    'value'   => '{"w":800,"h":800,"q":90,"zc":"1","bg":"fff"}',
+                ),*/
                 'maxUploadSize'    => array(
                     'name'    => 'maxUploadSize',
                     'desc'    => 'userfiles_source_maxUploadSize_desc',

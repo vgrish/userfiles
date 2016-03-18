@@ -22,6 +22,9 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
     /** @var null $data */
     protected $data = null;
 
+    /**
+     * @return bool|null|string
+     */
     public function initialize()
     {
         if (!$this->modx->hasPermission($this->permission)) {
@@ -52,7 +55,37 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
             return $checkFile;
         }
 
+        $this->mainThumbnail();
+
         return true;
+    }
+
+    /**
+     *
+     */
+    public function mainThumbnail()
+    {
+        $mainThumbnail = $this->object->getMainThumbnail();
+        $imageExtensions = $this->object->getImageExtensions();
+        if ($mainThumbnail AND !empty($imageExtensions) AND in_array($this->data['type'], $imageExtensions)) {
+            $mainThumbnail = array_merge(
+                $this->object->imageDefaultThumbnail,
+                $mainThumbnail
+            );
+            if ($mainThumbnail AND $thumbnail = $this->object->makeThumbnail(
+                    $mainThumbnail, array('content' => file_get_contents($this->data['tmp_name'])))
+            ) {
+                if (file_put_contents($this->data['tmp_name'], $thumbnail)) {
+                    $this->data = $this->getData(array(
+                        'tmp_name' => $this->data['tmp_name'],
+                        'name'     => $this->data['name'] . '.' . $this->data['type']
+                    ));
+                } else {
+                    $this->modx->log(modX::LOG_LEVEL_ERROR, '[UserFiles] Could not generate thumbnail for main image');
+                }
+            }
+
+        }
     }
 
     /** {@inheritDoc} */
@@ -69,20 +102,18 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
         return $initialized;
     }
 
-    protected function checkFile()
+    /**
+     * @param array $file
+     *
+     * @return array|string
+     */
+    protected function getData(array $file = array())
     {
-        if (empty($_FILES['file'])) {
+        $tnm = $this->modx->getOption('tmp_name', $file);
+        $name = $this->modx->getOption('name', $file);
+        if (!file_exists($tnm)) {
             return $this->UserFiles->lexicon('err_file_ns');
         }
-        if (!file_exists($_FILES['file']['tmp_name']) OR !is_uploaded_file($_FILES['file']['tmp_name'])) {
-            return $this->UserFiles->lexicon('err_file_ns');
-        }
-        if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
-            return $this->UserFiles->lexicon('err_file_ns');
-        }
-
-        $tnm = $_FILES['file']['tmp_name'];
-        $name = $_FILES['file']['name'];
 
         $size = @filesize($tnm);
         $mime = @finfo_file(finfo_open(FILEINFO_MIME_TYPE), $tnm);
@@ -99,7 +130,7 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
         $name = rtrim(str_replace($type, '', $name), '.');
         $hash = hash_file('sha1', $tnm);
 
-        $this->data = array(
+        $data = array(
             'tmp_name'   => $tnm,
             'size'       => $size,
             'mime'       => $mime,
@@ -115,8 +146,30 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
             ))
         );
 
-        return true;
+        return $data;
+    }
 
+    /**
+     * @return bool|string
+     */
+    protected function checkFile()
+    {
+        if (empty($_FILES['file'])) {
+            return $this->UserFiles->lexicon('err_file_ns');
+        }
+        if (!file_exists($_FILES['file']['tmp_name']) OR !is_uploaded_file($_FILES['file']['tmp_name'])) {
+            return $this->UserFiles->lexicon('err_file_ns');
+        }
+        if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+            return $this->UserFiles->lexicon('err_file_ns');
+        }
+
+        $this->data = $this->getData(array(
+            'tmp_name' => $_FILES['file']['tmp_name'],
+            'name'     => $_FILES['file']['name']
+        ));
+
+        return true;
     }
 
     /** {@inheritDoc} */
@@ -284,6 +337,9 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
         return parent::beforeSave();
     }
 
+    /**
+     * @return bool
+     */
     public function afterSave()
     {
         $children = $this->object->getMany('Children');
