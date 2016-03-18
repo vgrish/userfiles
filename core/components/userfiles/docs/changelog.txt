@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.1.1-beta (18.03.2016)
+==============
+- Fix resource tab (AjaxManager)
+
 2.1.0-beta (10.03.2016)
 ==============
 - Add vendors "bs3modal", "bs3dialog", "canvastoblob"
