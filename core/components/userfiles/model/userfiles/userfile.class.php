@@ -19,7 +19,6 @@ class UserFile extends xPDOSimpleObject
         'w'  => 120,
         'h'  => 90,
         'q'  => 90,
-        'zc' => 1,
         'bg' => 'fff',
         'f'  => 'jpg'
     );

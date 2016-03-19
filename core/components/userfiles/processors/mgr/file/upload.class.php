@@ -67,7 +67,7 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
     {
         $mainThumbnail = $this->object->getMainThumbnail();
         $imageExtensions = $this->object->getImageExtensions();
-        if ($mainThumbnail AND !empty($imageExtensions) AND in_array($this->data['type'], $imageExtensions)) {
+        if (!empty($mainThumbnail) AND !empty($imageExtensions) AND in_array($this->data['type'], $imageExtensions)) {
             $mainThumbnail = array_merge(
                 $this->object->imageDefaultThumbnail,
                 $mainThumbnail
@@ -84,7 +84,6 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
                     $this->modx->log(modX::LOG_LEVEL_ERROR, '[UserFiles] Could not generate thumbnail for main image');
                 }
             }
-
         }
     }
 
