@@ -22,8 +22,8 @@ userfiles.view.Files = function(config) {
         enableDD: true,
         multiSelect: true,
         tpl: this.templates.thumb,
-
         itemSelector: 'div.modx-browser-thumb-wrap',
+        trackOver: true,
         listeners: {
             afterrender: function(grid) {
                 var params = userfiles.tools.Hash.get();

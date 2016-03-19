@@ -30,6 +30,9 @@ userfiles.panel.Files = function(config) {
 				if (!target) {
 					return false;
 				}
+				if(e.ctrlKey) {
+					return false;
+				}
 				else if (!v.isSelected(target)) {
 					v.onClick(e);
 				}
