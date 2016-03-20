@@ -68,7 +68,7 @@ $tmp = array(
             'xtype' => 'textfield',
             'area'  => 'userfiles_temp',
         ),*/
- 
+
 
     //временные
 );

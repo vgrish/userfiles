@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.1.5-beta (21.03.2016)
+==============
+- Improvement copy links
+
 2.1.4-beta (20.03.2016)
 ==============
 - Fix single select

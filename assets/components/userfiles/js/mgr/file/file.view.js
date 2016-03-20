@@ -292,6 +292,9 @@ Ext.extend(userfiles.view.Files, MODx.DataView, {
             m.add(item);
         });
 
+        var ids = this._getSelectedIds();
+        var source = this.getStore().baseParams['source'] || userfiles.config.source || MODx.config.default_media_source;
+
         m.add('-', {
             text: _('userfiles_header_link') + _('userfiles_links'),
             menu: {
@@ -308,7 +311,8 @@ Ext.extend(userfiles.view.Files, MODx.DataView, {
                             url: userfiles.config.connector_url,
                             params: {
                                 action: 'mgr/misc/link/get',
-                                id: this.data.id
+                                source: source,
+                                ids: Ext.util.JSON.encode(ids)
                             },
                             listeners: {
                                 success: {
@@ -322,7 +326,7 @@ Ext.extend(userfiles.view.Files, MODx.DataView, {
 
                                             var data = {
                                                 text: i,
-                                                link: r.object.links[i]
+                                                link: r.object.links[i].join('')
                                             };
 
                                             m.add({

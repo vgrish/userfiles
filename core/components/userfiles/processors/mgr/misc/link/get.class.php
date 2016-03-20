@@ -1,6 +1,6 @@
 <?php
 
-class modUserFilesGetLinkProcessor extends modObjectGetProcessor
+class modUserFilesGetLinkProcessor extends modProcessor
 {
     public $objectType = 'UserFile';
     public $classKey = 'UserFile';
@@ -19,20 +19,21 @@ class modUserFilesGetLinkProcessor extends modObjectGetProcessor
     /** {@inheritDoc} */
     public function initialize()
     {
-        $initialize = parent::initialize();
-
         if (!$this->modx->hasPermission($this->permission)) {
             return $this->modx->lexicon('access_denied');
         }
         $this->UserFiles = $this->modx->getService('userfiles');
         $this->UserFiles->initialize();
 
+        $this->object = $this->modx->newObject($this->classKey);
+        $this->object->set('source', $this->getProperty('source'));
+
         $checkSource = $this->checkSource();
         if ($checkSource !== true) {
             return $this->UserFiles->lexicon('err_source_initialize');
         }
 
-        return $initialize;
+        return true;
     }
 
     /** {@inheritDoc} */
@@ -46,31 +47,32 @@ class modUserFilesGetLinkProcessor extends modObjectGetProcessor
         return $initialized;
     }
 
-    /**
-     * @return array|string
-     */
-    public function cleanup()
+    public function process()
     {
-        $array = $this->object->toArray();
-        $array['link'] = 'main';
+        $ids = $this->modx->fromJSON($this->getProperty('ids'));
+        $rows = array();
 
-        $imageExtensions = $this->object->getImageExtensions();
-        if (in_array($this->object->get('type'), $imageExtensions)) {
-            $chunk = $this->modx->getOption('userfiles_chunk_link_image');
-        } else {
-            $chunk = $this->modx->getOption('userfiles_chunk_link_file');
-        }
-
-        $key = 'userfiles_chunk_link_' . $this->object->get('type');
-        if ($setting = $this->modx->getObject('modSystemSetting', array('key' => $key))) {
-            $chunk = $setting->get('value');
-        }
-
-        $rows = array($array);
+        /* main link */
         $q = $this->modx->newQuery($this->classKey);
         $q->where(array(
-            'parent' => $array['id']
+            'id:IN' => $ids
         ));
+        $q->select($this->modx->getSelectColumns($this->classKey, $this->classKey));
+        $q->select(array(
+            "link" => "CONCAT_WS('', 'main','')"
+        ));
+        $q->sortby("FIELD({$this->classKey}.id, " . implode(',', $ids) . ")");
+        $q->limit(0);
+        if ($q->prepare() && $q->stmt->execute()) {
+            $rows = (array)$q->stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        /* child link */
+        $q = $this->modx->newQuery($this->classKey);
+        $q->where(array(
+            'OR:parent:IN' => $ids
+        ));
+
         $q->select($this->modx->getSelectColumns($this->classKey, $this->classKey));
         $q->select(array(
             "link" => "CONCAT_WS('x',
@@ -79,27 +81,36 @@ class modUserFilesGetLinkProcessor extends modObjectGetProcessor
             )"
         ));
         $q->sortby("rank", 'ASC');
+        $q->sortby("FIELD({$this->classKey}.parent, " . implode(',', $ids) . ")");
         $q->limit(0);
         if ($q->prepare() && $q->stmt->execute()) {
             $rows = array_merge($rows, (array)$q->stmt->fetchAll(PDO::FETCH_ASSOC));
         }
 
+
         $links = array();
-        /** @var modChunk $chunk */
-        if ($chunk = $this->modx->getObject('modChunk', $chunk)) {
-            $chunk = $chunk->get('name');//$array['link'] = $this->UserFiles->getChunk($chunk->get('name'), $array);
-            foreach ($rows as $row) {
+        $imageExtensions = $this->object->getImageExtensions();
+
+        foreach ($rows as $row) {
+            if (in_array($row['type'], $imageExtensions)) {
+                $chunk = $this->modx->getOption('userfiles_chunk_link_image');
+            } else {
+                $chunk = $this->modx->getOption('userfiles_chunk_link_file');
+            }
+
+            /** @var modChunk $chunk */
+            if ($chunk = $this->modx->getObject('modChunk', $chunk)) {
+                $chunk = $chunk->get('name');
                 if (empty($row['link'])) {
                     $row['link'] = $row['id'];
                 }
-                $links[$row['link']] = $this->UserFiles->getChunk($chunk, $row);
+                $links[$row['link']][] = $this->UserFiles->getChunk($chunk, $row);
             }
         }
 
-        $array['links'] = $links;
-
-        return $this->success('', $array);
+        return $this->success('', array('links' => $links));
     }
+
 }
 
 return 'modUserFilesGetLinkProcessor';
