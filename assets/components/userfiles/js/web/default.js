@@ -1,5 +1,5 @@
 /*
- * v 2.1.0
+ * v 2.1.6
  */
 
 var UserFilesTemplate = {
@@ -237,6 +237,7 @@ var UserFilesForm = {
             maxThumbnailFilesize: 9999999999,
             thumbnailWidth: 120,
             thumbnailHeight: 90,
+            autoDiscover: false,
 
             errors: []
         }
@@ -296,8 +297,8 @@ var UserFilesForm = {
 
                 dropzoneConfig.previewTemplate = UserFilesTemplate.get(dropzoneConfig.template || 'base');
 
-                dropzoneConfig.init = function() {
-                    var thisDropzone = this;
+                dropzoneConfig.reload = function($this) {
+                    var thisDropzone = $this;
 
                     $.ajax({
                         type: 'GET',
@@ -312,52 +313,57 @@ var UserFilesForm = {
                         success: function(r) {
 
                             if (r.success && r.results) {
+                                thisDropzone.files = [];
+
                                 $.each(r.results, function(i, item) {
 
                                     var addFile = {
                                         name: item.file,
                                         size: item.size,
-                                        type: item.mime
+                                        type: item.mime,
+                                        accepted: true,
                                     };
 
-                                    thisDropzone.options.addedfile.call(thisDropzone, addFile);
-                                    if (item.dyn_thumbnail) {
-                                        thisDropzone.options.thumbnail.call(thisDropzone, addFile, item.dyn_thumbnail);
-                                    }
-                                    addFile.previewElement.classList.add('dz-complete');
-                                    $(addFile.previewElement).attr('data-userfiles-id', item.id);
+                                     thisDropzone.options.addedfile.call(thisDropzone, addFile);
+                                     if (item.dyn_thumbnail) {
+                                     thisDropzone.options.thumbnail.call(thisDropzone, addFile, item.dyn_thumbnail);
+                                     }
+                                     addFile.previewElement.classList.add('dz-complete');
+                                     $(addFile.previewElement).attr('data-userfiles-id', item.id);
 
-                                    if (/^image\/\w+$/.test(item.mime)) {
-                                        $(addFile.previewElement).find('a[data-action="fileEdit"]').removeClass('hidden');
-                                    }
+                                     if (/^image\/\w+$/.test(item.mime)) {
+                                     $(addFile.previewElement).find('a[data-action="fileEdit"]').removeClass('hidden');
+                                     }
 
-                                    thisDropzone.files.push(addFile);
-                                    thisDropzone.options.maxFiles--;
+                                     thisDropzone.files.push(addFile);
+
                                 });
                             } else if (!r.success) {
                                 UserFilesMessage.error('', r.message);
                             }
                         }
                     });
-
                 };
 
+                dropzoneConfig.init = function() {
+                    dropzoneConfig.reload(this);
+                    $(document).trigger('dropzone_init', [dropzoneConfig, config]);
+                };
 
                 dropzoneConfig.removedfile = function(file) {
+
                     var _ref;
                     var thisDropzone = this;
 
                     if (!file.previewElement) {
-                        return;
+                        return thisDropzone._updateMaxFilesReachedClass();
                     }
 
                     var id = $(file.previewElement).attr('data-userfiles-id');
-                    if (!id && (_ref = file.previewElement) != null) {
-                        _ref.parentNode.removeChild(file.previewElement);
-                        return;
+                    if (!id && ((_ref = file.previewElement) != null)) {
+                         _ref.parentNode.removeChild(file.previewElement);
+                        return thisDropzone._updateMaxFilesReachedClass();
                     }
-
-                    thisDropzone.files.push(file);
 
                     $.ajax({
                         type: 'POST',
@@ -376,7 +382,6 @@ var UserFilesForm = {
                                 if ((_ref = file.previewElement) != null) {
                                     _ref.parentNode.removeChild(file.previewElement);
                                 }
-                                thisDropzone.options.maxFiles++;
                                 return thisDropzone._updateMaxFilesReachedClass();
                             }
                         },
@@ -398,11 +403,12 @@ var UserFilesForm = {
                 };
 
                 var dropzone = new Dropzone(this, dropzoneConfig);
-                var DropzoneEvents = ["drop", "dragstart", "dragend", "dragenter", "dragover", "dragleave", "addedfile",
+                var DropzoneEvents = Dropzone.prototype.events || ["drop", "dragstart", "dragend", "dragenter", "dragover", "dragleave", "addedfile",
                     "addedfiles", "removedfile", "thumbnail", "error", "errormultiple", "processing", "processingmultiple",
                     "uploadprogress", "totaluploadprogress", "sending", "sendingmultiple", "success", "successmultiple", "canceled",
                     "canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached", "queuecomplete"
                 ];
+
                 DropzoneEvents.filter(function(event) {
                     if (UserFilesForm['_' + event]) {
                         dropzone.on(event, UserFilesForm['_' + event]);
@@ -430,11 +436,11 @@ var UserFilesForm = {
                                 start.push($this.data('userfilesId'));
                             });
 
-                            $(this).data().uiSortable.start = start;
+                            $(this).data('ui-sortable').start = start;
                         },
 
                         update: function(e, ui) {
-                            var start = $(this).data().uiSortable.start || [];
+                            var start = $(this).data('ui-sortable').start || [];
                             var end = [];
 
                             $($(e.target).get(0)).children().each(function(i) {
@@ -528,7 +534,7 @@ var UserFilesForm = {
             setTimeout(function() {
                 this.removeFile(file);
             }.bind(this), 1000);
-        } else {
+        } else if (response.object && response.object.id){
             $(file.previewElement).attr('data-userfiles-id', response.object.id);
         }
     },
@@ -614,7 +620,7 @@ var UserFilesForm = {
                 contentType: false,
                 success: function(response) {
                     $('#' + config.propkey).find('.dz-preview').remove();
-                    Dropzone.options[config.propkey].init();
+                    Dropzone.options[config.propkey].options.reload(Dropzone.options[config.propkey]);
                     $this.dialog.close();
                 }
             });
@@ -809,3 +815,20 @@ var UserFilesConfirm = {
         return PNotify.removeAll();
     }
 };
+
+
+
+/* process events */
+$(document).on('dropzone_init', function(e, dropzone, config) {
+
+    var myDropzone = $('#'+config.propkey).get(0).dropzone;
+
+    myDropzone.on('addedfile', function(file) {
+
+    });
+
+    myDropzone.on('removedfile', function(file) {
+
+    });
+
+});
