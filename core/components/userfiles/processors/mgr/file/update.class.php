@@ -53,6 +53,14 @@ class modUserFileUpdateProcessor extends modObjectUpdateProcessor
             $child->save();
         }
 
+        if ($this->object->get('move')) {
+            foreach ($children as $child) {
+                $child->remove();
+            }
+
+            $this->object->generateThumbnails();
+        }
+
         return parent::beforeSave();
     }
 

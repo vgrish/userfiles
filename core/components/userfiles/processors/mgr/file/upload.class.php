@@ -212,13 +212,24 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
         $this->setProperty('list', $this->getProperty('list', 'default'));
         $this->setProperty('context', $this->getProperty('context', 'web'));
 
-        $path = array();
-        $path[] = $this->getProperty('list');
-        $path[] = $this->getProperty('class');
-        $path[] = $this->getProperty('parent');
-        $path[] = null;
-        $path = strtolower(implode('/', $path));
-        $this->setProperty('path', $path);
+      /*  switch ($this->getProperty('class')) {
+            case 'modResource':
+                if ($stmt = $this->modx->prepare("SELECT alias FROM " . $this->modx->getTableName('modResource') . " WHERE id = :id")) {
+                    $stmt->bindValue(':id', $this->getProperty('parent'));
+                    $alias = $this->modx->getValue($stmt);
+                }
+                break;
+            case 'modUser':
+                if ($stmt = $this->modx->prepare("SELECT email FROM " . $this->modx->getTableName('modUserProfile') . " WHERE internalKey = :id")) {
+                    $stmt->bindValue(':id', $this->getProperty('parent'));
+                    $alias = $this->modx->getValue($stmt);
+                }
+                break;
+        }
+
+        if (empty($alias)) {
+            $alias = 'alias';
+        }*/
 
         $pls = array(
             'pl' => array(
@@ -273,6 +284,8 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
             return $this->UserFiles->lexicon('err_file_ns');
         }
 
+        $this->object->set('path', $this->object->getFilePath());
+        
         $dsFields = $this->UserFiles->getOption('duplicate_search_fields', null, 'parent,class,list,hash,source', true);
         $dsFields = $this->UserFiles->explodeAndClean($dsFields);
 

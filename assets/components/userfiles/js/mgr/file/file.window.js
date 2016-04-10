@@ -382,11 +382,53 @@ Ext.extend(userfiles.window.FileUpdate, MODx.Window, {
     },
 
     getLeftFields: function(config) {
-        return [];
+        return [{
+            xtype: 'userfiles-combo-class',
+            width: 190,
+            custm: true,
+            clear: true,
+            addall: false,
+            name: 'class',
+            value: config.record.class,
+            anchor: '99%',
+            listeners: {
+                select: {
+                    fn: function (r) {
+                        this._handleChangeClass(1);
+                    },
+                    scope: this
+                }
+            }
+        }];
     },
 
     getRightFields: function(config) {
-        return [];
+        return [{
+            xtype: 'userfiles-combo-parent',
+            width: 190,
+            custm: true,
+            clear: true,
+            addall: true,
+            anchor: '99%',
+            name: 'parent',
+            value: config.record.parent
+        }];
+    },
+
+    _handleChangeClass: function (change) {
+        var f = this.fp.getForm();
+        var _class = f.findField('class');
+        var _parent = f.findField('parent');
+
+        _parent.baseParams.class = _class.getValue();
+
+        if (!!_parent.pageTb) {
+            _parent.pageTb.show();
+        }
+        if ((1 == change)) {
+            _parent.setValue();
+        }
+        _parent.store.load();
     }
 
 });

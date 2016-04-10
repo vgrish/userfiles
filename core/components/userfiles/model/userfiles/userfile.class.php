@@ -259,7 +259,7 @@ class UserFile extends xPDOSimpleObject
     {
         $this->mediaSource->errors = array();
         $filename = $this->get('path') . $this->get('file');
-        $contents = $contents ?:$this->mediaSource->getObjectContents($filename);
+        $contents = $contents ?: $this->mediaSource->getObjectContents($filename);
 
         if (!is_array($contents)) {
             return "[UserFiles] Could not retrieve contents of file {$filename} from media source.";
@@ -408,6 +408,25 @@ class UserFile extends xPDOSimpleObject
     }
 
     /**
+     * @return string
+     */
+    public function getFilePath()
+    {
+        $path = array();
+        foreach (array('list', 'class', 'parent') as $k) {
+            $path[] = $this->get($k);
+        }
+        $path[] = null;
+
+        return $path = strtolower(implode('/', $path));
+    }
+
+    public function isMove()
+    {
+        return $this->get('class') != 'UserFile' AND $this->get('path') != $this->getFilePath();
+    }
+
+    /**
      * @return bool|string
      */
     public function getFileName()
@@ -462,7 +481,30 @@ class UserFile extends xPDOSimpleObject
                     $this->set('createdby', $this->modx->user->get('id'));
                 }
             }
+        }
 
+        if ($this->isMove() AND $this->initialized()) {
+
+            $this->set('move',true);
+            $this->mediaSource->errors = array();
+            $filename = $this->get('path') . $this->get('file');
+            $contents = $this->mediaSource->getObjectContents($filename);
+
+            if (!is_array($contents)) {
+                return "[UserFiles] Could not retrieve contents of file {$filename} from media source.";
+            } elseif (!empty($this->mediaSource->errors['file'])) {
+                return "[UserFiles] Could not retrieve file {$filename} from media source: " . $this->mediaSource->errors['file'];
+            }
+
+            $newPath = $this->getFilePath();
+            $this->mediaSource->createObject($newPath, $this->get('file'), $contents['content']);
+            $this->mediaSource->removeObject($filename);
+
+            $this->set('path', $newPath);
+            $this->set('url', $this->mediaSource->getObjectUrl($newPath . $this->get('file')));
+        }
+
+        if ($this->isNew() || $this->get('move')) {
             $q = $this->xpdo->newQuery('UserFile');
             $q->where(array(
                 'parent'  => $this->get('parent'),
@@ -472,13 +514,14 @@ class UserFile extends xPDOSimpleObject
             ));
             $this->set('rank', $this->xpdo->getCount('UserFile', $q));
         }
-
+        
         $saved = parent:: save($cacheFlag);
 
         return $saved;
     }
 
-    protected function image_file_type_from_binary($binary) {
+    protected function image_file_type_from_binary($binary)
+    {
         if (
         !preg_match(
             '/\A(?:(\xff\xd8\xff)|(GIF8[79]a)|(\x89PNG\x0d\x0a)|(BM)|(\x49\x49(?:\x2a\x00|\x00\x4a))|(FORM.{4}ILBM))/',
@@ -487,7 +530,7 @@ class UserFile extends xPDOSimpleObject
         ) {
             return 'application/octet-stream';
         }
-        static $type = array (
+        static $type = array(
             1 => 'image/jpeg',
             2 => 'image/gif',
             3 => 'image/png',
@@ -495,6 +538,7 @@ class UserFile extends xPDOSimpleObject
             5 => 'image/tiff',
             6 => 'image/x-ilbm',
         );
+
         return $type[count($hits) - 1];
     }
 
