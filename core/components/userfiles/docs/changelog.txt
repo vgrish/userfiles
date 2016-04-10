@@ -1,6 +1,6 @@
 Changelog for UserFiles.
 
-2.1.7-beta (28.03.2016)
+2.1.7-beta (10.04.2016)
 ==============
 - Add "class", "parent" in update window
 - Add "move" files by changing the path
