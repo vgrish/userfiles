@@ -384,6 +384,7 @@ Ext.extend(userfiles.window.FileUpdate, MODx.Window, {
     getLeftFields: function(config) {
         return [{
             xtype: 'userfiles-combo-class',
+            fieldLabel: _('userfiles_class'),
             width: 190,
             custm: true,
             clear: true,
@@ -405,6 +406,7 @@ Ext.extend(userfiles.window.FileUpdate, MODx.Window, {
     getRightFields: function(config) {
         return [{
             xtype: 'userfiles-combo-parent',
+            fieldLabel: _('userfiles_parent'),
             width: 190,
             custm: true,
             clear: true,

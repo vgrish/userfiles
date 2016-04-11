@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.1.8-beta (11.04.2016)
+==============
+- Correcting lexicons
+
 2.1.7-beta (10.04.2016)
 ==============
 - Add "class", "parent" in update window
