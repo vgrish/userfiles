@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.1.9-beta (15.04.2016)
+==============
+- Fix error "move" files
+
 2.1.8-beta (11.04.2016)
 ==============
 - Correcting lexicons

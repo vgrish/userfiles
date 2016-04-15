@@ -497,11 +497,14 @@ class UserFile extends xPDOSimpleObject
             }
 
             $newPath = $this->getFilePath();
-            $this->mediaSource->createObject($newPath, $this->get('file'), $contents['content']);
-            $this->mediaSource->removeObject($filename);
+            $this->mediaSource->createContainer($newPath, '/');
+            if ($this->mediaSource->createObject($newPath, $this->get('file'), $contents['content'])) {
+                $this->mediaSource->removeObject($filename);
 
-            $this->set('path', $newPath);
-            $this->set('url', $this->mediaSource->getObjectUrl($newPath . $this->get('file')));
+                $this->set('path', $newPath);
+                $this->set('url', $this->mediaSource->getObjectUrl($newPath . $this->get('file')));
+            }
+
         }
 
         if ($this->isNew() || $this->get('move')) {
