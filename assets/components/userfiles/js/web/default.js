@@ -1,5 +1,5 @@
 /*
- * v 2.1.6
+ * v 2.1.10
  */
 
 var UserFilesTemplate = {
@@ -593,21 +593,25 @@ var UserFilesForm = {
         var data = $this.dialog.options.$cropperEl.cropper('getData');
         var config = $this.dialog.options.config;
         var record = $this.dialog.options.record;
-        if (!data) {
+
+        if (!data || !config || !record) {
             return;
         }
+
+        var type = record.type || 'png';
 
         $this.dialog.options.$cropperEl.cropper('getCroppedCanvas', data).toBlob(function(file) {
 
             var formData = new FormData();
 
-            formData.append('file', file, 'file.png');
             formData.append('action', 'file/image/update');
+            formData.append('crop', true);
             formData.append('data', JSON.stringify(data));
+            formData.append('type', type);
             formData.append('id', record.id);
             formData.append('propkey', config.propkey);
             formData.append('ctx', config.ctx);
-            formData.append('crop', true);
+            formData.append('file', file, 'file.png');
 
             $.ajax({
                 url: config.actionUrl,

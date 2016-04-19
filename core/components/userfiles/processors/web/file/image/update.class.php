@@ -11,8 +11,8 @@ class modWebUserFileImageUpdateProcessor extends modWebUserFileUploadProcessor
         if (empty($this->mediaSource->errors['file'])) {
 
             $file = $this->object->get('name');
-            $type = 'png';
-
+            $type = $this->getProperty('type', 'png');
+            
             $this->data['name'] = $file;
             $this->data['type'] = $type;
             $this->data['properties'] = str_replace('blob', $type, $this->data['properties']);

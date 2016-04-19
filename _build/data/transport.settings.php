@@ -20,6 +20,7 @@ $tmp = array(
         'xtype' => 'textarea',
         'area'  => 'userfiles_main',
     ),
+
    /* 'salt' => array(
         'value' => '12345678',
         'xtype' => 'textfield',
@@ -50,6 +51,12 @@ $tmp = array(
         'area'  => 'userfiles_links',
     ),
 
+    
+    'image_mime_type' => array(
+        'value' => '[{"type":"png","mime":"image/png"},{"type":"jpg","mime":"image/jpg"}]',
+        'xtype' => 'textarea',
+        'area'  => 'userfiles_editor',
+    ),
 
     //временные
 /*

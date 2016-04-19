@@ -1,5 +1,10 @@
 Changelog for UserFiles.
 
+2.1.10-beta (19.04.2016)
+==============
+- Add combo "file-type" in edit window
+- Fix "file-type" when editing
+
 2.1.9-beta (15.04.2016)
 ==============
 - Fix error "move" files

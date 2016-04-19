@@ -665,3 +665,28 @@ userfiles.combo.Parent = function(config) {
 Ext.extend(userfiles.combo.Parent, MODx.combo.ComboBox);
 Ext.reg('userfiles-combo-parent', userfiles.combo.Parent);
 
+
+userfiles.combo.MimeType = function(config) {
+    config = config || {};
+
+    if (!config.data) {
+        config.data = JSON.parse(MODx.config['userfiles_image_mime_type'] || '[{"type":"png","mime":"image/png"}]');
+    }
+
+    Ext.applyIf(config,{
+        name: config.name || 'mime',
+        displayField: 'type',
+        valueField: 'mime',
+        editable: false,
+        mode: 'local',
+        store: new Ext.data.JsonStore({
+            data: config.data,
+            fields: ['type', 'mime']
+        }),
+        value: config.data[0] ? config.data[0].type : ''
+    });
+
+    userfiles.combo.MimeType.superclass.constructor.call(this,config);
+};
+Ext.extend(userfiles.combo.MimeType,MODx.combo.ComboBox);
+Ext.reg('userfiles-combo-mime-type',userfiles.combo.MimeType);

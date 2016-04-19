@@ -3,6 +3,7 @@
 $_lang['area_userfiles_main'] = 'Основные';
 $_lang['area_userfiles_phpThumb'] = 'phpThumb';
 $_lang['area_userfiles_links'] = 'Ссылки';
+$_lang['area_userfiles_editor'] = 'Редактор';
 
 $_lang['setting_userfiles_source_default'] = 'Источник медиа для UserFiles';
 $_lang['setting_userfiles_source_default_desc'] = 'Выберите источник медиа, который будет использован по умолчанию для загрузки файлов пользователя.';
@@ -53,3 +54,6 @@ $_lang['setting_userfiles_chunk_link_image'] = 'Чанк ссылки на из�
 
 $_lang['setting_userfiles_duplicate_search_fields'] = 'Поиск дубликатов';
 $_lang['setting_userfiles_duplicate_search_fields_desc'] = 'Список ключей таблицы "UserFile" через запятую, для поиска дубликатов файлов. По умолчанию "parent,class,list,hash,source"';
+
+$_lang['setting_userfiles_image_mime_type'] = 'Тип изображения';
+$_lang['setting_userfiles_image_mime_type_desc'] = 'Закодированный в JSON массив с типами изображений доступных для сохранения в редакторе.';

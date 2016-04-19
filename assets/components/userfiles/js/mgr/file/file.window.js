@@ -28,6 +28,7 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
     imageData: '',
 
     getFields: function(config) {
+
         return [{
             xtype: 'hidden',
             name: 'id'
@@ -58,7 +59,7 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
     getBottomBar: function (config) {
         var component = [
             'move', 'crop', 'zoom_plus', 'zoom_minus', 'rotate_left', 'rotate_right', 'scalex', 'scaley',
-            'remove', 'left', 'cancel', 'save'
+            'remove', 'left', 'type', 'cancel', 'save'
         ];
         var bbar = [];
 
@@ -117,18 +118,32 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
                 handler: this.setCropperAction,
                 scope: this
             },
+            type: {
+                xtype: 'userfiles-combo-mime-type',
+                cls: 'userfiles-mime-type',
+                width: 78,
+                listeners: {
+                    select: {
+                        fn: function(combo, value){
+                            if (this.$cropperEl) {
+                                this.$cropperEl.type = value.data.type;
+                            }
+                        },
+                        scope: this
+                    },
+                },
+                value: config.record.type
+            },
+
             left: '->',
             cancel: {
-                text: _('cancel'),
                 handler: this.close,
                 scope: this
             },
             save: {
-                text: _('save'),
                 handler: this.save,
                 scope: this
             }
-
         };
 
         component.filter(function(field) {
@@ -160,6 +175,7 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
                         ].join();
                     }.bind(this);
                     this.$cropperEl.cropper(cropperOptions);
+                    this.$cropperEl.type = config.record.type;
                 },
                 scope: this
             }
@@ -200,15 +216,16 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
     save: function(btn) {
         var config = this.config;
         var data = this.$cropperEl.cropper('getData');
-
+        var type = this.$cropperEl.type || 'png';
         var formData = new FormData();
 
         this.$cropperEl.cropper('getCroppedCanvas', data).toBlob(function (file) {
             formData.append('action', 'mgr/file/image/update');
+            formData.append('crop', true);
             formData.append('data', JSON.stringify(data));
+            formData.append('type', type);
             formData.append('id', config.record.id);
             formData.append('file', file);
-            formData.append('crop', true);
         });
 
         var xhr = new XMLHttpRequest();

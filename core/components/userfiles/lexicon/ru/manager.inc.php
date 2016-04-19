@@ -39,6 +39,10 @@ $_lang['userfiles_button_scalex'] = '<i class="icon icon-arrows-h icon-large"></
 $_lang['userfiles_button_scaley'] = '<i class="icon icon-arrows-v icon-large"></i>';
 $_lang['userfiles_button_remove'] = '<i class="icon icon-remove icon-large"></i>';
 
+$_lang['userfiles_button_cancel'] = '<i class="icon icon-times icon-large red"></i>';
+$_lang['userfiles_button_save'] = '<i class="icon icon-upload icon-large blue"></i>';
+
+
 
 /* tooltip */
 $_lang['userfiles_tooltip_id'] = 'Id';
