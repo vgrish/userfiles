@@ -59,7 +59,7 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
     getBottomBar: function (config) {
         var component = [
             'move', 'crop', 'zoom_plus', 'zoom_minus', 'rotate_left', 'rotate_right', 'scalex', 'scaley',
-            'remove', 'left', 'type', 'cancel', 'save'
+            'clear', 'left', 'type', 'cancel', 'save'
         ];
         var bbar = [];
 
@@ -112,7 +112,7 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
                 handler: this.setCropperAction,
                 scope: this
             },
-            remove: {
+            clear: {
                 param: null,
                 action: 'clear',
                 handler: this.setCropperAction,
@@ -149,7 +149,18 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
         component.filter(function(field) {
             if (add[field]) {
                 Ext.applyIf(add[field], {
-                    text: _('userfiles_button_' + field)
+                    text: _('userfiles_button_' + field),
+                    listeners: {
+                        render: function(b) {
+                            var t = _('userfiles_tooltip_' + field);
+                            if (t) {
+                                Ext.QuickTips.register({
+                                    target: b,
+                                    text: t,
+                                });
+                            }
+                        }
+                    }
                 });
                 bbar.push(add[field]);
             }

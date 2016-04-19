@@ -37,7 +37,7 @@ $_lang['userfiles_button_rotate_left'] = '<i class="icon icon-rotate-left icon-l
 $_lang['userfiles_button_rotate_right'] = '<i class="icon icon-rotate-right icon-large"></i>';
 $_lang['userfiles_button_scalex'] = '<i class="icon icon-arrows-h icon-large"></i>';
 $_lang['userfiles_button_scaley'] = '<i class="icon icon-arrows-v icon-large"></i>';
-$_lang['userfiles_button_remove'] = '<i class="icon icon-remove icon-large"></i>';
+$_lang['userfiles_button_clear'] = '<i class="icon icon-remove icon-large"></i>';
 
 $_lang['userfiles_button_cancel'] = '<i class="icon icon-times icon-large red"></i>';
 $_lang['userfiles_button_save'] = '<i class="icon icon-upload icon-large blue"></i>';
@@ -66,6 +66,18 @@ $_lang['userfiles_tooltip_status'] = 'Статус';
 $_lang['userfiles_tooltip_context'] = 'Контекст';
 $_lang['userfiles_tooltip_handler'] = 'Обработчик';
 $_lang['userfiles_tooltip_content'] = 'Контент';
+
+
+$_lang['userfiles_tooltip_zoom_plus'] = 'Увеличить';
+$_lang['userfiles_tooltip_zoom_minus'] = 'Уменьшить';
+$_lang['userfiles_tooltip_rotate_left'] = 'Повернуть налево';
+$_lang['userfiles_tooltip_rotate_right'] = 'Повернуть направо';
+$_lang['userfiles_tooltip_scalex'] = 'Отразить по горизонтали';
+$_lang['userfiles_tooltip_scaley'] = 'Отразить по вертикали';
+$_lang['userfiles_tooltip_clear'] = 'Очистить';
+$_lang['userfiles_tooltip_type'] = 'Тип';
+$_lang['userfiles_tooltip_cancel'] = 'Отменить';
+$_lang['userfiles_tooltip_save'] = 'Сохранить';
 
 
 /* fields */

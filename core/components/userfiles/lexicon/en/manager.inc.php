@@ -63,6 +63,17 @@ $_lang['userfiles_tooltip_context'] = 'Контекст';
 $_lang['userfiles_tooltip_handler'] = 'Обработчик';
 $_lang['userfiles_tooltip_content'] = 'Контент';
 
+$_lang['userfiles_tooltip_zoom_plus'] = 'Увеличить';
+$_lang['userfiles_tooltip_zoom_minus'] = 'Уменьшить';
+$_lang['userfiles_tooltip_rotate_left'] = 'Повернуть налево';
+$_lang['userfiles_tooltip_rotate_right'] = 'Повернуть направо';
+$_lang['userfiles_tooltip_scalex'] = 'Отразить по горизонтали';
+$_lang['userfiles_tooltip_scaley'] = 'Отразить по вертикали';
+$_lang['userfiles_tooltip_clear'] = 'Очистить';
+$_lang['userfiles_tooltip_type'] = 'Тип';
+$_lang['userfiles_tooltip_cancel'] = 'Отменить';
+$_lang['userfiles_tooltip_save'] = 'Сохранить';
+
 
 /* fields */
 $_lang['userfiles_name'] = 'Имя';
