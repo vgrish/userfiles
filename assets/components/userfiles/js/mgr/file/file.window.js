@@ -237,9 +237,35 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
             formData.append('type', type);
             formData.append('id', config.record.id);
             formData.append('file', file);
-        });
 
-        var xhr = new XMLHttpRequest();
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', userfiles.config.connector_url);
+            xhr.setRequestHeader('Powered-By', 'MODx');
+            xhr.setRequestHeader('modAuth', Ext.Ajax.defaultHeaders.modAuth);
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    var response = xhr.responseText ? JSON.parse(xhr.responseText) : {};
+                    if (this.progress) {
+                        this.progress.hide();
+                    }
+                    this.fireEvent('success', {});
+                    userfiles.window.ImageEdit.superclass.close.call(this);
+                }
+            }.bind(this);
+
+            xhr.upload.onprogress = function (event) {
+                if (event.lengthComputable) {
+                    this.progress.updateProgress(event.loaded / event.total);
+                }
+            }.bind(this);
+
+            xhr.send(formData);
+            this.progress = Ext.MessageBox.progress(_('please_wait'));
+
+        }.bind(this));
+        
+       /* var xhr = new XMLHttpRequest();
         xhr.open('POST', userfiles.config.connector_url);
         xhr.setRequestHeader('Powered-By', 'MODx');
         xhr.setRequestHeader('modAuth', Ext.Ajax.defaultHeaders.modAuth);
@@ -262,7 +288,7 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
         }.bind(this);
 
         xhr.send(formData);
-        this.progress = Ext.MessageBox.progress(_('please_wait'));
+        this.progress = Ext.MessageBox.progress(_('please_wait'));*/
     }
 
 });

@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.1.11-beta (04.05.2016)
+==============
+- Fix edit "image"
+
 2.1.10-beta (19.04.2016)
 ==============
 - Add combo "file-type" in edit window
