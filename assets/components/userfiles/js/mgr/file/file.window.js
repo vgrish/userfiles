@@ -4,6 +4,7 @@ userfiles.window.ImageEdit = function(config) {
 
     Ext.applyIf(config, {
         title: _('update'),
+        modal: Ext.isIE ? false : true,
         width: 800,
         layout: 'auto',
         closeAction: 'close',
@@ -23,6 +24,7 @@ userfiles.window.ImageEdit = function(config) {
 
     userfiles.window.ImageEdit.superclass.constructor.call(this, config);
     this.config = config;
+    this.on('show',this.init,this);
 };
 Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
     imageData: '',

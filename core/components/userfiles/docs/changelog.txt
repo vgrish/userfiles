@@ -1,5 +1,11 @@
 Changelog for UserFiles.
 
+2.1.12-beta (05.05.2016)
+==============
+- Fix "tooltip buttons"
+- Add "overlay for editing images"
+- Fix "files.store.load" after "change", "edit" file
+
 2.1.11-beta (04.05.2016)
 ==============
 - Fix edit "image"

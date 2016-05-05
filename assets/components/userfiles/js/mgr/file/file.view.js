@@ -171,7 +171,13 @@ Ext.extend(userfiles.view.Files, MODx.DataView, {
                     listeners: {
                         success: {
                             fn: function() {
-                                this.store.load();
+                                var hash = userfiles.tools.Hash.get();
+                                this.store.load({
+                                    params:{
+                                        start:parseInt(hash['uf_start'] || 0),
+                                        limit:parseInt(hash['uf_limit'] || MODx.config.default_per_page)
+                                    }
+                                });
                             },
                             scope: this
                         },
@@ -210,7 +216,13 @@ Ext.extend(userfiles.view.Files, MODx.DataView, {
             listeners: {
                 success: {
                     fn: function() {
-                        this.store.load();
+                        var hash = userfiles.tools.Hash.get();
+                        this.store.load({
+                            params:{
+                                start:parseInt(hash['uf_start'] || 0),
+                                limit:parseInt(hash['uf_limit'] || MODx.config.default_per_page)
+                            }
+                        });
                     },
                     scope: this
                 },

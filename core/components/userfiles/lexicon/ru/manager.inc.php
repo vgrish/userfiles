@@ -68,6 +68,8 @@ $_lang['userfiles_tooltip_handler'] = 'Обработчик';
 $_lang['userfiles_tooltip_content'] = 'Контент';
 
 
+$_lang['userfiles_tooltip_move'] = 'Переместить';
+$_lang['userfiles_tooltip_crop'] = 'Обрезать';
 $_lang['userfiles_tooltip_zoom_plus'] = 'Увеличить';
 $_lang['userfiles_tooltip_zoom_minus'] = 'Уменьшить';
 $_lang['userfiles_tooltip_rotate_left'] = 'Повернуть налево';

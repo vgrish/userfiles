@@ -451,6 +451,10 @@ Ext.extend(userfiles.panel.Files,MODx.Panel, {
 							if (Ext.isEmpty(nv)) {return;}
 							nv = parseInt(nv);
 							this.getBottomToolbar().pageSize = nv;
+
+							userfiles.tools.Hash.add('uf_start',0);
+							userfiles.tools.Hash.add('uf_limit',nv);
+
 							this.view.getStore().load({params:{start:0, limit: nv}});
 						}, scope:this},
 						render: {fn: function(cmp) {
@@ -462,7 +466,13 @@ Ext.extend(userfiles.panel.Files,MODx.Panel, {
 						}, scope:this}
 					}
 				}
-			]
+			],
+			listeners: {
+				beforechange:{fn: function(tf, ov) {
+					userfiles.tools.Hash.add('uf_start',ov.start);
+					userfiles.tools.Hash.add('uf_limit',ov.limit);
+				}, scope:this}
+			}
 		});
     }
 
