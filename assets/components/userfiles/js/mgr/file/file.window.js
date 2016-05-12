@@ -449,6 +449,12 @@ Ext.extend(userfiles.window.FileUpdate, MODx.Window, {
             value: config.record.class,
             anchor: '99%',
             listeners: {
+                afterrender: {
+                    fn: function(r) {
+                        this._handleChangeClass(0);
+                    },
+                    scope: this
+                },
                 select: {
                     fn: function (r) {
                         this._handleChangeClass(1);
@@ -466,7 +472,7 @@ Ext.extend(userfiles.window.FileUpdate, MODx.Window, {
             width: 190,
             custm: true,
             clear: true,
-            addall: true,
+            addall: false,
             anchor: '99%',
             name: 'parent',
             value: config.record.parent

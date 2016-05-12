@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.1.13-beta (12.05.2016)
+==============
+- Fix "class" in update window
+
 2.1.12-beta (05.05.2016)
 ==============
 - Fix "tooltip buttons"
