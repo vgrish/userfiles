@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.1.14-beta (14.05.2016)
+==============
+- Fix get "mome_type"
+
 2.1.13-beta (12.05.2016)
 ==============
 - Fix "class" in update window

@@ -1,5 +1,5 @@
 /*
- * v 2.1.10
+ * v 2.1.14
  */
 
 var UserFilesTemplate = {
@@ -601,9 +601,9 @@ var UserFilesForm = {
         var type = record.type || 'png';
 
         $this.dialog.options.$cropperEl.cropper('getCroppedCanvas', data).toBlob(function(file) {
+            file = new Blob([file], { type: 'image/'+type});
 
             var formData = new FormData();
-
             formData.append('action', 'file/image/update');
             formData.append('crop', true);
             formData.append('data', JSON.stringify(data));
@@ -611,7 +611,7 @@ var UserFilesForm = {
             formData.append('id', record.id);
             formData.append('propkey', config.propkey);
             formData.append('ctx', config.ctx);
-            formData.append('file', file, 'file.png');
+            formData.append('file', file, 'file.'+type);
 
             $.ajax({
                 url: config.actionUrl,
@@ -628,7 +628,7 @@ var UserFilesForm = {
                     $this.dialog.close();
                 }
             });
-        }, 'image/png');
+        }, 'image/'+type);
     },
 
     _fileShow: function($this, config) {

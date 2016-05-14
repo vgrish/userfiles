@@ -230,15 +230,17 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
         var config = this.config;
         var data = this.$cropperEl.cropper('getData');
         var type = this.$cropperEl.type || 'png';
-        var formData = new FormData();
 
         this.$cropperEl.cropper('getCroppedCanvas', data).toBlob(function (file) {
+            file = new Blob([file], { type: 'image/'+type});
+
+            var formData = new FormData();
             formData.append('action', 'mgr/file/image/update');
             formData.append('crop', true);
             formData.append('data', JSON.stringify(data));
             formData.append('type', type);
             formData.append('id', config.record.id);
-            formData.append('file', file);
+            formData.append('file', file, 'file.'+type);
 
             var xhr = new XMLHttpRequest();
             xhr.open('POST', userfiles.config.connector_url);
@@ -266,31 +268,7 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
             this.progress = Ext.MessageBox.progress(_('please_wait'));
 
         }.bind(this));
-        
-       /* var xhr = new XMLHttpRequest();
-        xhr.open('POST', userfiles.config.connector_url);
-        xhr.setRequestHeader('Powered-By', 'MODx');
-        xhr.setRequestHeader('modAuth', Ext.Ajax.defaultHeaders.modAuth);
 
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                var response = xhr.responseText ? JSON.parse(xhr.responseText) : {};
-                if (this.progress) {
-                    this.progress.hide();
-                }
-                this.fireEvent('success', {});
-                userfiles.window.ImageEdit.superclass.close.call(this);
-            }
-        }.bind(this);
-
-        xhr.upload.onprogress = function (event) {
-            if (event.lengthComputable) {
-                this.progress.updateProgress(event.loaded / event.total);
-            }
-        }.bind(this);
-
-        xhr.send(formData);
-        this.progress = Ext.MessageBox.progress(_('please_wait'));*/
     }
 
 });
