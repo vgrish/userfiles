@@ -402,7 +402,7 @@ class Tools implements UserFilesToolsInterface
         return $output;
     }
 
-    public function getFileMimeType($filename, $debug = false)
+    public function getFileMimeType($filename, $name = '')
     {
         if (function_exists('finfo_open') AND function_exists('finfo_file') AND function_exists('finfo_close')) {
             $fileinfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -415,7 +415,7 @@ class Tools implements UserFilesToolsInterface
         }
 
         if (function_exists('mime_content_type')) {
-            $mimeType = mime_content_type($filename);
+            $mimeType = mime_content_type($name);
 
             if (!empty($mimeType)) {
                 return $mimeType;
@@ -613,7 +613,7 @@ class Tools implements UserFilesToolsInterface
             'zip'     => 'application/zip'
         );
 
-        $ext = strtolower(array_pop(explode('.', $filename)));
+        $ext = strtolower(array_pop(explode('.', $name)));
 
         if (!empty($mimeTypes[$ext])) {
 

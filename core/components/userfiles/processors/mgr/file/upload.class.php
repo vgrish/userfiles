@@ -116,11 +116,11 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
 
         $size = @filesize($tnm);
         if (!$this->getProperty('crop', false)) {
-            $mime = $this->UserFiles->Tools->getFileMimeType($tnm);
+            $mime = $this->UserFiles->Tools->getFileMimeType($tnm, $name);
         } else {
             $mime = 'image/' . $this->getProperty('type', 'png');
         }
-        
+
         $tim = getimagesize($tnm);
         $width = $height = 0;
         if (is_array($tim)) {
