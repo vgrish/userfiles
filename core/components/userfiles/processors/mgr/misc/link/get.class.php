@@ -74,19 +74,22 @@ class modUserFilesGetLinkProcessor extends modProcessor
         ));
 
         $q->select($this->modx->getSelectColumns($this->classKey, $this->classKey));
-        $q->select(array(
+       /* $q->select(array(
             "link" => "CONCAT_WS('x',
             substring(properties, locate('\"w\":',properties)+4,locate(',\"', properties, locate('\"w\":',properties))-locate('\"w\":',properties)-4),
             substring(properties, locate('\"h\":',properties)+4,locate(',\"', properties, locate('\"h\":',properties))-locate('\"h\":',properties)-4)
             )"
+        ));*/
+        $q->select(array(
+            "link" => "properties"
         ));
+
         $q->sortby("rank", 'ASC');
         $q->sortby("FIELD({$this->classKey}.parent, " . implode(',', $ids) . ")");
         $q->limit(0);
         if ($q->prepare() && $q->stmt->execute()) {
             $rows = array_merge($rows, (array)$q->stmt->fetchAll(PDO::FETCH_ASSOC));
         }
-
 
         $links = array();
         $imageExtensions = $this->object->getImageExtensions();

@@ -337,7 +337,7 @@ Ext.extend(userfiles.view.Files, MODx.DataView, {
                                         for (var i in r.object.links) {
 
                                             var data = {
-                                                text: i,
+                                                text: String.format('<b><small>{0}</small><b>', i),
                                                 link: r.object.links[i].join('')
                                             };
 

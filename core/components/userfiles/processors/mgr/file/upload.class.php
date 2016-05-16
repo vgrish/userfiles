@@ -274,6 +274,7 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
 
         $filename = $this->object->getFileName();
         $filename = strtolower(str_replace($pls['pl'], $pls['vl'], $filename));
+        $filename = preg_replace('#(\.|\?|!|\(|\)){2,}#', '\1', $filename);
 
         $this->setProperty('file', $filename);
 

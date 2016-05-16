@@ -16,8 +16,8 @@ class UserFile extends xPDOSimpleObject
 
     /** @var array $imageThumbnail */
     public $imageDefaultThumbnail = array(
-        'w'  => 120,
-        'h'  => 90,
+//        'w'  => 120,
+//        'h'  => 90,
         'q'  => 90,
         'bg' => 'fff',
         'f'  => 'jpg'
@@ -367,6 +367,7 @@ class UserFile extends xPDOSimpleObject
 
         $thumbnailName = $this->getThumbnailName();
         $filename = strtolower(str_replace($pls['pl'], $pls['vl'], $thumbnailName));
+        $filename = preg_replace('#(\.|\?|!|\(|\)){2,}#', '\1', $filename);
 
         /** @var UserFile $thumbnailFile */
         $thumbnailFile = $this->xpdo->newObject('UserFile', array_merge(
