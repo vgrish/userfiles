@@ -1,5 +1,5 @@
 /*
- * v 2.1.14
+ * v 2.1.17
  */
 
 var UserFilesTemplate = {
@@ -246,35 +246,37 @@ var UserFilesForm = {
     initialize: function(opts) {
         var config = $.extend(true, {}, this.config, opts);
 
-        if (!jQuery.Dropzone) {
+        var canvas = HTMLCanvasElement && HTMLCanvasElement.prototype;
+
+        if (!jQuery().dropzone) {
             document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/dropzone/dist/min/dropzone.min.css); </style>');
             document.writeln('<script src="' + config.assetsUrl + 'vendor/dropzone/dist/dropzone.js"><\/script>');
         }
 
-        if (!jQuery.pnotify) {
+        if (typeof(PNotify) == 'undefined') {
             document.writeln('<style data-compiled-css>@import url(' + config.assetsBaseUrl + 'components/modpnotify/build/pnotify.custom.css); </style>');
             document.writeln('<script src="' + config.assetsBaseUrl + 'components/modpnotify/build/pnotify.custom.js"><\/script>');
         }
 
-        if (!jQuery.ui) {
+        if (!jQuery().sortable) {
             document.writeln('<script src="' + config.assetsUrl + 'vendor/jqueryui/jquery-ui.min.js"><\/script>');
         }
 
-        if (!jQuery.cropper) {
+        if (!jQuery().cropper) {
             document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/cropper/dist/cropper.min.css); </style>');
             document.writeln('<script src="' + config.assetsUrl + 'vendor/cropper/dist/cropper.min.js"><\/script>');
         }
 
-        if (!jQuery().toBlob) {
+        if (!canvas.toBlob) {
             document.writeln('<script src="' + config.assetsUrl + 'vendor/canvastoblob/js/canvas-to-blob.min.js"><\/script>');
         }
 
-        if (!jQuery.Modal) {
+        if (!jQuery().modal) {
             document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/bs3modal/dist/css/bootstrap-modal.css); </style>');
             document.writeln('<script src="' + config.assetsUrl + 'vendor/bs3modal/dist/js/bootstrap-modal.js"><\/script>');
         }
 
-        if (!jQuery.BootstrapDialogModal) {
+        if (!jQuery().dialog) {
             document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/bs3dialog/dist/css/bootstrap-dialog.min.css); </style>');
             document.writeln('<script src="' + config.assetsUrl + 'vendor/bs3dialog/dist/js/bootstrap-dialog.min.js"><\/script>');
         }
