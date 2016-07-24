@@ -1,5 +1,13 @@
 Changelog for UserFiles.
 
+2.1.19-beta (25.07.2016)
+==============
+- Improvement file upload
+
+2.1.18-beta (29.06.2016)
+==============
+- Fix override "MODx.panel.Resource"
+
 2.1.17-beta (30.05.2016)
 ==============
 - Fix "initialize" in default.js

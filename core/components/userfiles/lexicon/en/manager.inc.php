@@ -37,7 +37,11 @@ $_lang['userfiles_button_rotate_left'] = '<i class="icon icon-rotate-left icon-l
 $_lang['userfiles_button_rotate_right'] = '<i class="icon icon-rotate-right icon-large"></i>';
 $_lang['userfiles_button_scalex'] = '<i class="icon icon-arrows-h icon-large"></i>';
 $_lang['userfiles_button_scaley'] = '<i class="icon icon-arrows-v icon-large"></i>';
-$_lang['userfiles_button_remove'] = '<i class="icon icon-remove icon-large"></i>';
+$_lang['userfiles_button_clear'] = '<i class="icon icon-remove icon-large"></i>';
+
+$_lang['userfiles_button_cancel'] = '<i class="icon icon-times icon-large red"></i>';
+$_lang['userfiles_button_save'] = '<i class="icon icon-upload icon-large blue"></i>';
+
 
 
 /* tooltip */
@@ -111,6 +115,9 @@ $_lang['userfiles_content'] = 'Контент';
 $_lang['userfiles_subscription'] = 'Подписка';
 $_lang['userfiles_link'] = 'Ссылка';
 $_lang['userfiles_links'] = 'Ссылки';
+$_lang['userfiles_file'] = 'Файл';
+$_lang['userfiles_files'] = 'Файлы';
+$_lang['userfiles_filesis'] = 'Файла (файлов)';
 $_lang['userfiles_createdon'] = 'Создан';
 $_lang['userfiles_updatedon'] = 'Изменен';
 
@@ -137,4 +144,4 @@ $_lang['userfiles_action_copy_boofer'] = 'Скопирована в буфер �
 
 /* confirm */
 $_lang['userfiles_confirm_remove'] = 'Вы уверены, что хотите удалить это?';
-
+$_lang['userfiles_confirm_load'] = 'Вы уверены, что хотите загрузить это?';

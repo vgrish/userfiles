@@ -157,19 +157,32 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
      */
     protected function checkFile()
     {
-        if (empty($_FILES['file'])) {
+        $filePath = $this->getProperty('_file_path');
+        $fileName = $this->getProperty('_file_name');
+        if (
+            !($filePath AND $fileName)
+            AND
+            (
+                empty($_FILES['file'])
+                OR
+                !file_exists($_FILES['file']['tmp_name'])
+                OR
+                !is_uploaded_file($_FILES['file']['tmp_name'])
+            )
+        ) {
             return $this->UserFiles->lexicon('err_file_ns');
         }
-        if (!file_exists($_FILES['file']['tmp_name']) OR !is_uploaded_file($_FILES['file']['tmp_name'])) {
+
+        /*if (!file_exists($_FILES['file']['tmp_name']) OR !is_uploaded_file($_FILES['file']['tmp_name'])) {
             return $this->UserFiles->lexicon('err_file_ns');
         }
         if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
             return $this->UserFiles->lexicon('err_file_ns');
-        }
+        }*/
 
         $this->data = $this->getData(array(
-            'tmp_name' => $_FILES['file']['tmp_name'],
-            'name'     => $_FILES['file']['name']
+            'tmp_name' => $filePath ? $filePath : $_FILES['file']['tmp_name'],
+            'name'     => $fileName ? $fileName : $_FILES['file']['name']
         ));
 
         return true;
@@ -342,7 +355,10 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
                 )
             );
         }
-        unlink($this->data['tmp_name']);
+
+        if (!$this->getProperty('_file_path')) {
+            unlink($this->data['tmp_name']);
+        }
 
         if ($file) {
             $url = $this->mediaSource->getObjectUrl($this->object->get('path') . $this->object->get('file'));
