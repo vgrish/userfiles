@@ -1,5 +1,10 @@
 Changelog for UserFiles.
 
+2.2.0-beta (10.08.2016)
+==============
+- Improvement render "UserFiles tab"
+- Fix remove "UserFiles"
+
 2.1.19-beta (25.07.2016)
 ==============
 - Improvement file upload

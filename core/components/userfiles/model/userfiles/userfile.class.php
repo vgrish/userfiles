@@ -419,6 +419,9 @@ class UserFile extends xPDOSimpleObject
         return $path = strtolower(implode('/', $path));
     }
 
+    /**
+     * @return bool
+     */
     public function isMove()
     {
         return $this->get('class') != 'UserFile' AND $this->get('path') != $this->getFilePath();
@@ -483,7 +486,7 @@ class UserFile extends xPDOSimpleObject
 
         if ($this->isMove() AND $this->initialized()) {
 
-            $this->set('move',true);
+            $this->set('move', true);
             $this->mediaSource->errors = array();
             $filename = $this->get('path') . $this->get('file');
             $contents = $this->mediaSource->getObjectContents($filename);
@@ -515,10 +518,27 @@ class UserFile extends xPDOSimpleObject
             ));
             $this->set('rank', $this->xpdo->getCount('UserFile', $q));
         }
-        
+
         $saved = parent:: save($cacheFlag);
 
         return $saved;
+    }
+
+
+    /**
+     * @param string $alias
+     * @param null   $criteria
+     * @param bool   $cacheFlag
+     *
+     * @return array
+     */
+    public function & getMany($alias, $criteria = null, $cacheFlag = true)
+    {
+        if ($alias == 'Children') {
+            $criteria = array('class' => $this->class_key);
+        }
+
+        return parent::getMany($alias, $criteria, $cacheFlag);
     }
 
 }

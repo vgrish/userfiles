@@ -318,8 +318,7 @@ class Tools implements UserFilesToolsInterface
      */
     public function isWorkingTemplates(modResource $resource)
     {
-        return !is_object($resource) ? false : in_array($resource->get('template'),
-            $this->explodeAndClean($this->getOption('working_templates')));
+        return in_array($resource->get('template'), $this->explodeAndClean($this->getOption('working_templates')));
     }
 
     /**
