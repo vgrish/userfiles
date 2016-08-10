@@ -1,7 +1,7 @@
 userfiles.panel.Files = function(config) {
-    config = config || {};
+	config = config || {};
 
-	this.pageSize =  parseInt(config.pageSize|| MODx.config.default_per_page);
+	this.pageSize = parseInt(config.pageSize || MODx.config.default_per_page);
 
 	this.view = MODx.load({
 		xtype: 'userfiles-view-files',
@@ -10,30 +10,69 @@ userfiles.panel.Files = function(config) {
 		list: config.list || '',
 		type: config.type || '',
 		pageSize: this.pageSize,
-		emptyText:_('userfiles_emptymsg')
+		emptyText: _('userfiles_emptymsg'),
 	});
 
-    Ext.applyIf(config,{
-        id: 'userfiles-files',
-        border: false,
-        items: this.view,
-        tbar: this.getTopBar(config),
-        bbar: this.getBottomBar(config),
-    });
-    userfiles.panel.Files.superclass.constructor.call(this,config);
+	Ext.applyIf(config, {
+		id: 'userfiles-files',
+		border: false,
+		items: this.view,
+		tbar: this.getTopBar(config),
+		bbar: this.getBottomBar(config),
+
+	});
+	userfiles.panel.Files.superclass.constructor.call(this, config);
+
+	this.on('render', function(v) {
+		var ddTargetEl = v.getEl();
+
+		this.DropTarget = new Ext.dd.DropTarget(ddTargetEl, {
+			ddGroup: 'modx-treedrop-sources-dd',
+
+			notifyOut: function(ddSource, e, data) {
+				v.removeClass('dz-drag-hover');
+			},
+
+			notifyEnter: function(ddSource, e, data) {
+				if (!data.node || !data.node.attributes || !data.node.attributes.type) return false;
+
+				switch (data.node.attributes.type) {
+					case 'dir':
+					case 'file':
+						break;
+					default:
+						return false;
+						break;
+				}
+
+				v.addClass('dz-drag-hover');
+				if (ddTargetEl) {
+					ddTargetEl.frame();
+					ddTargetEl.focus();
+				}
+			},
+
+			notifyDrop: function(ddSource, e, data) {
+				if (!data.node || !data.node.attributes || !data.node.attributes.type) return false;
+				return v.addFiles(data);
+			}
+
+		});
+
+	});
 
 	this.view.on('render', function(v) {
 
+
 		this.DragZone = new Ext.dd.DragZone(v.getEl(), {
-			getDragData : function(e) {
+			getDragData: function(e) {
 				var target = e.getTarget(v.itemSelector);
 				if (!target) {
 					return false;
 				}
-				if(e.ctrlKey) {
+				if (e.ctrlKey) {
 					return false;
-				}
-				else if (!v.isSelected(target)) {
+				} else if (!v.isSelected(target)) {
 					v.onClick(e);
 				}
 
@@ -52,21 +91,17 @@ userfiles.panel.Files = function(config) {
 		this.DropZone = new Ext.dd.DropZone(v.getEl(), {
 			getTargetFromEvent: function(e) {
 				return e.getTarget(v.itemSelector);
-			}
-
-			,onNodeEnter : function(target, dd, e, data) {
+			},
+			onNodeEnter: function(target, dd, e, data) {
 				Ext.fly(target).addClass('x-view-selected');
-			}
-
-			,onNodeOut : function(target, dd, e, data) {
+			},
+			onNodeOut: function(target, dd, e, data) {
 				Ext.fly(target).removeClass('x-view-selected');
-			}
-
-			,onNodeOver : function(target, dd, e, data) {
+			},
+			onNodeOver: function(target, dd, e, data) {
 				return Ext.dd.DropZone.prototype.dropAllowed && (target != data.nodes[0]);
-			}
-
-			,onNodeDrop : function(target, dd, e, data) {
+			},
+			onNodeDrop: function(target, dd, e, data) {
 				var targetNode = v.getRecord(target);
 				var sourceNode = v.getRecord(data.nodes[0]);
 				if (sourceNode == targetNode) {
@@ -91,8 +126,61 @@ userfiles.panel.Files = function(config) {
 	});
 
 };
-Ext.extend(userfiles.panel.Files,MODx.Panel, {
+Ext.extend(userfiles.panel.Files, MODx.Panel, {
 	dropzone: null,
+
+	addFiles: function(data) {
+		switch (data.node.attributes.type) {
+			case 'dir':
+			case 'file':
+
+				MODx.Ajax.request({
+					url: userfiles.config.connector_url,
+					params: {
+						action: 'mgr/misc/tree/getlist',
+						source: data.node.attributes.loader.baseParams.source,
+						type: data.node.attributes.type,
+						path: data.node.attributes.id,
+					},
+					listeners: {
+						success: {
+							fn: function(r) {
+								if (!r.object || !r.object.files) return;
+								var files = r.object.files;
+								if (files.length == 0) return;
+
+								Ext.Msg.confirm(
+									_('userfiles_action_load') || _('warning'),
+									_('userfiles_confirm_load') + '<br>' + files.length + ' ' + _('userfiles_filesis'),
+									function(e) {
+										if (e == 'yes') {
+											files.filter(function(file) {
+												dropzone.emit("addedfiles", [file]);
+												dropzone.on("sending", function(file, xhr, formData) {
+													if (file.tree) {
+														formData.append("_file_path", file.path);
+														formData.append("_file_name", file.name);
+													}
+												});
+												dropzone.handleFiles([file]);
+											});
+
+										} else {
+											return false;
+										}
+									}, this);
+
+							},
+							scope: this
+						}
+					}
+				});
+				break;
+			default:
+				return false;
+				break;
+		}
+	},
 
 	initialize: function() {
 		if (this.initialized) {
@@ -102,7 +190,7 @@ Ext.extend(userfiles.panel.Files,MODx.Panel, {
 		var config = {
 			url: userfiles.config.connector_url,
 			params: {
-				action:'mgr/file/upload',
+				action: 'mgr/file/upload',
 				ctx: 'mgr',
 				HTTP_MODAUTH: MODx.siteId
 			},
@@ -112,7 +200,7 @@ Ext.extend(userfiles.panel.Files,MODx.Panel, {
 		};
 
 		if (document.getElementById(this.config.id)) {
-			dropzone = new Dropzone('#'+this.config.id, config);
+			dropzone = new Dropzone('#' + this.config.id, config);
 			dropzone.view = this.view;
 			dropzone.self = this;
 		}
@@ -120,16 +208,17 @@ Ext.extend(userfiles.panel.Files,MODx.Panel, {
 		var DropzoneEvents = ["drop", "dragstart", "dragend", "dragenter", "dragover", "dragleave", "addedfile",
 			"addedfiles", "removedfile", "thumbnail", "error", "errormultiple", "processing", "processingmultiple",
 			"uploadprogress", "totaluploadprogress", "sending", "sendingmultiple", "success", "successmultiple", "canceled",
-			"canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached", "queuecomplete"];
-		Ext.each(DropzoneEvents, function (event) {
-			if (this['_'+event]) {
-				dropzone.on(event, this['_'+event]);
+			"canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached", "queuecomplete"
+		];
+		Ext.each(DropzoneEvents, function(event) {
+			if (this['_' + event]) {
+				dropzone.on(event, this['_' + event]);
 			}
-		},this);
+		}, this);
 		this.initialized = true;
 	},
 
-	_addedfile:function(file) {
+	_addedfile: function(file) {
 		dropzone.options.params['parent'] = this.view.getStore().baseParams['parent'] || 0;
 		dropzone.options.params['class'] = this.view.getStore().baseParams['class'] || '';
 		dropzone.options.params['list'] = this.view.getStore().baseParams['list'] || '';
@@ -183,8 +272,8 @@ Ext.extend(userfiles.panel.Files,MODx.Panel, {
 		var tbar1 = [];
 		var tbar2 = [];
 
-		var component1 = ['button', 'left', 'list', 'type', 'source','spacer'];
-		var component2 = ['left','class','parent','search','spacer'];
+		var component1 = ['button', 'left', 'list', 'type', 'source', 'spacer'];
+		var component2 = ['left', 'class', 'parent', 'search', 'spacer'];
 
 		switch (true) {
 			case !!userfiles.config.resource:
@@ -342,13 +431,13 @@ Ext.extend(userfiles.panel.Files,MODx.Panel, {
 					width: 190,
 					listeners: {
 						search: {
-							fn: function (field) {
+							fn: function(field) {
 								this._doSearch(field);
 							},
 							scope: this
 						},
 						clear: {
-							fn: function (field) {
+							fn: function(field) {
 								field.setValue('');
 								this._clearSearch();
 							},
@@ -388,10 +477,10 @@ Ext.extend(userfiles.panel.Files,MODx.Panel, {
 			items.push(new Ext.Toolbar(tbar2));
 		}
 
-		return new Ext.Panel({items:items});
-    },
+		return new Ext.Panel({ items: items });
+	},
 
-	_filterBySource: function (cb) {
+	_filterBySource: function(cb) {
 		if (cb.value == '' || cb.value == 0) {
 			cb.value = userfiles.config.source || 1;
 			cb.setValue(cb.value);
@@ -400,32 +489,34 @@ Ext.extend(userfiles.panel.Files,MODx.Panel, {
 		this.getBottomToolbar().changePage(1);
 	},
 
-	_filterByCombo: function (cb) {
+	_filterByCombo: function(cb) {
 		this.view.getStore().baseParams[cb.name] = cb.value;
 		this.getBottomToolbar().changePage(1);
 	},
 
-	_doSearch: function (cb) {
+	_doSearch: function(cb) {
 		this.view.getStore().baseParams.query = cb.getValue();
 		this.getBottomToolbar().changePage(1);
 		userfiles.tools.Hash.add('query', cb.getValue());
 	},
 
-	_clearSearch: function () {
+	_clearSearch: function() {
 		this.view.getStore().baseParams.query = '';
 		this.getBottomToolbar().changePage(1);
 		userfiles.tools.Hash.remove('query');
 	},
 
 
-	_filterByClass: function (cb) {
-		var parent = this.getTopToolbar().findByType('combo').find( function(c){ return ( c.hiddenName == 'parent') } );
+	_filterByClass: function(cb) {
+		var parent = this.getTopToolbar().findByType('combo').find(function(c) {
+			return (c.hiddenName == 'parent')
+		});
 		if (!!parent) {
 			parent.baseParams.class = cb.value;
 			parent.setValue();
 			parent.store.load();
 
-			if(!!parent.pageTb) {
+			if (!!parent.pageTb) {
 				parent.pageTb.show();
 			}
 
@@ -434,49 +525,61 @@ Ext.extend(userfiles.panel.Files,MODx.Panel, {
 		}
 	},
 
-    getBottomBar: function(config) {
-        return new Ext.PagingToolbar({
+	getBottomBar: function(config) {
+		return new Ext.PagingToolbar({
 			pageSize: this.pageSize,
 			store: this.view.store,
 			displayInfo: true,
 			autoLoad: true,
 			items: ['-',
-				_('per_page') + ':',
-				{
+				_('per_page') + ':', {
 					xtype: 'textfield',
 					value: this.pageSize,
 					width: 50,
 					listeners: {
-						change: {fn:function(tf,nv,ov) {
-							if (Ext.isEmpty(nv)) {return;}
-							nv = parseInt(nv);
-							this.getBottomToolbar().pageSize = nv;
+						change: {
+							fn: function(tf, nv, ov) {
+								if (Ext.isEmpty(nv)) {
+									return;
+								}
+								nv = parseInt(nv);
+								this.getBottomToolbar().pageSize = nv;
 
-							userfiles.tools.Hash.add('uf_start',0);
-							userfiles.tools.Hash.add('uf_limit',nv);
+								userfiles.tools.Hash.add('uf_start', 0);
+								userfiles.tools.Hash.add('uf_limit', nv);
 
-							this.view.getStore().load({params:{start:0, limit: nv}});
-						}, scope:this},
-						render: {fn: function(cmp) {
-							new Ext.KeyMap(cmp.getEl(), {
-								key: Ext.EventObject.ENTER,
-								fn: function() {this.fireEvent('change',this.getValue());this.blur();return true;},
-								scope: cmp
-							});
-						}, scope:this}
+								this.view.getStore().load({ params: { start: 0, limit: nv } });
+							},
+							scope: this
+						},
+						render: {
+							fn: function(cmp) {
+								new Ext.KeyMap(cmp.getEl(), {
+									key: Ext.EventObject.ENTER,
+									fn: function() {
+										this.fireEvent('change', this.getValue());
+										this.blur();
+										return true;
+									},
+									scope: cmp
+								});
+							},
+							scope: this
+						}
 					}
 				}
 			],
 			listeners: {
-				beforechange:{fn: function(tf, ov) {
-					userfiles.tools.Hash.add('uf_start',ov.start);
-					userfiles.tools.Hash.add('uf_limit',ov.limit);
-				}, scope:this}
+				beforechange: {
+					fn: function(tf, ov) {
+						userfiles.tools.Hash.add('uf_start', ov.start);
+						userfiles.tools.Hash.add('uf_limit', ov.limit);
+					},
+					scope: this
+				}
 			}
 		});
-    }
+	}
 
 });
-Ext.reg('userfiles-panel-files',userfiles.panel.Files);
-
-
+Ext.reg('userfiles-panel-files', userfiles.panel.Files);

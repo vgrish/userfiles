@@ -115,6 +115,9 @@ $_lang['userfiles_content'] = 'Контент';
 $_lang['userfiles_subscription'] = 'Подписка';
 $_lang['userfiles_link'] = 'Ссылка';
 $_lang['userfiles_links'] = 'Ссылки';
+$_lang['userfiles_file'] = 'Файл';
+$_lang['userfiles_files'] = 'Файлы';
+$_lang['userfiles_filesis'] = 'Файла (файлов)';
 $_lang['userfiles_createdon'] = 'Создан';
 $_lang['userfiles_updatedon'] = 'Изменен';
 
@@ -141,4 +144,4 @@ $_lang['userfiles_action_copy_boofer'] = 'Скопирована в буфер �
 
 /* confirm */
 $_lang['userfiles_confirm_remove'] = 'Вы уверены, что хотите удалить это?';
-
+$_lang['userfiles_confirm_load'] = 'Вы уверены, что хотите загрузить это?';
