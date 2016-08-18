@@ -12,8 +12,11 @@ class UserFilesOnDocFormPrerender extends UserFilesPlugin
         }
 
         /** @var modResource $resource */
-        $resource = $this->modx->getOption('resource', $this->scriptProperties, null, true);
-        if (!$this->UserFiles->Tools->isWorkingTemplates($resource)) {
+        if (
+            !$resource = $this->modx->getOption('resource', $this->scriptProperties)
+            OR
+            !$this->UserFiles->Tools->isWorkingTemplates($resource)
+        ) {
             return;
         }
 
