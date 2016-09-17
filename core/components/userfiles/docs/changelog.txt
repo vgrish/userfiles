@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.2.1-beta (18.08.2016)
+==============
+- Fix get "config"
+
 2.2.0-beta (10.08.2016)
 ==============
 - Improvement render "UserFiles tab"
