@@ -535,7 +535,7 @@ class UserFile extends xPDOSimpleObject
     public function & getMany($alias, $criteria = null, $cacheFlag = true)
     {
         if ($alias == 'Children') {
-            $criteria = array('class' => $this->class_key);
+            $criteria = array('class' => 'UserFile');
         }
 
         return parent::getMany($alias, $criteria, $cacheFlag);

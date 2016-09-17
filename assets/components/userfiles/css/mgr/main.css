@@ -208,7 +208,7 @@ span.userfiles-grid-color {
 .userfiles-thumb-wrap:hover {border: 1px solid #AAA;}
 .userfiles-thumb-wrap.inactive {opacity: .4; border: 1px dashed #3697cd;}
 .userfiles-thumb {width: 120px; height: 90px;border-radius: 3px;display: flex;}
-.userfiles-thumb img {max-width: 120px; max-height: 90px;display: block; margin: auto;}
+.userfiles-thumb img {max-width: 120px; max-height: 90px;display: block; margin: auto;background-color: #ccc;}
 .userfiles-window-thumb {border: 1px solid #efefef; border-radius: 2px;}
 
 .modx-browser-thumb-wrap.modx-pb-thumb-wrap.userfiles-thumb-wrap {width: 120px;height: 108px;}
