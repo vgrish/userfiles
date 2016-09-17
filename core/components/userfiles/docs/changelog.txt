@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.2.3-beta (17.09.2016)
+==============
+- Fix "makeThumbnail"
+
 2.2.2-beta (17.09.2016)
 ==============
 - Fix "getMany" UserFile class

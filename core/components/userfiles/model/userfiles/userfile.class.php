@@ -16,8 +16,6 @@ class UserFile extends xPDOSimpleObject
 
     /** @var array $imageThumbnail */
     public $imageDefaultThumbnail = array(
-//        'w'  => 120,
-//        'h'  => 90,
         'q'  => 90,
         'bg' => 'fff',
         'f'  => 'jpg'
@@ -163,10 +161,6 @@ class UserFile extends xPDOSimpleObject
         }
 
         $imageExtensions = $this->getImageExtensions();
-        if (empty($imageExtensions)) {
-            return false;
-        }
-
         if (!in_array($this->get('type'), $imageExtensions)) {
             return false;
         }
@@ -194,14 +188,17 @@ class UserFile extends xPDOSimpleObject
      */
     public function getImageThumbnails()
     {
-        if (!$this->initialized()) {
-            return false;
-        }
-        if (isset($this->mediaSourceProperties['imageThumbnails'])) {
-            return $this->xpdo->fromJSON($this->mediaSourceProperties['imageThumbnails']);
+        $value = array();
+
+        if (
+            $this->initialized()
+            AND
+            isset($this->mediaSourceProperties['imageThumbnails'])
+        ) {
+            $value = $this->xpdo->fromJSON($this->mediaSourceProperties['imageThumbnails']);
         }
 
-        return array();
+        return $value;
     }
 
     /**
@@ -209,14 +206,17 @@ class UserFile extends xPDOSimpleObject
      */
     public function getImageExtensions()
     {
-        if (!$this->initialized()) {
-            return false;
-        }
-        if (isset($this->mediaSourceProperties['imageExtensions'])) {
-            return $this->UserFiles->explodeAndClean($this->mediaSourceProperties['imageExtensions']);
+        $value = array();
+
+        if (
+            $this->initialized()
+            AND
+            isset($this->mediaSourceProperties['imageExtensions'])
+        ) {
+            $value = $this->UserFiles->explodeAndClean($this->mediaSourceProperties['imageExtensions']);
         }
 
-        return array();
+        return $value;
     }
 
     /**
@@ -224,14 +224,19 @@ class UserFile extends xPDOSimpleObject
      */
     public function getThumbnailType()
     {
-        if (!$this->initialized()) {
-            return false;
-        }
-        if (isset($this->mediaSourceProperties['thumbnailType']) AND !empty($this->mediaSourceProperties['thumbnailType'])) {
-            return $this->mediaSourceProperties['thumbnailType'];
+        $value = 'jpg';
+
+        if (
+            $this->initialized()
+            AND
+            isset($this->mediaSourceProperties['thumbnailType'])
+            AND
+            !empty($this->mediaSourceProperties['thumbnailType'])
+        ) {
+            $value = strtolower($this->mediaSourceProperties['thumbnailType']);
         }
 
-        return 'jpg';
+        return $value;
     }
 
 
@@ -240,14 +245,19 @@ class UserFile extends xPDOSimpleObject
      */
     public function getMainThumbnail()
     {
-        if (!$this->initialized()) {
-            return false;
-        }
-        if (isset($this->mediaSourceProperties['imageMainThumbnail']) AND !empty($this->mediaSourceProperties['imageMainThumbnail'])) {
-            return $this->modx->fromJSON($this->mediaSourceProperties['imageMainThumbnail']);
+        $value = false;
+
+        if (
+            $this->initialized()
+            AND
+            isset($this->mediaSourceProperties['imageMainThumbnail'])
+            AND
+            !empty($this->mediaSourceProperties['imageMainThumbnail'])
+        ) {
+            $value = $this->modx->fromJSON($this->mediaSourceProperties['imageMainThumbnail']);
         }
 
-        return false;
+        return $value;
     }
 
     /**
@@ -304,18 +314,18 @@ class UserFile extends xPDOSimpleObject
         }
 
         if ($phpThumb->GenerateThumbnail()) {
-            ImageInterlace($phpThumb->gdimg_output, true);
-            if ($phpThumb->RenderOutput()) {
-                $this->xpdo->log(modX::LOG_LEVEL_INFO,
-                    '[UserFiles] phpThumb messages for "' . $this->get('url') . '". ' . print_r($phpThumb->debugmessages,
-                        1));
+            if (!is_resource($phpThumb->gdimg_output)) {
+                $this->xpdo->log(modX::LOG_LEVEL_ERROR,
+                    '[UserFiles] phpThumb messages for "' . $this->get('url') . 'failed because !is_resource($phpThumb->gdimg_output)');
 
-                return $phpThumb->outputImageData;
+            } else {
+                if ($phpThumb->RenderOutput()) {
+                    return $phpThumb->outputImageData;
+                }
             }
         }
         $this->xpdo->log(modX::LOG_LEVEL_ERROR,
-            '[UserFiles] Could not generate thumbnail for "' . $this->get('url') . '". ' . print_r($phpThumb->debugmessages,
-                1));
+            '[UserFiles] Could not generate thumbnail for "' . $this->get('url') . ' ' . __FILE__ . __LINE__);
 
         return false;
     }
