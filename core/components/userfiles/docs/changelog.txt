@@ -1,6 +1,6 @@
 Changelog for UserFiles.
 
-2.2.2-beta (18.08.2016)
+2.2.2-beta (17.09.2016)
 ==============
 - Fix "getMany" UserFile class
 - Add "background-color" thumb
