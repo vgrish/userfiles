@@ -10,8 +10,6 @@ class modUserFileMultipleProcessor extends modProcessor
 
     public function process()
     {
-        $this->modx->log(1, print_r(11, 1));
-        
         if (!$this->modx->hasPermission($this->permission)) {
             return $this->modx->lexicon('userfiles_err_permission_denied');
         }
