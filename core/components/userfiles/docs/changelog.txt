@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.2.4-beta (21.09.2016)
+==============
+- Add "ufWrapper" snippet
+
 2.2.3-beta (17.09.2016)
 ==============
 - Fix "makeThumbnail"
