@@ -58,5 +58,5 @@ $BUILD_RESOLVERS = array(
     'settings',
     'policy',
     'chunks',
-   // 'vendors',
+    'vendors',
 );
