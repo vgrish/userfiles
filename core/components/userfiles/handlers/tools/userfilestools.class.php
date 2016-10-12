@@ -82,9 +82,9 @@ interface UserFilesToolsInterface
 }
 
 /**
- * Class Tools
+ * Class UserFilesTools
  */
-class Tools implements UserFilesToolsInterface
+class UserFilesTools implements UserFilesToolsInterface
 {
 
     static $xpdo;

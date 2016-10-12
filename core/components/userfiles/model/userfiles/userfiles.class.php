@@ -13,7 +13,7 @@ class UserFiles
     public $config = array();
     /** @var array $initialized */
     public $initialized = array();
-    /** @var Tools $Tools */
+    /** @var UserFilesTools $Tools */
     public $Tools;
 
     /**
@@ -180,7 +180,7 @@ class UserFiles
     public function loadTools()
     {
         if (!is_object($this->Tools) OR !($this->Tools instanceof UserFilesToolsInterface)) {
-            $toolsClass = $this->modx->loadClass('tools.Tools', $this->config['handlersPath'], true, true);
+            $toolsClass = $this->modx->loadClass('tools.UserFilesTools', $this->config['handlersPath'], true, true);
             if ($derivedClass = $this->getOption('class_tools_handler', null, '')) {
                 if ($derivedClass = $this->modx->loadClass('tools.' . $derivedClass, $this->config['handlersPath'],
                     true, true)

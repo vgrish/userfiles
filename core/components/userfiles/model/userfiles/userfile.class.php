@@ -585,6 +585,8 @@ class UserFile extends xPDOSimpleObject
                 in_array($this->get('type'), $imageExtensions)
             ) {
 
+                $url = $this->get('url');
+
                 /* get thumb */
                 $thumb = '';
                 $q = $this->xpdo->newQuery('UserFile');
@@ -605,9 +607,10 @@ class UserFile extends xPDOSimpleObject
                 }
 
                 $arr = array(
-                    'image' => !empty($this->get('url')) ? $this->get('url') : '',
+                    'image' => !empty($url) ? $url : '',
                     'thumb' => !empty($thumb) ? $thumb : '',
                 );
+                
                 $productData->fromArray($arr);
                 if ($productData->save()) {
                     $product->clearCache();

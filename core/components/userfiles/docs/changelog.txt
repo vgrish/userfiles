@@ -5,6 +5,7 @@ Changelog for UserFiles.
 - Add "list_default", "process_msproduct", "image_cropper_profile" setting
 - Add "process msproduct"
 - Add "cropper profile"
+- Fix "Tools"
 
 2.2.4-beta (21.09.2016)
 ==============
