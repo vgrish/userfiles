@@ -1,5 +1,11 @@
 Changelog for UserFiles.
 
+2.2.5-beta (12.10.2016)
+==============
+- Add "list_default", "process_msproduct", "image_cropper_profile" setting
+- Add "process msproduct"
+- Add "cropper profile"
+
 2.2.4-beta (21.09.2016)
 ==============
 - Add "ufWrapper" snippet

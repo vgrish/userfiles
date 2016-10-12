@@ -44,6 +44,13 @@ class modUserFilesListGetListProcessor extends modObjectProcessor
     /** {@inheritDoc} */
     public function outputArray(array $array, $count = false)
     {
+        $array = array_merge_recursive(array(
+            array(
+                'id'   => $this->modx->getOption('userfiles_list_default', null, 'default', true),
+                'name' => $this->modx->getOption('userfiles_list_default', null, 'default', true),
+            )
+        ), $array);
+
         if ($this->getProperty('addall')) {
             $array = array_merge_recursive(array(
                 array(

@@ -31,7 +31,8 @@ switch (true) {
         break;
 }
 
-$list = $scriptProperties['list'] = $UserFiles->getOption('list', $scriptProperties, 'default', true);
+$list = $scriptProperties['list'] = $UserFiles->getOption('list', $scriptProperties,
+    $UserFiles->getOption('list_default', null, 'default', true), true);
 $createdby = $scriptProperties['createdby'] = $UserFiles->getOption('createdby', $scriptProperties, $modx->user->id);
 
 $source = $scriptProperties['source'] = $UserFiles->getOption('source', $scriptProperties,

@@ -180,6 +180,8 @@ class UserFile extends xPDOSimpleObject
             }
         }
 
+        $this->processMsProductImage();
+
         return true;
     }
 
@@ -476,7 +478,7 @@ class UserFile extends xPDOSimpleObject
     {
         if ($this->isNew()) {
             if (!$this->get('list')) {
-                $this->set('list', 'default');
+                $this->set('list', $this->xpdo->getOption('userfiles_list_default', null, 'default', true));
             }
             if (!$this->get('session')) {
                 $this->set('session', session_id());
@@ -531,6 +533,10 @@ class UserFile extends xPDOSimpleObject
 
         $saved = parent:: save($cacheFlag);
 
+        if ($saved) {
+            $this->processMsProductImage();
+        }
+
         return $saved;
     }
 
@@ -549,6 +555,67 @@ class UserFile extends xPDOSimpleObject
         }
 
         return parent::getMany($alias, $criteria, $cacheFlag);
+    }
+
+    public function processMsProductImage()
+    {
+        /** @var msProduct $product */
+        /** @var msProductData $productData */
+        if (
+            $this->xpdo->getOption('userfiles_process_msproduct', null, false, true)
+            AND
+            $this->get('class') == 'modResource'
+            AND
+            $this->get('rank') == 0
+            AND
+            $product = $this->xpdo->getObject('msProduct', $this->get('parent'))
+            AND
+            $productData = $product->loadData()
+        ) {
+
+            $product->toArray();
+
+            $list = $this->xpdo->getOption('userfiles_list_template_' . $product->get('template'), null,
+                $this->xpdo->getOption('userfiles_list_default', null, 'default', true), true);
+
+            $imageExtensions = $this->getImageExtensions();
+            if (
+                $this->get('list') == $list
+                AND
+                in_array($this->get('type'), $imageExtensions)
+            ) {
+
+                /* get thumb */
+                $thumb = '';
+                $q = $this->xpdo->newQuery('UserFile');
+                $q->where(array(
+                    "class"   => "UserFile",
+                    "list"    => $list,
+                    "rank"    => 0,
+                    "parent"  => $this->get('id'),
+                    "source"  => $this->get('source'),
+                    "context" => $this->get('context')
+                ));
+                $q->select("url");
+                $q->limit(1);
+                if ($q->prepare() AND $q->stmt->execute()) {
+                    if (!$thumb = $this->xpdo->getValue($q->stmt)) {
+                        $thumb = '';
+                    }
+                }
+
+                $arr = array(
+                    'image' => !empty($this->get('url')) ? $this->get('url') : '',
+                    'thumb' => !empty($thumb) ? $thumb : '',
+                );
+                $productData->fromArray($arr);
+                if ($productData->save()) {
+                    $product->clearCache();
+                }
+
+            }
+
+        }
     }
 
 }

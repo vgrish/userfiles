@@ -15,6 +15,16 @@ $tmp = array(
         'xtype' => 'modx-combo-source',
         'area'  => 'userfiles_main',
     ),
+    'list_default'          => array(
+        'value' => 'default',
+        'xtype' => 'textfield',
+        'area'  => 'userfiles_main',
+    ),
+    'process_msproduct'              => array(
+        'xtype' => 'combo-boolean',
+        'value' => false,
+        'area'  => 'userfiles_main',
+    ),
     'duplicate_search_fields' => array(
         'value' => 'parent,class,list,hash,source',
         'xtype' => 'textarea',
@@ -54,6 +64,11 @@ $tmp = array(
     
     'image_mime_type' => array(
         'value' => '[{"type":"png","mime":"image/png"},{"type":"jpg","mime":"image/jpg"}]',
+        'xtype' => 'textarea',
+        'area'  => 'userfiles_editor',
+    ),
+    'image_cropper_profile' => array(
+        'value' => '[{"profile":"free"},{"profile":"square","ratio": "1/1"},{"profile":"4x6 wide","ratio": "6/4"}]',
         'xtype' => 'textarea',
         'area'  => 'userfiles_editor',
     ),

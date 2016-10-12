@@ -331,7 +331,7 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 					width: 190,
 					custm: true,
 					clear: true,
-					value: 'default',
+					value: userfiles.tools.getListDefault(),
 					listeners: {
 						select: {
 							fn: this._filterByCombo,

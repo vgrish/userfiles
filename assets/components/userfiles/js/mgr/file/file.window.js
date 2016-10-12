@@ -28,6 +28,33 @@ userfiles.window.ImageEdit = function(config) {
 };
 Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
     imageData: '',
+    cropperProfile: {name: ''},
+
+    changeCropperProfile: function(profile){
+        var ratio;
+
+        if (profile.ratio != "") {
+            ratio = profile.ratio;
+            ratio.replace(/[^-:x()\d/*+.]/g, '');
+            ratio = eval(ratio) || NaN;
+        } else {
+            if (profile.width && profile.height) {
+                var width = parseInt(profile.width);
+                var height = parseInt(profile.height);
+                if (width > 0 && height > 0) {
+                    ratio = width / height;
+                } else {
+                    ratio = NaN;
+                }
+            } else {
+                ratio = NaN;
+            }
+        }
+
+        this.cropperProfile = profile;
+        this.$cropperEl.cropper('setAspectRatio', ratio);
+    },
+
 
     getFields: function(config) {
 
@@ -61,7 +88,7 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
     getBottomBar: function (config) {
         var component = [
             'move', 'crop', 'zoom_plus', 'zoom_minus', 'rotate_left', 'rotate_right', 'scalex', 'scaley',
-            'clear', 'left', 'type', 'cancel', 'save'
+            'clear', 'left', 'profile', 'type', 'cancel', 'save'
         ];
         var bbar = [];
 
@@ -136,7 +163,19 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
                 },
                 value: config.record.type
             },
-
+            profile: {
+                xtype: 'userfiles-combo-cropper-profile',
+                cls: 'userfiles-cropper-profile',
+                width: 150,
+                listeners: {
+                    select: {
+                        fn: function(combo, value){
+                            this.changeCropperProfile(value.data);
+                        },
+                        scope: this
+                    },
+                }
+            },
             left: '->',
             cancel: {
                 handler: this.close,

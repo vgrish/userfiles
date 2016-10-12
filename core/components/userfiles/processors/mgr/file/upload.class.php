@@ -226,8 +226,10 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
 
         $this->setProperty('parent', $this->getProperty('parent', 0));
         $this->setProperty('class', $this->getProperty('class', 'modResource'));
-        $this->setProperty('list', $this->getProperty('list', 'default'));
+        $this->setProperty('list',
+            $this->getProperty('list', $this->UserFiles->getOption('list_default', null, 'default', true)));
         $this->setProperty('context', $this->getProperty('context', 'web'));
+
 
         /*  switch ($this->getProperty('class')) {
               case 'modResource':
