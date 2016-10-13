@@ -23,6 +23,7 @@ $parent = $scriptProperties['parent'] = $modx->getOption('parent', $scriptProper
 switch (true) {
     case empty($parent) AND $class == 'modResource':
         $parent = $scriptProperties['parent'] = $modx->resource->id;
+        $class = $scriptProperties['class'] = $modx->resource->class_key;
         break;
     case empty($parent) AND $class == 'modUser':
         $parent = $scriptProperties['parent'] = $modx->user->id;

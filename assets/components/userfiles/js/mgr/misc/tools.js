@@ -256,3 +256,19 @@ userfiles.tools.getListDefault = function (config) {
 };
 
 
+userfiles.tools.getParentClass = function (config) {
+	var parentClass = [];
+	if (userfiles.config && userfiles.config.resource && userfiles.config.resource.class_key) {
+		parentClass.push('modResource');
+		parentClass.push(userfiles.config.resource.class_key);
+	}
+	else if (userfiles.config && userfiles.config.user) {
+		parentClass.push('modUser');
+	}
+	else if (userfiles.config) {
+
+	}
+
+	return parentClass.join(',');
+};
+

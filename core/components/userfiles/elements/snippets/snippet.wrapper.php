@@ -14,9 +14,8 @@ if (!$userfiles = $modx->getService($fqn, '', $path . 'model/',
 $tpl = $scriptProperties['tpl'] = $modx->getOption('tpl', $scriptProperties, '', true);
 $parents = $scriptProperties['parents'] = $modx->getOption('parents', $scriptProperties, $modx->resource->id, true);
 $class = $scriptProperties['class'] = $modx->getOption('class', $scriptProperties, 'modResource', true);
-$return = $scriptProperties['return'] = $modx->getOption('return', $scriptProperties, 'chunks', true);
-$includeThumbs = $scriptProperties['includeThumbs'] = $modx->getOption('includeThumbs', $scriptProperties, 0, true);
-$includeThumbs = $userfiles->explodeAndClean($includeThumbs);
+$includeFilesThumbs = $scriptProperties['includeFilesThumbs'] = $modx->getOption('includeFilesThumbs', $scriptProperties, 0, true);
+$includeFilesThumbs = $userfiles->explodeAndClean($includeFilesThumbs);
 
 $element = $scriptProperties['element'] = $modx->getOption('element', $scriptProperties, 'pdoResources', true);
 if (isset($this) AND $this instanceof modSnippet AND $element == $this->get('name')) {
@@ -32,6 +31,7 @@ $innerJoinFiles = array();
 $select = array(
     $class => "{$class}.*"
 );
+
 $groupby = array(
     "{$class}.id",
 );
@@ -61,7 +61,7 @@ foreach (array('leftJoinFiles' => 'leftJoin', 'innerJoinFiles' => 'innerJoin') a
             );
             $select[$var] = $modx->getSelectColumns('UserFile', $var, $var . '_');
 
-            foreach ($includeThumbs as $thumb) {
+            foreach ($includeFilesThumbs as $thumb) {
                 $size = explode('x', $thumb);
                 $sizeLike = array();
                 if (!empty($size[0])) {
@@ -103,8 +103,7 @@ $default = array(
     'select'    => $select,
     'sortby'    => "{$class}.id",
     'sortdir'   => 'ASC',
-    'groupby'   => implode(', ', $groupby),
-    'return'    => $return,
+    'groupby'   => implode(', ', $groupby)
 );
 
 $output = '';

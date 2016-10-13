@@ -23,7 +23,7 @@ $tmp = array(
         'type'  => 'textfield',
         'value' => '',
     ),
-    'includeThumbs'   => array(
+    'includeFilesThumbs'   => array(
         'type'  => 'textfield',
         'value' => '',
     ),

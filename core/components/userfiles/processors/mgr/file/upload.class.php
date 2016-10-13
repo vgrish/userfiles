@@ -56,8 +56,16 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
         }
 
         $this->mainThumbnail();
+        $this->prepareClass();
 
         return true;
+    }
+
+    public function prepareClass()
+    {
+        $class = $this->UserFiles->explodeAndClean($this->getProperty('class', 'modResource'));
+        $class = end($class);
+        $this->setProperty('class', $class);
     }
 
     /**
@@ -231,28 +239,21 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
         $this->setProperty('context', $this->getProperty('context', 'web'));
 
 
-        /*  switch ($this->getProperty('class')) {
-              case 'modResource':
-                  if ($stmt = $this->modx->prepare("SELECT alias FROM " . $this->modx->getTableName('modResource') . " WHERE id = :id")) {
-                      $stmt->bindValue(':id', $this->getProperty('parent'));
-                      $alias = $this->modx->getValue($stmt);
-                  }
-                  break;
-              case 'modUser':
-                  if ($stmt = $this->modx->prepare("SELECT email FROM " . $this->modx->getTableName('modUserProfile') . " WHERE internalKey = :id")) {
-                      $stmt->bindValue(':id', $this->getProperty('parent'));
-                      $alias = $this->modx->getValue($stmt);
-                  }
-                  break;
-          }
+        $alias = '';
+        if ($parent = $this->modx->getObject($this->getProperty('class'), (int)$this->getProperty('parent'))) {
+            if ($this->getProperty('class') == 'modResource' AND $classKey = $parent->get('class_key')) {
+                $this->setProperty('class', $classKey);
+            }
 
-          if (empty($alias)) {
-              $alias = 'alias';
-          }*/
+            if (!$alias = $parent->get('alias')) {
+                $alias = '';
+            }
+        }
 
         $pls = array(
             'pl' => array(
                 '{name}',
+                '{alias}',
                 '{id}',
                 '{class}',
                 '{list}',
@@ -270,7 +271,8 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
             ),
             'vl' => array(
                 $name,
-                0,
+                $alias,
+                $this->getProperty('parent'),
                 $this->getProperty('class'),
                 $this->getProperty('list'),
                 session_id(),

@@ -124,7 +124,7 @@ class modUserFileGetListProcessor extends modObjectGetListProcessor
 
         $class = $this->getProperty('class');
         if ($class) {
-            $c->where(array("{$this->classKey}.class" => $class));
+            $c->where(array("{$this->classKey}.class:IN" => explode(',', $class)));
         }
 
         $active = $this->getProperty('active');

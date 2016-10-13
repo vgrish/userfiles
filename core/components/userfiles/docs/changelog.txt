@@ -1,5 +1,10 @@
 Changelog for UserFiles.
 
+2.2.6-beta (13.10.2016)
+==============
+- Fix "UserFile class"
+- Improvement "ufWrapper"
+
 2.2.5-beta (12.10.2016)
 ==============
 - Add "list_default", "process_msproduct", "image_cropper_profile" setting
