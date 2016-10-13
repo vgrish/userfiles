@@ -27,6 +27,10 @@ $tmp = array(
         'type'  => 'textfield',
         'value' => '',
     ),
+    'includeAllFiles' => array(
+        'type' => 'combo-boolean',
+        'value' => false,
+    ),
     'element'        => array(
         'type'  => 'textfield',
         'value' => 'pdoResources',

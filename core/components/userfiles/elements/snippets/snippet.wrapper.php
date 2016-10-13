@@ -14,8 +14,10 @@ if (!$userfiles = $modx->getService($fqn, '', $path . 'model/',
 $tpl = $scriptProperties['tpl'] = $modx->getOption('tpl', $scriptProperties, '', true);
 $parents = $scriptProperties['parents'] = $modx->getOption('parents', $scriptProperties, $modx->resource->id, true);
 $class = $scriptProperties['class'] = $modx->getOption('class', $scriptProperties, 'modResource', true);
-$includeFilesThumbs = $scriptProperties['includeFilesThumbs'] = $modx->getOption('includeFilesThumbs', $scriptProperties, 0, true);
+$includeFilesThumbs = $scriptProperties['includeFilesThumbs'] = $modx->getOption('includeFilesThumbs',
+    $scriptProperties, 0, true);
 $includeFilesThumbs = $userfiles->explodeAndClean($includeFilesThumbs);
+$includeAllFiles = (bool)$modx->getOption('includeAllFiles', $scriptProperties, 0, true);
 
 $element = $scriptProperties['element'] = $modx->getOption('element', $scriptProperties, 'pdoResources', true);
 if (isset($this) AND $this instanceof modSnippet AND $element == $this->get('name')) {
@@ -62,8 +64,10 @@ foreach (array('leftJoinFiles' => 'leftJoin', 'innerJoinFiles' => 'innerJoin') a
                 'class' => 'UserFile',
                 'on'    => "`{$var}`.class = '{$class}' AND `{$var}`.parent = `{$class}`.id AND `{$var}`.list = '{$var}'",
             );
-            $select[$var] = $modx->getSelectColumns('UserFile', $var, $var . '_');
-
+            $select[$var][] = $modx->getSelectColumns('UserFile', $var, $var . '_');
+            if ($includeAllFiles) {
+                $select[$var][] = "GROUP_CONCAT(`{$var}`.`url` SEPARATOR ',') as `{$var}`";
+            }
             foreach ($includeFilesThumbs as $thumb) {
                 $size = explode('x', $thumb);
                 $sizeLike = array();
@@ -79,7 +83,10 @@ foreach (array('leftJoinFiles' => 'leftJoin', 'innerJoinFiles' => 'innerJoin') a
                     'class' => 'UserFile',
                     'on'    => "`{$thumb}`.class = 'UserFile' AND `{$thumb}`.parent = `{$var}`.id AND `{$thumb}`.list = '{$var}' AND `{$thumb}`.properties LIKE '%{$sizeLike}%'",
                 );
-                $select[$thumb] = $modx->getSelectColumns('UserFile', $thumb, $thumb . '_');
+                $select[$thumb][] = $modx->getSelectColumns('UserFile', $thumb, $thumb . '_');
+                if ($includeAllFiles) {
+                    $select[$thumb][] = "GROUP_CONCAT(`{$thumb}`.`url` SEPARATOR ',') as `{$thumb}`";
+                }
             }
         }
     }
