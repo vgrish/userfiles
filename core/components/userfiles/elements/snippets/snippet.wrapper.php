@@ -43,6 +43,9 @@ foreach (array('where', 'leftJoin', 'innerJoin', 'select', 'groupby') as $v) {
         if (!is_array($tmp)) {
             $tmp = json_decode($tmp, true);
         }
+        if (!is_array($tmp)) {
+            $tmp = array($scriptProperties[$v]);
+        }
         if (is_array($tmp)) {
             $$v = array_merge($$v, $tmp);
         }
