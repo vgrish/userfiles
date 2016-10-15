@@ -81,14 +81,22 @@
 
 		<aggregate alias="Source" class="modMediaSource" local="source" foreign="id" cardinality="one" owner="local" />
 		<aggregate alias="Context" class="modContext" local="context" foreign="key" cardinality="one" owner="local" />
+
 		<aggregate alias="Resource" class="modResource" local="parent" foreign="id" cardinality="one" owner="local">
 			<criteria target="local"><![CDATA[
 			{"class":"modResource"}
 			]]></criteria>
 		</aggregate>
+
 		<aggregate alias="User" class="modUser" local="parent" foreign="id" cardinality="one" owner="local">
 			<criteria target="local"><![CDATA[
 			{"class":"modUser"}
+			]]></criteria>
+		</aggregate>
+
+		<aggregate alias="Product" class="msProduct" local="parent" foreign="id" cardinality="one" owner="local">
+			<criteria target="local"><![CDATA[
+			{"class":"msProduct"}
 			]]></criteria>
 		</aggregate>
 

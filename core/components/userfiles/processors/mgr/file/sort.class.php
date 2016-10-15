@@ -30,6 +30,7 @@ class modUserFileSortProcessor extends modObjectProcessor
             $this->setProperty($key, $source->get($key));
         }
 
+
         if (
             $this->getProperty('parent') != $target->get('parent') OR
             $this->getProperty('class') != $target->get('class') OR
@@ -39,12 +40,14 @@ class modUserFileSortProcessor extends modObjectProcessor
             return $this->failure('');
         }
 
+        $table = $this->modx->getTableName($this->classKey);
+
         if ($source->get('rank') < $target->get('rank')) {
-            $this->modx->exec("UPDATE {$this->modx->getTableName($this->classKey)}
+            $this->modx->exec("UPDATE {$table}
 				SET rank = rank - 1 WHERE
-					parent = {$this->getProperty('parent')}
+					parent = '{$this->getProperty('parent')}'
 					AND class = '{$this->getProperty('class')}'
-					AND source = {$this->getProperty('source')}
+					AND source = '{$this->getProperty('source')}'
 					AND context = '{$this->getProperty('context')}'
 
 					AND rank <= {$target->get('rank')}
@@ -53,11 +56,11 @@ class modUserFileSortProcessor extends modObjectProcessor
 			");
             $newRank = $target->get('rank');
         } else {
-            $this->modx->exec("UPDATE {$this->modx->getTableName($this->classKey)}
+            $this->modx->exec("UPDATE {$table}
 				SET rank = rank + 1 WHERE
-					parent = {$this->getProperty('parent')}
+					parent = '{$this->getProperty('parent')}'
 					AND class = '{$this->getProperty('class')}'
-					AND source = {$this->getProperty('source')}
+					AND source = '{$this->getProperty('source')}'
 					AND context = '{$this->getProperty('context')}'
 
 					AND rank >= {$target->get('rank')}
@@ -69,43 +72,9 @@ class modUserFileSortProcessor extends modObjectProcessor
         $source->set('rank', $newRank);
         $source->save();
 
-        $q = $this->modx->newQuery($this->classKey);
-        $q->where(array(
-            "{$this->classKey}.rank"    => 0,
-            "{$this->classKey}.parent"  => $this->getProperty('parent'),
-            "{$this->classKey}.class"   => $this->getProperty('class'),
-            "{$this->classKey}.source"  => $this->getProperty('source'),
-            "{$this->classKey}.context" => $this->getProperty('context')
-        ));
+        $thumb = $source->updateRanks();
 
-        if (1 != $this->modx->getCount($this->classKey, $q)) {
-            $this->setRanks();
-        }
-
-        return $this->success('');
-    }
-
-    /** {@inheritDoc} */
-    public function setRanks()
-    {
-        $q = $this->modx->newQuery($this->classKey);
-        $q->where(array(
-            "{$this->classKey}.parent"  => $this->getProperty('parent'),
-            "{$this->classKey}.class"   => $this->getProperty('class'),
-            "{$this->classKey}.source"  => $this->getProperty('source'),
-            "{$this->classKey}.context" => $this->getProperty('context')
-        ));
-        $q->select('id');
-        $q->sortby('rank ASC, id', 'ASC');
-        if ($q->prepare() AND $q->stmt->execute()) {
-            $ids = $q->stmt->fetchAll(PDO::FETCH_COLUMN);
-            $sql = '';
-            $table = $this->modx->getTableName($this->classKey);
-            foreach ($ids as $k => $id) {
-                $sql .= "UPDATE {$table} SET `rank` = '{$k}' WHERE `id` = '{$id}';";
-            }
-            $this->modx->exec($sql);
-        }
+        return $this->success('', array('product_thumb' => $thumb));
     }
 
 }

@@ -180,8 +180,6 @@ class UserFile extends xPDOSimpleObject
             }
         }
 
-        $this->processMsProductImage();
-
         return true;
     }
 
@@ -451,7 +449,7 @@ class UserFile extends xPDOSimpleObject
             return $this->mediaSourceProperties['fileName'];
         }
 
-        return '{name}.{rand}.{ext}';
+        return '{name}.{ext}';
     }
 
     /**
@@ -466,7 +464,7 @@ class UserFile extends xPDOSimpleObject
             return $this->mediaSourceProperties['thumbnailName'];
         }
 
-        return '{name}.{rand}.{w}.{h}.{ext}';
+        return '{name}.{w}.{h}.{ext}';
     }
 
     /**
@@ -520,22 +518,7 @@ class UserFile extends xPDOSimpleObject
 
         }
 
-        if ($this->isNew() || $this->get('move')) {
-            $q = $this->xpdo->newQuery('UserFile');
-            $q->where(array(
-                'parent'  => $this->get('parent'),
-                'class'   => $this->get('class'),
-                'source'  => $this->get('source'),
-                'context' => $this->get('context')
-            ));
-            $this->set('rank', $this->xpdo->getCount('UserFile', $q));
-        }
-
         $saved = parent:: save($cacheFlag);
-
-        if ($saved) {
-            $this->processMsProductImage();
-        }
 
         return $saved;
     }
@@ -557,68 +540,150 @@ class UserFile extends xPDOSimpleObject
         return parent::getMany($alias, $criteria, $cacheFlag);
     }
 
-    public function processMsProductImage()
+    public function updateRanks($getProductThumb = true)
     {
-        /** @var msProduct $product */
-        /** @var msProductData $productData */
-        if (
-            $this->xpdo->getOption('userfiles_process_msproduct', null, false, true)
-            AND
-            $this->get('class') == 'modResource'
-            AND
-            $this->get('rank') == 0
-            AND
-            $product = $this->xpdo->getObject('msProduct', $this->get('parent'))
-            AND
-            $productData = $product->loadData()
-        ) {
+        $class = 'UserFile';
+        $q = $this->xpdo->newQuery($class);
+        $q->where(array(
+            "parent"  => $this->get('parent'),
+            "class"   => $this->get('class'),
+            "list"    => $this->get('list'),
+            "source"  => $this->get('source'),
+            "context" => $this->get('context')
+        ));
+        $q->select('id');
+        $q->sortby('rank ASC, id', 'ASC');
 
-            $product->toArray();
-
-            $list = $this->xpdo->getOption('userfiles_list_template_' . $product->get('template'), null,
-                $this->xpdo->getOption('userfiles_list_default', null, 'default', true), true);
-
-            $imageExtensions = $this->getImageExtensions();
-            if (
-                $this->get('list') == $list
-                AND
-                in_array($this->get('type'), $imageExtensions)
-            ) {
-
-                $url = $this->get('url');
-
-                /* get thumb */
-                $thumb = '';
-                $q = $this->xpdo->newQuery('UserFile');
-                $q->where(array(
-                    "class"   => "UserFile",
-                    "list"    => $list,
-                    "rank"    => 0,
-                    "parent"  => $this->get('id'),
-                    "source"  => $this->get('source'),
-                    "context" => $this->get('context')
-                ));
-                $q->select("url");
-                $q->limit(1);
-                if ($q->prepare() AND $q->stmt->execute()) {
-                    if (!$thumb = $this->xpdo->getValue($q->stmt)) {
-                        $thumb = '';
-                    }
-                }
-
-                $arr = array(
-                    'image' => !empty($url) ? $url : '',
-                    'thumb' => !empty($thumb) ? $thumb : '',
-                );
-                
-                $productData->fromArray($arr);
-                if ($productData->save()) {
-                    $product->clearCache();
-                }
-
+        if ($q->prepare() AND $q->stmt->execute()) {
+            $table = $this->xpdo->getTableName($class);
+            $ids = $q->stmt->fetchAll(PDO::FETCH_COLUMN);
+            $sql = '';
+            foreach ($ids as $k => $id) {
+                $sql .= "UPDATE {$table} SET `rank` = '{$k}' WHERE `id` = '{$id}';";
             }
-
+            $sql .= "ALTER TABLE {$table} ORDER BY rank ASC;";
+            $this->xpdo->exec($sql);
         }
+
+        $thumb = null;
+        if ($getProductThumb) {
+            $thumb = $this->getProductThumb();
+        }
+
+        return $thumb;
+    }
+
+    public function getProductThumb()
+    {
+        $thumb = null;
+        /** @var msProduct $product */
+        if (
+            !$this->xpdo->getOption('userfiles_process_msproduct', null, false, true)
+            OR
+            !$product = $this->getOne('Product')
+            OR
+            !$productData = $product->loadData()
+        ) {
+            return $thumb;
+        }
+
+        $list = $this->xpdo->getOption('userfiles_list_template_' . $product->get('template'), null,
+            $this->xpdo->getOption('userfiles_list_default', null, 'default', true), true);
+        if ($this->get('list') != $list) {
+            return $thumb;
+        }
+
+        $url = '';
+        $thumb = '';
+
+        /** @var UserFile $image */
+        if ($firstObject = $this->getFirstObject()) {
+            $url = $firstObject->get('url');
+            $thumb = $this->getFirstThumb($firstObject);
+        }
+
+        if ($productData->get('thumb') != $thumb) {
+
+            $arr = array(
+                'image' => !empty($url) ? $url : '',
+                'thumb' => !empty($thumb) ? $thumb : '',
+            );
+
+            $productData->fromArray($arr);
+            if ($productData->save()) {
+                $product->clearCache();
+            }
+        }
+
+        return $thumb;
+    }
+
+    public function getFirstObject($instance = null)
+    {
+        $object = null;
+
+        if (!is_object($instance) OR !($instance instanceof xPDOObject)) {
+            $instance = $this;
+        }
+        $imageExtensions = $this->getImageExtensions();
+        if (!in_array($instance->get('type'), $imageExtensions)) {
+            return $object;
+        }
+
+        $q = $this->xpdo->newQuery('UserFile');
+        $q->where(array(
+            "active"  => 1,
+            "parent"  => $instance->get('parent'),
+            "class"   => $instance->get('class'),
+            "list"    => $instance->get('list'),
+            "source"  => $instance->get('source'),
+            "context" => $instance->get('context')
+        ));
+        $q->sortby('rank', 'ASC');
+
+        $object = $this->xpdo->getObject('UserFile', $q);
+
+        return $object;
+    }
+
+    public function getFirstThumb($instance = null)
+    {
+        $thumb = '';
+
+        $size = explode('x', $this->xpdo->getOption('userfiles_image_thumb_default', null, '120x90', true));
+        $sizeLike = array();
+        if (!empty($size[0])) {
+            $sizeLike[] = 'w\":' . $size[0];
+        }
+        if (!empty($size[1])) {
+            $sizeLike[] = '"\h\":' . $size[1];
+        }
+        $sizeLike = implode(',', $sizeLike);
+
+        if (!is_object($instance) OR !($instance instanceof xPDOObject)) {
+            $instance = $this;
+        }
+
+        $q = $this->xpdo->newQuery('UserFile');
+        $q->where(array(
+            "class"           => "UserFile",
+            "active"          => 1,
+            "parent"          => $instance->get('id'),
+            "list"            => $instance->get('list'),
+            "source"          => $instance->get('source'),
+            "context"         => $instance->get('context'),
+            "properties:LIKE" => "%{$sizeLike}%",
+        ));
+        $q->sortby('rank', 'ASC');
+        $q->select("url");
+        $q->limit(1);
+        if ($q->prepare() AND $q->stmt->execute()) {
+            if (!$thumb = $this->xpdo->getValue($q->stmt)) {
+                $thumb = '';
+            }
+        }
+
+        return $thumb;
     }
 
 }

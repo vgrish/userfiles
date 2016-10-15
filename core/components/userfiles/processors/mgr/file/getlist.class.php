@@ -85,10 +85,22 @@ class modUserFileGetListProcessor extends modObjectGetListProcessor
     /** {@inheritDoc} */
     public function prepareQueryBeforeCount(xPDOQuery $c)
     {
+        $size = explode('x', $this->UserFiles->getOption('image_thumb_default', null, '120x90', true));
+        $sizeLike = array();
+        if (!empty($size[0])) {
+            $sizeLike[] = 'w\":' . $size[0];
+        }
+        if (!empty($size[1])) {
+            $sizeLike[] = '"\h\":' . $size[1];
+        }
+        $sizeLike = implode(',', $sizeLike);
+
+
         $c->leftJoin('modMediaSource', 'Source');
         $c->leftJoin($this->classKey, 'Thumbnail',
-            "{$this->classKey}.id = Thumbnail.parent AND Thumbnail.class = '{$this->classKey}' AND Thumbnail.rank = 0");
+            "{$this->classKey}.id = Thumbnail.parent AND Thumbnail.class = '{$this->classKey}' AND Thumbnail.properties LIKE '%{$sizeLike}%'");
         $c->groupby($this->classKey . '.id');
+
 
         $c->select($this->modx->getSelectColumns($this->classKey, $this->classKey));
         $c->select(array(

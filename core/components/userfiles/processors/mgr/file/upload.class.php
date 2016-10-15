@@ -389,6 +389,14 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
         return true;
     }
 
+    public function cleanup()
+    {
+        $array = $this->object->toArray();
+        $array['product_thumb'] = $this->object->updateRanks();
+
+        return $this->success('', $array);
+    }
+
 }
 
 return 'modUserFileUploadProcessor';

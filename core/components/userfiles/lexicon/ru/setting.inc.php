@@ -11,6 +11,9 @@ $_lang['setting_userfiles_source_default_desc'] = 'Выберите источн
 $_lang['setting_userfiles_list_default'] = 'Список файлов для UserFiles';
 $_lang['setting_userfiles_list_default_desc'] = 'Список файлов, который будет использован по умолчанию для загрузки файлов пользователя.';
 
+$_lang['setting_userfiles_image_thumb_default'] = 'Размер превью по умолчанию';
+$_lang['setting_userfiles_image_thumb_default_desc'] = 'Здесь вы можете указать размер заранее уменьшенной копии изображения. Конечно, этот размер должен существовать и в настройках источника медиа, чтобы генерировались такие превью.';
+
 $_lang['setting_userfiles_process_msproduct'] = 'Обрабатывать продукты';
 $_lang['setting_userfiles_process_msproduct_desc'] = 'Обрабатывать продукты магазина, при включенной настройке заменяет поля "image", "thumb" таблицы "msProductData"';
 

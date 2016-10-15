@@ -292,7 +292,8 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
                     if (this.progress) {
                         this.progress.hide();
                     }
-                    this.fireEvent('success', {});
+
+                    this.fireEvent('success', response);
                     userfiles.window.ImageEdit.superclass.close.call(this);
                 }
             }.bind(this);

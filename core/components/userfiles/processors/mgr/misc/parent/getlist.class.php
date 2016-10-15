@@ -59,24 +59,18 @@ class modResourceGetListProcessor extends modObjectGetListProcessor
             $c->select("{$this->fieldId},{$this->fieldName} as name");
         }
 
-        $id = $this->getProperty('id');
-        if (!empty($id) AND $this->getProperty('combo')) {
-            $q = $this->modx->newQuery($this->classKey);
-            $q->where(array("{$this->fieldId}!=" => $id));
-            $q->select($this->fieldId);
-            $q->limit($this->getProperty('limit') - 1);
-            $q->prepare();
-            $q->stmt->execute();
-            $ids = $q->stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-            $ids = array_merge_recursive(array($id), $ids);
-            $c->where(array(
-                "{$this->classKey}.{$this->fieldId}:IN" => $ids
-            ));
-        }
-
         $query = $this->getProperty('query');
         if (!empty($query)) {
-            $c->where(array("{$this->fieldName}:LIKE" => '%' . $query . '%'));
+            if (is_numeric($query)) {
+                $c->andCondition(array(
+                    'id' => $query,
+                ));
+            } else {
+                $c->where(array(
+                    "{$this->fieldName}:LIKE" => "%{$query}%"
+                ));
+            }
+
         }
 
         return $c;

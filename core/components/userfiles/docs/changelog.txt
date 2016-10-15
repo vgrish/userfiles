@@ -1,5 +1,13 @@
 Changelog for UserFiles.
 
+2.2.8-beta (00.10.2016)
+==============
+- Fix "list" processor
+- Remove "{rand}" from media source
+- Improvement "UserFile" class
+- Improvement "process msproduct"
+- Add "image_thumb_default" setting
+
 2.2.7-beta (13.10.2016)
 ==============
 - Improvement "ufWrapper", add "includeAllFiles"

@@ -10,6 +10,9 @@ class modUserFileRemoveProcessor extends modObjectRemoveProcessor
     public $languageTopics = array('userfiles');
     public $permission = 'userfiles_file_remove';
 
+    /** @var UserFile $object */
+    public $object;
+
     /** {@inheritDoc} */
     public function initialize()
     {
@@ -20,10 +23,34 @@ class modUserFileRemoveProcessor extends modObjectRemoveProcessor
         return parent::initialize();
     }
 
-    /** {@inheritDoc} */
-    public function beforeRemove()
+    public function process()
     {
-        return parent::beforeRemove();
+        $canRemove = $this->beforeRemove();
+        if ($canRemove !== true) {
+            return $this->failure($canRemove);
+        }
+        $preventRemoval = $this->fireBeforeRemoveEvent();
+        if (!empty($preventRemoval)) {
+            return $this->failure($preventRemoval);
+        }
+
+        if ($this->removeObject() == false) {
+            return $this->failure($this->modx->lexicon($this->objectType . '_err_remove'));
+        }
+        $this->afterRemove();
+        $this->fireAfterRemoveEvent();
+        $this->logManagerAction();
+
+        return $this->cleanup();
+    }
+
+
+    public function cleanup()
+    {
+        $array = $this->object->toArray();
+        $array['product_thumb'] = $this->object->updateRanks();
+
+        return $this->success('', $array);
     }
 }
 

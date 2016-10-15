@@ -5,6 +5,9 @@ class modUserFileThumbnailCreateProcessor extends modObjectProcessor
     public $classKey = 'UserFile';
     public $languageTopics = array('userfiles');
 
+    /** @var UserFile $object */
+    public $object;
+
     /**
      * @return array|string
      */
@@ -15,17 +18,25 @@ class modUserFileThumbnailCreateProcessor extends modObjectProcessor
         }
 
         /* @var UserFile $file */
-        if ($file = $this->modx->getObject('UserFile', $id)) {
-            $children = $file->getMany('Children');
+        if ($this->object = $this->modx->getObject('UserFile', $id)) {
+            $children = $this->object->getMany('Children');
             /* @var UserFile $child */
             foreach ($children as $child) {
                 $child->remove();
             }
 
-            $file->generateThumbnails();
+            $this->object->generateThumbnails();
         }
 
-        return $this->success();
+        return $this->cleanup();
+    }
+
+    public function cleanup()
+    {
+        $array = $this->object->toArray();
+        $array['product_thumb'] = $this->object->updateRanks();
+
+        return $this->success('', $array);
     }
 }
 

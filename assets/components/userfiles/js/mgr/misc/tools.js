@@ -272,3 +272,17 @@ userfiles.tools.getParentClass = function (config) {
 	return parentClass.join(',');
 };
 
+
+userfiles.tools.updateProductThumb = function (data) {
+	if (!data || data.length == 0 || data['product_thumb'] === null) {
+		return;
+	}
+
+	var url = data['product_thumb'] || miniShop2.config.default_thumb || '';
+	var thumb = Ext.get('minishop2-product-image');
+	if (thumb && url) {
+
+		url = url + '?t=' + new Date().getTime();
+		thumb.set({'src': url});
+	}
+};
