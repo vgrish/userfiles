@@ -17,13 +17,12 @@ if (!$UserFiles) {
     return 'Could not load UserFiles class!';
 }
 
-$class = $scriptProperties['class'] = $UserFiles->getOption('class', $scriptProperties, 'modResource', true);
 $parent = $scriptProperties['parent'] = $modx->getOption('parent', $scriptProperties);
+$class = $scriptProperties['class'] = $UserFiles->getOption('class', $scriptProperties, 'modResource', true);
 
 switch (true) {
     case empty($parent) AND $class == 'modResource':
         $parent = $scriptProperties['parent'] = $modx->resource->id;
-        $class = $scriptProperties['class'] = $modx->resource->class_key;
         break;
     case empty($parent) AND $class == 'modUser':
         $parent = $scriptProperties['parent'] = $modx->user->id;
@@ -31,6 +30,11 @@ switch (true) {
     default:
         break;
 }
+
+if ($class == 'modResource' AND $object = $modx->getObject('modResource', $parent)) {
+    $class = $scriptProperties['class'] = $class . ',' . $object->get('class_key');
+}
+
 
 $list = $scriptProperties['list'] = $UserFiles->getOption('list', $scriptProperties,
     $UserFiles->getOption('list_default', null, 'default', true), true);

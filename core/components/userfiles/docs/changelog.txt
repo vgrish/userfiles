@@ -1,6 +1,10 @@
 Changelog for UserFiles.
 
-2.2.8-beta (00.10.2016)
+2.2.9-beta (16.10.2016)
+==============
+- Fix "ufForm class" snippet
+
+2.2.8-beta (15.10.2016)
 ==============
 - Fix "list" processor
 - Remove "{rand}" from media source
