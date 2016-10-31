@@ -49,7 +49,7 @@ class modUserFileMultipleProcessor extends modProcessor
             }
         }
 
-        return $this->success('');
+        return !empty($response) ? $response->getResponse() : $this->success('');
     }
 }
 

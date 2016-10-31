@@ -2,7 +2,7 @@ userfiles.panel.ResourceFiles = function(config) {
     config = config || {};
 
     if (!config.class) {
-        config.class = 'modResource';
+        config.class = userfiles.tools.getParentClass();
     }
     if (!config.update) {
         config.update = false;

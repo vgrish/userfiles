@@ -690,3 +690,29 @@ userfiles.combo.MimeType = function(config) {
 };
 Ext.extend(userfiles.combo.MimeType,MODx.combo.ComboBox);
 Ext.reg('userfiles-combo-mime-type',userfiles.combo.MimeType);
+
+
+userfiles.combo.CropperProfile = function(config) {
+    config = config || {};
+
+    if (!config.data) {
+        config.data = JSON.parse(MODx.config['userfiles_image_cropper_profile'] || '[]');
+    }
+
+    Ext.applyIf(config,{
+        name: config.name || 'profile',
+        displayField: 'profile',
+        valueField: 'profile',
+        editable: false,
+        mode: 'local',
+        store: new Ext.data.JsonStore({
+            data: config.data,
+            fields: ['profile', 'width', 'height', 'ratio']
+        }),
+        value: config.data[0] ? config.data[0].profile : ''
+    });
+
+    userfiles.combo.CropperProfile.superclass.constructor.call(this,config);
+};
+Ext.extend(userfiles.combo.CropperProfile,MODx.combo.ComboBox);
+Ext.reg('userfiles-combo-cropper-profile',userfiles.combo.CropperProfile);

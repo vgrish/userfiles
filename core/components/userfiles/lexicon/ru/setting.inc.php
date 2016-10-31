@@ -8,6 +8,20 @@ $_lang['area_userfiles_editor'] = 'Редактор';
 $_lang['setting_userfiles_source_default'] = 'Источник медиа для UserFiles';
 $_lang['setting_userfiles_source_default_desc'] = 'Выберите источник медиа, который будет использован по умолчанию для загрузки файлов пользователя.';
 
+$_lang['setting_userfiles_list_default'] = 'Список файлов для UserFiles';
+$_lang['setting_userfiles_list_default_desc'] = 'Список файлов, который будет использован по умолчанию для загрузки файлов пользователя.';
+
+$_lang['setting_userfiles_image_thumb_default'] = 'Размер превью по умолчанию';
+$_lang['setting_userfiles_image_thumb_default_desc'] = 'Здесь вы можете указать размер заранее уменьшенной копии изображения. Конечно, этот размер должен существовать и в настройках источника медиа, чтобы генерировались такие превью.';
+
+$_lang['setting_userfiles_process_msproduct'] = 'Обрабатывать продукты';
+$_lang['setting_userfiles_process_msproduct_desc'] = 'Обрабатывать продукты магазина, при включенной настройке заменяет поля "image", "thumb" таблицы "msProductData"';
+
+$_lang['setting_userfiles_image_cropper_profile'] = 'Профиль "Cropper"';
+$_lang['setting_userfiles_image_cropper_profile_desc'] = 'Закодированный в JSON массив с параметрами профиля "Cropper".';
+
+$_lang['setting_userfiles_image_cropper_quality'] = 'Качество изображения';
+$_lang['setting_userfiles_image_cropper_quality_desc'] = 'Параметр качества изображения в % .';
 
 $_lang['userfiles_source_thumbnail_desc'] = 'Закодированный в JSON массив с параметрами генерации превью изображений.';
 $_lang['userfiles_source_main_thumbnail_desc'] = 'Закодированный в JSON массив с параметрами генерации главного изображения.';

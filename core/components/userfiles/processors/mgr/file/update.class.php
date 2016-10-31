@@ -27,17 +27,6 @@ class modUserFileUpdateProcessor extends modObjectUpdateProcessor
         return parent::initialize();
     }
 
-    /** {@inheritDoc} */
-    public function beforeSet()
-    {
-        $id = (int)$this->getProperty('id');
-        if (empty($id)) {
-            return $this->modx->lexicon('payandsee_err_ns');
-        }
-
-        return parent::beforeSet();
-    }
-
     /**
      * @return bool
      */
@@ -62,6 +51,14 @@ class modUserFileUpdateProcessor extends modObjectUpdateProcessor
         }
 
         return parent::beforeSave();
+    }
+
+    public function cleanup()
+    {
+        $array = $this->object->toArray();
+        $array['product_thumb'] = $this->object->updateRanks();
+
+        return $this->success('', $array);
     }
 
 }

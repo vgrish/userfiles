@@ -1,5 +1,8 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('error_reporting', -1);
+
 class UserFile extends xPDOSimpleObject
 {
     /** @var modX $modx */
@@ -16,8 +19,6 @@ class UserFile extends xPDOSimpleObject
 
     /** @var array $imageThumbnail */
     public $imageDefaultThumbnail = array(
-//        'w'  => 120,
-//        'h'  => 90,
         'q'  => 90,
         'bg' => 'fff',
         'f'  => 'jpg'
@@ -163,10 +164,6 @@ class UserFile extends xPDOSimpleObject
         }
 
         $imageExtensions = $this->getImageExtensions();
-        if (empty($imageExtensions)) {
-            return false;
-        }
-
         if (!in_array($this->get('type'), $imageExtensions)) {
             return false;
         }
@@ -194,14 +191,17 @@ class UserFile extends xPDOSimpleObject
      */
     public function getImageThumbnails()
     {
-        if (!$this->initialized()) {
-            return false;
-        }
-        if (isset($this->mediaSourceProperties['imageThumbnails'])) {
-            return $this->xpdo->fromJSON($this->mediaSourceProperties['imageThumbnails']);
+        $value = array();
+
+        if (
+            $this->initialized()
+            AND
+            isset($this->mediaSourceProperties['imageThumbnails'])
+        ) {
+            $value = $this->xpdo->fromJSON($this->mediaSourceProperties['imageThumbnails']);
         }
 
-        return array();
+        return $value;
     }
 
     /**
@@ -209,14 +209,17 @@ class UserFile extends xPDOSimpleObject
      */
     public function getImageExtensions()
     {
-        if (!$this->initialized()) {
-            return false;
-        }
-        if (isset($this->mediaSourceProperties['imageExtensions'])) {
-            return $this->UserFiles->explodeAndClean($this->mediaSourceProperties['imageExtensions']);
+        $value = array();
+
+        if (
+            $this->initialized()
+            AND
+            isset($this->mediaSourceProperties['imageExtensions'])
+        ) {
+            $value = $this->UserFiles->explodeAndClean($this->mediaSourceProperties['imageExtensions']);
         }
 
-        return array();
+        return $value;
     }
 
     /**
@@ -224,14 +227,19 @@ class UserFile extends xPDOSimpleObject
      */
     public function getThumbnailType()
     {
-        if (!$this->initialized()) {
-            return false;
-        }
-        if (isset($this->mediaSourceProperties['thumbnailType']) AND !empty($this->mediaSourceProperties['thumbnailType'])) {
-            return $this->mediaSourceProperties['thumbnailType'];
+        $value = 'jpg';
+
+        if (
+            $this->initialized()
+            AND
+            isset($this->mediaSourceProperties['thumbnailType'])
+            AND
+            !empty($this->mediaSourceProperties['thumbnailType'])
+        ) {
+            $value = strtolower($this->mediaSourceProperties['thumbnailType']);
         }
 
-        return 'jpg';
+        return $value;
     }
 
 
@@ -240,14 +248,19 @@ class UserFile extends xPDOSimpleObject
      */
     public function getMainThumbnail()
     {
-        if (!$this->initialized()) {
-            return false;
-        }
-        if (isset($this->mediaSourceProperties['imageMainThumbnail']) AND !empty($this->mediaSourceProperties['imageMainThumbnail'])) {
-            return $this->modx->fromJSON($this->mediaSourceProperties['imageMainThumbnail']);
+        $value = false;
+
+        if (
+            $this->initialized()
+            AND
+            isset($this->mediaSourceProperties['imageMainThumbnail'])
+            AND
+            !empty($this->mediaSourceProperties['imageMainThumbnail'])
+        ) {
+            $value = $this->modx->fromJSON($this->mediaSourceProperties['imageMainThumbnail']);
         }
 
-        return false;
+        return $value;
     }
 
     /**
@@ -304,18 +317,18 @@ class UserFile extends xPDOSimpleObject
         }
 
         if ($phpThumb->GenerateThumbnail()) {
-            ImageInterlace($phpThumb->gdimg_output, true);
-            if ($phpThumb->RenderOutput()) {
-                $this->xpdo->log(modX::LOG_LEVEL_INFO,
-                    '[UserFiles] phpThumb messages for "' . $this->get('url') . '". ' . print_r($phpThumb->debugmessages,
-                        1));
+            if (!is_resource($phpThumb->gdimg_output)) {
+                $this->xpdo->log(modX::LOG_LEVEL_ERROR,
+                    '[UserFiles] phpThumb messages for "' . $this->get('url') . 'failed because !is_resource($phpThumb->gdimg_output)');
 
-                return $phpThumb->outputImageData;
+            } else {
+                if ($phpThumb->RenderOutput()) {
+                    return $phpThumb->outputImageData;
+                }
             }
         }
         $this->xpdo->log(modX::LOG_LEVEL_ERROR,
-            '[UserFiles] Could not generate thumbnail for "' . $this->get('url') . '". ' . print_r($phpThumb->debugmessages,
-                1));
+            '[UserFiles] Could not generate thumbnail for "' . $this->get('url') . ' ' . __FILE__ . __LINE__);
 
         return false;
     }
@@ -367,7 +380,7 @@ class UserFile extends xPDOSimpleObject
 
         $thumbnailName = $this->getThumbnailName();
         $filename = strtolower(str_replace($pls['pl'], $pls['vl'], $thumbnailName));
-        $filename = preg_replace('#(\.|\?|!|\(|\)){2,}#', '\1', $filename);
+        //$filename = preg_replace('#(\.|\?|!|\(|\)){2,}#', '\1', $filename);
 
         /** @var UserFile $thumbnailFile */
         $thumbnailFile = $this->xpdo->newObject('UserFile', array_merge(
@@ -401,6 +414,11 @@ class UserFile extends xPDOSimpleObject
 
             return $thumbnailFile->save();
         } else {
+
+            $errors = $this->mediaSource->getErrors();
+            $this->modx->log(modX::LOG_LEVEL_ERROR, '[UserFiles] Could not load thumbnail image');
+            $this->modx->log(modX::LOG_LEVEL_ERROR, print_r($errors, 1));
+
             return false;
         }
     }
@@ -439,7 +457,7 @@ class UserFile extends xPDOSimpleObject
             return $this->mediaSourceProperties['fileName'];
         }
 
-        return '{name}.{rand}.{ext}';
+        return '{name}.{ext}';
     }
 
     /**
@@ -454,7 +472,7 @@ class UserFile extends xPDOSimpleObject
             return $this->mediaSourceProperties['thumbnailName'];
         }
 
-        return '{name}.{rand}.{w}.{h}.{ext}';
+        return '{name}.{w}.{h}.{ext}';
     }
 
     /**
@@ -466,7 +484,7 @@ class UserFile extends xPDOSimpleObject
     {
         if ($this->isNew()) {
             if (!$this->get('list')) {
-                $this->set('list', 'default');
+                $this->set('list', $this->xpdo->getOption('userfiles_list_default', null, 'default', true));
             }
             if (!$this->get('session')) {
                 $this->set('session', session_id());
@@ -508,17 +526,6 @@ class UserFile extends xPDOSimpleObject
 
         }
 
-        if ($this->isNew() || $this->get('move')) {
-            $q = $this->xpdo->newQuery('UserFile');
-            $q->where(array(
-                'parent'  => $this->get('parent'),
-                'class'   => $this->get('class'),
-                'source'  => $this->get('source'),
-                'context' => $this->get('context')
-            ));
-            $this->set('rank', $this->xpdo->getCount('UserFile', $q));
-        }
-
         $saved = parent:: save($cacheFlag);
 
         return $saved;
@@ -535,10 +542,156 @@ class UserFile extends xPDOSimpleObject
     public function & getMany($alias, $criteria = null, $cacheFlag = true)
     {
         if ($alias == 'Children') {
-            $criteria = array('class' => $this->class_key);
+            $criteria = array('class' => 'UserFile');
         }
 
         return parent::getMany($alias, $criteria, $cacheFlag);
+    }
+
+    public function updateRanks($getProductThumb = true)
+    {
+        $class = 'UserFile';
+        $q = $this->xpdo->newQuery($class);
+        $q->where(array(
+            "parent"  => $this->get('parent'),
+            "class"   => $this->get('class'),
+            "list"    => $this->get('list'),
+            "source"  => $this->get('source'),
+            "context" => $this->get('context')
+        ));
+        $q->select('id');
+        $q->sortby('rank ASC, id', 'ASC');
+
+        if ($q->prepare() AND $q->stmt->execute()) {
+            $table = $this->xpdo->getTableName($class);
+            $ids = $q->stmt->fetchAll(PDO::FETCH_COLUMN);
+            $sql = '';
+            foreach ($ids as $k => $id) {
+                $sql .= "UPDATE {$table} SET `rank` = '{$k}' WHERE `id` = '{$id}';";
+            }
+            $sql .= "ALTER TABLE {$table} ORDER BY rank ASC;";
+            $this->xpdo->exec($sql);
+        }
+
+        $thumb = null;
+        if ($getProductThumb) {
+            $thumb = $this->getProductThumb();
+        }
+
+        return $thumb;
+    }
+
+    public function getProductThumb()
+    {
+        $thumb = null;
+        /** @var msProduct $product */
+        if (
+            !$this->xpdo->getOption('userfiles_process_msproduct', null, false, true)
+            OR
+            !$product = $this->getOne('Product')
+            OR
+            !$productData = $product->loadData()
+        ) {
+            return $thumb;
+        }
+
+        $list = $this->xpdo->getOption('userfiles_list_template_' . $product->get('template'), null,
+            $this->xpdo->getOption('userfiles_list_default', null, 'default', true), true);
+        if ($this->get('list') != $list) {
+            return $thumb;
+        }
+
+        $url = '';
+        $thumb = '';
+
+        /** @var UserFile $image */
+        if ($firstObject = $this->getFirstObject()) {
+            $url = $firstObject->get('url');
+            $thumb = $this->getFirstThumb($firstObject);
+        }
+
+        if ($productData->get('thumb') != $thumb) {
+
+            $arr = array(
+                'image' => !empty($url) ? $url : '',
+                'thumb' => !empty($thumb) ? $thumb : '',
+            );
+
+            $productData->fromArray($arr);
+            if ($productData->save()) {
+                $product->clearCache();
+            }
+        }
+
+        return $thumb;
+    }
+
+    public function getFirstObject($instance = null)
+    {
+        $object = null;
+
+        if (!is_object($instance) OR !($instance instanceof xPDOObject)) {
+            $instance = $this;
+        }
+        $imageExtensions = $this->getImageExtensions();
+        if (!in_array($instance->get('type'), $imageExtensions)) {
+            return $object;
+        }
+
+        $q = $this->xpdo->newQuery('UserFile');
+        $q->where(array(
+            "active"  => 1,
+            "parent"  => $instance->get('parent'),
+            "class"   => $instance->get('class'),
+            "list"    => $instance->get('list'),
+            "source"  => $instance->get('source'),
+            "context" => $instance->get('context')
+        ));
+        $q->sortby('rank', 'ASC');
+
+        $object = $this->xpdo->getObject('UserFile', $q);
+
+        return $object;
+    }
+
+    public function getFirstThumb($instance = null)
+    {
+        $thumb = '';
+
+        $size = explode('x', $this->xpdo->getOption('userfiles_image_thumb_default', null, '120x90', true));
+        $sizeLike = array();
+        if (!empty($size[0])) {
+            $sizeLike[] = 'w\":' . $size[0];
+        }
+        if (!empty($size[1])) {
+            $sizeLike[] = '"\h\":' . $size[1];
+        }
+        $sizeLike = implode(',', $sizeLike);
+
+        if (!is_object($instance) OR !($instance instanceof xPDOObject)) {
+            $instance = $this;
+        }
+
+        $q = $this->xpdo->newQuery('UserFile');
+        $q->where(array(
+            "class"           => "UserFile",
+            "active"          => 1,
+            "parent"          => $instance->get('id'),
+            "list"            => $instance->get('list'),
+            "source"          => $instance->get('source'),
+            "context"         => $instance->get('context'),
+            "properties:LIKE" => "%{$sizeLike}%",
+        ));
+        $q->sortby('rank', 'ASC');
+        $q->select("url");
+        $q->limit(1);
+        if ($q->prepare() AND $q->stmt->execute()) {
+            if (!$thumb = $this->xpdo->getValue($q->stmt)) {
+                $thumb = '';
+            }
+        }
+
+        return $thumb;
     }
 
 }

@@ -13,6 +13,9 @@ class modUserFilesListGetListProcessor extends modObjectProcessor
         }
 
         $query = $this->getProperty('query');
+        $start = (int)$this->getProperty('start', 0);
+        $limit = (int)$this->getProperty('limit', 10);
+
 
         $c = $this->modx->newQuery($class);
         $c->sortby('list', 'ASC');
@@ -23,27 +26,40 @@ class modUserFilesListGetListProcessor extends modObjectProcessor
             $c->where(array('list:LIKE' => "%{$query}%"));
         }
         if ($c->prepare() AND $c->stmt->execute()) {
-            $array = $c->stmt->fetchAll(PDO::FETCH_ASSOC);
-            foreach ($array as $k => $v) {
-                $array[$k]['name'] = $this->modx->lexicon($array[$k]['name']);
+            $values = $c->stmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($values as $k => $v) {
+                $values[$k]['name'] = $this->modx->lexicon($values[$k]['name']);
             }
         } else {
-            $array = array();
+            $values = array();
         }
 
-        if (!empty($query) AND empty($array)) {
-            $array = array(
+        if (!empty($query) AND empty($values)) {
+            $values = array(
                 'id'   => $query,
                 'name' => $query
             );
         }
 
-        return $this->outputArray($array);
+        $count = count($values);
+        $values = array_slice($values, $start, $limit);
+
+        return $this->outputArray($values, $count);
     }
 
     /** {@inheritDoc} */
     public function outputArray(array $array, $count = false)
     {
+        $array = array_merge_recursive(array(
+            array(
+                'id'   => $this->modx->getOption('userfiles_list_default', null, 'default', true),
+                'name' => $this->modx->getOption('userfiles_list_default', null, 'default', true),
+            )
+        ), $array);
+        if ($count) {
+            $count++;
+        }
+
         if ($this->getProperty('addall')) {
             $array = array_merge_recursive(array(
                 array(
@@ -51,6 +67,9 @@ class modUserFilesListGetListProcessor extends modObjectProcessor
                     'name' => $this->modx->lexicon('userfiles_all')
                 )
             ), $array);
+            if ($count) {
+                $count++;
+            }
         }
 
         return parent::outputArray($array, $count);

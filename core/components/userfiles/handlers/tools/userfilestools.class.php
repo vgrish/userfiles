@@ -82,9 +82,9 @@ interface UserFilesToolsInterface
 }
 
 /**
- * Class Tools
+ * Class UserFilesTools
  */
-class Tools implements UserFilesToolsInterface
+class UserFilesTools implements UserFilesToolsInterface
 {
 
     static $xpdo;
@@ -249,6 +249,10 @@ class Tools implements UserFilesToolsInterface
 
         if (!empty($opts['jquery'])) {
             $controller->addLastJavascript($this->config['assetsUrl'] . 'vendor/jquery/jquery.min.js');
+        }
+
+        if (!empty($opts['blob'])) {
+            $controller->addLastJavascript($this->config['assetsUrl'] . 'vendor/canvastoblob/js/canvas-to-blob.min.js');
         }
 
         if (!empty($opts['cropper'])) {

@@ -1,5 +1,50 @@
 Changelog for UserFiles.
 
+2.2.10-beta (31.10.2016)
+==============
+- Add "image_cropper_quality" setting
+
+2.2.9-beta (16.10.2016)
+==============
+- Fix "ufForm class" snippet
+
+2.2.8-beta (15.10.2016)
+==============
+- Fix "list" processor
+- Remove "{rand}" from media source
+- Improvement "UserFile" class
+- Improvement "process msproduct"
+- Add "image_thumb_default" setting
+
+2.2.7-beta (13.10.2016)
+==============
+- Improvement "ufWrapper", add "includeAllFiles"
+
+2.2.6-beta (13.10.2016)
+==============
+- Fix "UserFile class"
+- Improvement "ufWrapper"
+
+2.2.5-beta (12.10.2016)
+==============
+- Add "list_default", "process_msproduct", "image_cropper_profile" setting
+- Add "process msproduct"
+- Add "cropper profile"
+- Fix "Tools"
+
+2.2.4-beta (21.09.2016)
+==============
+- Add "ufWrapper" snippet
+
+2.2.3-beta (17.09.2016)
+==============
+- Fix "makeThumbnail"
+
+2.2.2-beta (17.09.2016)
+==============
+- Fix "getMany" UserFile class
+- Add "background-color" thumb
+
 2.2.1-beta (18.08.2016)
 ==============
 - Fix get "config"

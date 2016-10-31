@@ -1,4 +1,4 @@
-userfiles.panel.Files = function(config) {
+userfiles.panel.Files = function (config) {
 	config = config || {};
 
 	this.pageSize = parseInt(config.pageSize || MODx.config.default_per_page);
@@ -23,17 +23,17 @@ userfiles.panel.Files = function(config) {
 	});
 	userfiles.panel.Files.superclass.constructor.call(this, config);
 
-	this.on('render', function(v) {
+	this.on('render', function (v) {
 		var ddTargetEl = v.getEl();
 
 		this.DropTarget = new Ext.dd.DropTarget(ddTargetEl, {
 			ddGroup: 'modx-treedrop-sources-dd',
 
-			notifyOut: function(ddSource, e, data) {
+			notifyOut: function (ddSource, e, data) {
 				v.removeClass('dz-drag-hover');
 			},
 
-			notifyEnter: function(ddSource, e, data) {
+			notifyEnter: function (ddSource, e, data) {
 				if (!data.node || !data.node.attributes || !data.node.attributes.type) return false;
 
 				switch (data.node.attributes.type) {
@@ -52,7 +52,7 @@ userfiles.panel.Files = function(config) {
 				}
 			},
 
-			notifyDrop: function(ddSource, e, data) {
+			notifyDrop: function (ddSource, e, data) {
 				if (!data.node || !data.node.attributes || !data.node.attributes.type) return false;
 				return v.addFiles(data);
 			}
@@ -61,11 +61,11 @@ userfiles.panel.Files = function(config) {
 
 	});
 
-	this.view.on('render', function(v) {
+	this.view.on('render', function (v) {
 
 
 		this.DragZone = new Ext.dd.DragZone(v.getEl(), {
-			getDragData: function(e) {
+			getDragData: function (e) {
 				var target = e.getTarget(v.itemSelector);
 				if (!target) {
 					return false;
@@ -89,19 +89,19 @@ userfiles.panel.Files = function(config) {
 			}
 		});
 		this.DropZone = new Ext.dd.DropZone(v.getEl(), {
-			getTargetFromEvent: function(e) {
+			getTargetFromEvent: function (e) {
 				return e.getTarget(v.itemSelector);
 			},
-			onNodeEnter: function(target, dd, e, data) {
+			onNodeEnter: function (target, dd, e, data) {
 				Ext.fly(target).addClass('x-view-selected');
 			},
-			onNodeOut: function(target, dd, e, data) {
+			onNodeOut: function (target, dd, e, data) {
 				Ext.fly(target).removeClass('x-view-selected');
 			},
-			onNodeOver: function(target, dd, e, data) {
+			onNodeOver: function (target, dd, e, data) {
 				return Ext.dd.DropZone.prototype.dropAllowed && (target != data.nodes[0]);
 			},
-			onNodeDrop: function(target, dd, e, data) {
+			onNodeDrop: function (target, dd, e, data) {
 				var targetNode = v.getRecord(target);
 				var sourceNode = v.getRecord(data.nodes[0]);
 				if (sourceNode == targetNode) {
@@ -121,7 +121,7 @@ userfiles.panel.Files = function(config) {
 			}
 		});
 	});
-	this.on('afterrender', function() {
+	this.on('afterrender', function () {
 		this.initialize();
 	});
 
@@ -129,7 +129,7 @@ userfiles.panel.Files = function(config) {
 Ext.extend(userfiles.panel.Files, MODx.Panel, {
 	dropzone: null,
 
-	addFiles: function(data) {
+	addFiles: function (data) {
 		switch (data.node.attributes.type) {
 			case 'dir':
 			case 'file':
@@ -144,7 +144,7 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 					},
 					listeners: {
 						success: {
-							fn: function(r) {
+							fn: function (r) {
 								if (!r.object || !r.object.files) return;
 								var files = r.object.files;
 								if (files.length == 0) return;
@@ -152,11 +152,11 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 								Ext.Msg.confirm(
 									_('userfiles_action_load') || _('warning'),
 									_('userfiles_confirm_load') + '<br>' + files.length + ' ' + _('userfiles_filesis'),
-									function(e) {
+									function (e) {
 										if (e == 'yes') {
-											files.filter(function(file) {
+											files.filter(function (file) {
 												dropzone.emit("addedfiles", [file]);
-												dropzone.on("sending", function(file, xhr, formData) {
+												dropzone.on("sending", function (file, xhr, formData) {
 													if (file.tree) {
 														formData.append("_file_path", file.path);
 														formData.append("_file_name", file.name);
@@ -182,7 +182,7 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 		}
 	},
 
-	initialize: function() {
+	initialize: function () {
 		if (this.initialized) {
 			return;
 		}
@@ -210,7 +210,7 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 			"uploadprogress", "totaluploadprogress", "sending", "sendingmultiple", "success", "successmultiple", "canceled",
 			"canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached", "queuecomplete"
 		];
-		Ext.each(DropzoneEvents, function(event) {
+		Ext.each(DropzoneEvents, function (event) {
 			if (this['_' + event]) {
 				dropzone.on(event, this['_' + event]);
 			}
@@ -218,7 +218,7 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 		this.initialized = true;
 	},
 
-	_addedfile: function(file) {
+	_addedfile: function (file) {
 		dropzone.options.params['parent'] = this.view.getStore().baseParams['parent'] || 0;
 		dropzone.options.params['class'] = this.view.getStore().baseParams['class'] || '';
 		dropzone.options.params['list'] = this.view.getStore().baseParams['list'] || '';
@@ -229,22 +229,22 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 		file.previewElement = null;
 	},
 
-	_processing: function(file) {
+	_processing: function (file) {
 		this.progress = Ext.MessageBox.progress(_('please_wait'));
 	},
 
-	_uploadprogress: function(file, progress, bytesSent) {
+	_uploadprogress: function (file, progress, bytesSent) {
 		if (this.progress) {
 			this.progress.updateText(file.name);
 			this.progress.updateProgress(progress / 100);
 		}
 	},
 
-	_complete: function(file) {
+	_complete: function (file) {
 
 	},
 
-	_queuecomplete: function() {
+	_queuecomplete: function () {
 		if (this.progress) {
 			this.progress.hide();
 		}
@@ -254,21 +254,28 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 		this.view.getStore().reload();
 	},
 
-	_error: function(file, message) {
+	_error: function (file, message) {
 
 	},
 
-	_success: function(file, response) {
-		if (response.success == false && response.message != '') {
-			this.errors.push(file.name + ': ' + response.message);
+	_success: function (file, r) {
+
+		if (r.success == true && r.object) {
+
+			/* product */
+			userfiles.tools.updateProductThumb(r.object);
 		}
+		else if (r.success == false && r.message != '') {
+			this.errors.push(file.name + ': ' + r.message);
+		}
+
 	},
 
-	reload: function() {
+	reload: function () {
 		this.view.getStore().reload();
 	},
 
-	getTopBar: function(config) {
+	getTopBar: function (config) {
 		var tbar1 = [];
 		var tbar2 = [];
 
@@ -331,7 +338,7 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 					width: 190,
 					custm: true,
 					clear: true,
-					value: 'default',
+					value: userfiles.tools.getListDefault(),
 					listeners: {
 						select: {
 							fn: this._filterByCombo,
@@ -431,13 +438,13 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 					width: 190,
 					listeners: {
 						search: {
-							fn: function(field) {
+							fn: function (field) {
 								this._doSearch(field);
 							},
 							scope: this
 						},
 						clear: {
-							fn: function(field) {
+							fn: function (field) {
 								field.setValue('');
 								this._clearSearch();
 							},
@@ -457,13 +464,13 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 			}
 		};
 
-		component1.filter(function(item) {
+		component1.filter(function (item) {
 			if (add[item]) {
 				tbar1.push(add[item]);
 			}
 		});
 
-		component2.filter(function(item) {
+		component2.filter(function (item) {
 			if (add[item]) {
 				tbar2.push(add[item]);
 			}
@@ -477,10 +484,10 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 			items.push(new Ext.Toolbar(tbar2));
 		}
 
-		return new Ext.Panel({ items: items });
+		return new Ext.Panel({items: items});
 	},
 
-	_filterBySource: function(cb) {
+	_filterBySource: function (cb) {
 		if (cb.value == '' || cb.value == 0) {
 			cb.value = userfiles.config.source || 1;
 			cb.setValue(cb.value);
@@ -489,26 +496,26 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 		this.getBottomToolbar().changePage(1);
 	},
 
-	_filterByCombo: function(cb) {
+	_filterByCombo: function (cb) {
 		this.view.getStore().baseParams[cb.name] = cb.value;
 		this.getBottomToolbar().changePage(1);
 	},
 
-	_doSearch: function(cb) {
+	_doSearch: function (cb) {
 		this.view.getStore().baseParams.query = cb.getValue();
 		this.getBottomToolbar().changePage(1);
 		userfiles.tools.Hash.add('query', cb.getValue());
 	},
 
-	_clearSearch: function() {
+	_clearSearch: function () {
 		this.view.getStore().baseParams.query = '';
 		this.getBottomToolbar().changePage(1);
 		userfiles.tools.Hash.remove('query');
 	},
 
 
-	_filterByClass: function(cb) {
-		var parent = this.getTopToolbar().findByType('combo').find(function(c) {
+	_filterByClass: function (cb) {
+		var parent = this.getTopToolbar().findByType('combo').find(function (c) {
 			return (c.hiddenName == 'parent')
 		});
 		if (!!parent) {
@@ -525,7 +532,7 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 		}
 	},
 
-	getBottomBar: function(config) {
+	getBottomBar: function (config) {
 		return new Ext.PagingToolbar({
 			pageSize: this.pageSize,
 			store: this.view.store,
@@ -538,7 +545,7 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 					width: 50,
 					listeners: {
 						change: {
-							fn: function(tf, nv, ov) {
+							fn: function (tf, nv, ov) {
 								if (Ext.isEmpty(nv)) {
 									return;
 								}
@@ -548,15 +555,15 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 								userfiles.tools.Hash.add('uf_start', 0);
 								userfiles.tools.Hash.add('uf_limit', nv);
 
-								this.view.getStore().load({ params: { start: 0, limit: nv } });
+								this.view.getStore().load({params: {start: 0, limit: nv}});
 							},
 							scope: this
 						},
 						render: {
-							fn: function(cmp) {
+							fn: function (cmp) {
 								new Ext.KeyMap(cmp.getEl(), {
 									key: Ext.EventObject.ENTER,
-									fn: function() {
+									fn: function () {
 										this.fireEvent('change', this.getValue());
 										this.blur();
 										return true;
@@ -571,7 +578,7 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 			],
 			listeners: {
 				beforechange: {
-					fn: function(tf, ov) {
+					fn: function (tf, ov) {
 						userfiles.tools.Hash.add('uf_start', ov.start);
 						userfiles.tools.Hash.add('uf_limit', ov.limit);
 					},

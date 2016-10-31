@@ -15,17 +15,32 @@ $tmp = array(
         'xtype' => 'modx-combo-source',
         'area'  => 'userfiles_main',
     ),
+    'list_default'            => array(
+        'value' => 'default',
+        'xtype' => 'textfield',
+        'area'  => 'userfiles_main',
+    ),
+    'image_thumb_default'     => array(
+        'value' => '120x90',
+        'xtype' => 'textfield',
+        'area'  => 'userfiles_main',
+    ),
+    'process_msproduct'       => array(
+        'xtype' => 'combo-boolean',
+        'value' => false,
+        'area'  => 'userfiles_main',
+    ),
     'duplicate_search_fields' => array(
         'value' => 'parent,class,list,hash,source',
         'xtype' => 'textarea',
         'area'  => 'userfiles_main',
     ),
 
-   /* 'salt' => array(
-        'value' => '12345678',
-        'xtype' => 'textfield',
-        'area'  => 'userfiles_main',
-    ),*/
+    /* 'salt' => array(
+         'value' => '12345678',
+         'xtype' => 'textfield',
+         'area'  => 'userfiles_main',
+     ),*/
 
 
     'phpThumb_config_max_source_pixels' => array(
@@ -51,30 +66,41 @@ $tmp = array(
         'area'  => 'userfiles_links',
     ),
 
-    
-    'image_mime_type' => array(
+
+    'image_mime_type'       => array(
         'value' => '[{"type":"png","mime":"image/png"},{"type":"jpg","mime":"image/jpg"}]',
         'xtype' => 'textarea',
         'area'  => 'userfiles_editor',
     ),
+    'image_cropper_profile' => array(
+        'value' => '[{"profile":"free"},{"profile":"square","ratio": "1/1"},{"profile":"4x6 wide","ratio": "6/4"}]',
+        'xtype' => 'textarea',
+        'area'  => 'userfiles_editor',
+    ),
+    'image_cropper_quality'       => array(
+        'value' => '60',
+        'xtype' => 'numberfield',
+        'area'  => 'userfiles_editor',
+    ),
+
 
     //временные
-/*
-        'assets_path' => array(
-            'value' => '{base_path}userfiles/assets/components/userfiles/',
-            'xtype' => 'textfield',
-            'area'  => 'userfiles_temp',
-        ),
-        'assets_url'  => array(
-            'value' => '/userfiles/assets/components/userfiles/',
-            'xtype' => 'textfield',
-            'area'  => 'userfiles_temp',
-        ),
-        'core_path'   => array(
-            'value' => '{base_path}userfiles/core/components/userfiles/',
-            'xtype' => 'textfield',
-            'area'  => 'userfiles_temp',
-        ),*/
+    /*
+            'assets_path' => array(
+                'value' => '{base_path}userfiles/assets/components/userfiles/',
+                'xtype' => 'textfield',
+                'area'  => 'userfiles_temp',
+            ),
+            'assets_url'  => array(
+                'value' => '/userfiles/assets/components/userfiles/',
+                'xtype' => 'textfield',
+                'area'  => 'userfiles_temp',
+            ),
+            'core_path'   => array(
+                'value' => '{base_path}userfiles/core/components/userfiles/',
+                'xtype' => 'textfield',
+                'area'  => 'userfiles_temp',
+            ),*/
 
 
     //временные

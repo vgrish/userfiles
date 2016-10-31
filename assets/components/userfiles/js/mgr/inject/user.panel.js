@@ -2,7 +2,7 @@ userfiles.panel.UserFiles = function(config) {
     config = config || {};
 
 	if (!config.class) {
-		config.class = 'modUser';
+		config.class = userfiles.tools.getParentClass();
 	}
 	if (!config.update) {
 		config.update = false;

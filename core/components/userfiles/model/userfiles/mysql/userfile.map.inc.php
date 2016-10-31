@@ -465,5 +465,20 @@ $xpdo_meta_map['UserFile']= array (
         ),
       ),
     ),
+    'Product' => 
+    array (
+      'class' => 'msProduct',
+      'local' => 'parent',
+      'foreign' => 'id',
+      'cardinality' => 'one',
+      'owner' => 'local',
+      'criteria' => 
+      array (
+        'local' => 
+        array (
+          'class' => 'msProduct',
+        ),
+      ),
+    ),
   ),
 );

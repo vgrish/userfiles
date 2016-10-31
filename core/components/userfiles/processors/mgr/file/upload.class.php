@@ -56,8 +56,16 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
         }
 
         $this->mainThumbnail();
+        $this->prepareClass();
 
         return true;
+    }
+
+    public function prepareClass()
+    {
+        $class = $this->UserFiles->explodeAndClean($this->getProperty('class', 'modResource'));
+        $class = end($class);
+        $this->setProperty('class', $class);
     }
 
     /**
@@ -216,7 +224,9 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
                 $name = $this->getProperty('name');
                 /** @var  modResource $resource */
                 $resource = $this->modx->newObject('modResource');
-                $name = $resource->cleanAlias($name);
+                $name = $resource->cleanAlias($name, array(
+                    'friendly_alias_lowercase_only' => true
+                ));
                 break;
             case 'hash':
             default:
@@ -226,31 +236,26 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
 
         $this->setProperty('parent', $this->getProperty('parent', 0));
         $this->setProperty('class', $this->getProperty('class', 'modResource'));
-        $this->setProperty('list', $this->getProperty('list', 'default'));
+        $this->setProperty('list',
+            $this->getProperty('list', $this->UserFiles->getOption('list_default', null, 'default', true)));
         $this->setProperty('context', $this->getProperty('context', 'web'));
 
-        /*  switch ($this->getProperty('class')) {
-              case 'modResource':
-                  if ($stmt = $this->modx->prepare("SELECT alias FROM " . $this->modx->getTableName('modResource') . " WHERE id = :id")) {
-                      $stmt->bindValue(':id', $this->getProperty('parent'));
-                      $alias = $this->modx->getValue($stmt);
-                  }
-                  break;
-              case 'modUser':
-                  if ($stmt = $this->modx->prepare("SELECT email FROM " . $this->modx->getTableName('modUserProfile') . " WHERE internalKey = :id")) {
-                      $stmt->bindValue(':id', $this->getProperty('parent'));
-                      $alias = $this->modx->getValue($stmt);
-                  }
-                  break;
-          }
 
-          if (empty($alias)) {
-              $alias = 'alias';
-          }*/
+        $alias = '';
+        if ($parent = $this->modx->getObject($this->getProperty('class'), (int)$this->getProperty('parent'))) {
+            if ($this->getProperty('class') == 'modResource' AND $classKey = $parent->get('class_key')) {
+                $this->setProperty('class', $classKey);
+            }
+
+            if (!$alias = $parent->get('alias')) {
+                $alias = '';
+            }
+        }
 
         $pls = array(
             'pl' => array(
                 '{name}',
+                '{alias}',
                 '{id}',
                 '{class}',
                 '{list}',
@@ -268,7 +273,8 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
             ),
             'vl' => array(
                 $name,
-                0,
+                $alias,
+                $this->getProperty('parent'),
                 $this->getProperty('class'),
                 $this->getProperty('list'),
                 session_id(),
@@ -287,7 +293,7 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
 
         $filename = $this->object->getFileName();
         $filename = strtolower(str_replace($pls['pl'], $pls['vl'], $filename));
-        $filename = preg_replace('#(\.|\?|!|\(|\)){2,}#', '\1', $filename);
+        //$filename = preg_replace('#(\.|\?|!|\(|\)){2,}#', '\1', $filename);
 
         $this->setProperty('file', $filename);
 
@@ -331,6 +337,7 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
             $path .= $dir . '/';
             $this->mediaSource->createContainer($path, '/');
         }
+
         $this->mediaSource->createContainer($this->object->get('path'), '/');
         $this->mediaSource->errors = array();
         if ($this->mediaSource instanceof modFileMediaSource) {
@@ -364,6 +371,10 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
             $url = $this->mediaSource->getObjectUrl($this->object->get('path') . $this->object->get('file'));
             $this->object->set('url', $url);
         } else {
+            $errors = $this->mediaSource->getErrors();
+            $this->modx->log(modX::LOG_LEVEL_ERROR, '[UserFiles] Could not load main image');
+            $this->modx->log(modX::LOG_LEVEL_ERROR, print_r($errors ,1));
+
             return $this->UserFiles->lexicon('err_file_create');
         }
 
@@ -383,6 +394,14 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
         $this->object->generateThumbnails();
 
         return true;
+    }
+
+    public function cleanup()
+    {
+        $array = $this->object->toArray();
+        $array['product_thumb'] = $this->object->updateRanks();
+
+        return $this->success('', $array);
     }
 
 }
