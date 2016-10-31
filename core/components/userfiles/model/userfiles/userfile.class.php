@@ -1,5 +1,8 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('error_reporting', -1);
+
 class UserFile extends xPDOSimpleObject
 {
     /** @var modX $modx */
@@ -377,7 +380,7 @@ class UserFile extends xPDOSimpleObject
 
         $thumbnailName = $this->getThumbnailName();
         $filename = strtolower(str_replace($pls['pl'], $pls['vl'], $thumbnailName));
-        $filename = preg_replace('#(\.|\?|!|\(|\)){2,}#', '\1', $filename);
+        //$filename = preg_replace('#(\.|\?|!|\(|\)){2,}#', '\1', $filename);
 
         /** @var UserFile $thumbnailFile */
         $thumbnailFile = $this->xpdo->newObject('UserFile', array_merge(
@@ -411,6 +414,11 @@ class UserFile extends xPDOSimpleObject
 
             return $thumbnailFile->save();
         } else {
+
+            $errors = $this->mediaSource->getErrors();
+            $this->modx->log(modX::LOG_LEVEL_ERROR, '[UserFiles] Could not load thumbnail image');
+            $this->modx->log(modX::LOG_LEVEL_ERROR, print_r($errors, 1));
+
             return false;
         }
     }

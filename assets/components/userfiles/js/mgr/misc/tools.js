@@ -273,6 +273,19 @@ userfiles.tools.getParentClass = function (config) {
 };
 
 
+userfiles.tools.getImageCropperQuality = function (config) {
+	var quality = MODx.config['userfiles_image_cropper_quality'] || 70;
+	quality.replace(/[^\d*+.]/g, '');
+	quality = eval(quality + '/100');
+
+	if (quality > 1 || quality < 0) {
+		quality = 0.7;
+	}
+	
+	return quality;
+};
+
+
 userfiles.tools.updateProductThumb = function (data) {
 	if (!data || data.length == 0 || data['product_thumb'] === null) {
 		return;

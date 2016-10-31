@@ -224,7 +224,9 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
                 $name = $this->getProperty('name');
                 /** @var  modResource $resource */
                 $resource = $this->modx->newObject('modResource');
-                $name = $resource->cleanAlias($name);
+                $name = $resource->cleanAlias($name, array(
+                    'friendly_alias_lowercase_only' => true
+                ));
                 break;
             case 'hash':
             default:
@@ -291,7 +293,7 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
 
         $filename = $this->object->getFileName();
         $filename = strtolower(str_replace($pls['pl'], $pls['vl'], $filename));
-        $filename = preg_replace('#(\.|\?|!|\(|\)){2,}#', '\1', $filename);
+        //$filename = preg_replace('#(\.|\?|!|\(|\)){2,}#', '\1', $filename);
 
         $this->setProperty('file', $filename);
 
@@ -335,6 +337,7 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
             $path .= $dir . '/';
             $this->mediaSource->createContainer($path, '/');
         }
+
         $this->mediaSource->createContainer($this->object->get('path'), '/');
         $this->mediaSource->errors = array();
         if ($this->mediaSource instanceof modFileMediaSource) {
@@ -368,6 +371,10 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
             $url = $this->mediaSource->getObjectUrl($this->object->get('path') . $this->object->get('file'));
             $this->object->set('url', $url);
         } else {
+            $errors = $this->mediaSource->getErrors();
+            $this->modx->log(modX::LOG_LEVEL_ERROR, '[UserFiles] Could not load main image');
+            $this->modx->log(modX::LOG_LEVEL_ERROR, print_r($errors ,1));
+
             return $this->UserFiles->lexicon('err_file_create');
         }
 

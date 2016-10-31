@@ -77,6 +77,12 @@ $tmp = array(
         'xtype' => 'textarea',
         'area'  => 'userfiles_editor',
     ),
+    'image_cropper_quality'       => array(
+        'value' => '60',
+        'xtype' => 'numberfield',
+        'area'  => 'userfiles_editor',
+    ),
+
 
     //временные
     /*

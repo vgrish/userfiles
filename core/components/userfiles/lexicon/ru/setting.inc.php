@@ -20,6 +20,9 @@ $_lang['setting_userfiles_process_msproduct_desc'] = 'Обрабатывать �
 $_lang['setting_userfiles_image_cropper_profile'] = 'Профиль "Cropper"';
 $_lang['setting_userfiles_image_cropper_profile_desc'] = 'Закодированный в JSON массив с параметрами профиля "Cropper".';
 
+$_lang['setting_userfiles_image_cropper_quality'] = 'Качество изображения';
+$_lang['setting_userfiles_image_cropper_quality_desc'] = 'Параметр качества изображения в % .';
+
 $_lang['userfiles_source_thumbnail_desc'] = 'Закодированный в JSON массив с параметрами генерации превью изображений.';
 $_lang['userfiles_source_main_thumbnail_desc'] = 'Закодированный в JSON массив с параметрами генерации главного изображения.';
 $_lang['userfiles_source_maxUploadSize_desc'] = 'Максимальный размер загружаемых изображений (в байтах).';

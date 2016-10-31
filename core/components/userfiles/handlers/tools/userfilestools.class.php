@@ -251,6 +251,10 @@ class UserFilesTools implements UserFilesToolsInterface
             $controller->addLastJavascript($this->config['assetsUrl'] . 'vendor/jquery/jquery.min.js');
         }
 
+        if (!empty($opts['blob'])) {
+            $controller->addLastJavascript($this->config['assetsUrl'] . 'vendor/canvastoblob/js/canvas-to-blob.min.js');
+        }
+
         if (!empty($opts['cropper'])) {
             $controller->addCss($this->config['assetsUrl'] . 'vendor/cropper/dist/cropper.css');
             $controller->addLastJavascript($this->config['assetsUrl'] . 'vendor/cropper/dist/cropper.js');
