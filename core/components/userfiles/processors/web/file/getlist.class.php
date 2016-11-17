@@ -59,7 +59,11 @@ class modWebUserFileGetListProcessor extends modUserFileGetListProcessor
         $row['active'] = !empty($row['active']);
         $row['cls'] = $row['active'] ? 'active' : 'inactive';
 
-
+        if (isset($row['thumbnails']) AND empty($row['thumbnail'])) {
+            $row['thumbnails'] = explode('||', $row['thumbnails']);
+            $row['thumbnail'] = reset($row['thumbnails']);
+        }
+        
         if (!empty($row['thumbnail'])) {
             $row['dyn_thumbnail'] = $row['thumbnail'] . '?t=' . $row['size'];
         }

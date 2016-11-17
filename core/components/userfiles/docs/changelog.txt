@@ -1,6 +1,6 @@
 Changelog for UserFiles.
 
-2.2.12-beta (17.11.2016)
+2.2.12-13 beta (17.11.2016)
 ==============
 - Fix "thumb default"
 
