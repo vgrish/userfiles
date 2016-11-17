@@ -24,7 +24,7 @@ userfiles.window.ImageEdit = function (config) {
 
 	userfiles.window.ImageEdit.superclass.constructor.call(this, config);
 	this.config = config;
-	this.on('show', this.init, this);
+	/*this.on('show', this.init, this);*/
 };
 Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
 	imageData: '',
@@ -233,7 +233,7 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
 			}
 		};
 
-		return Ext.applyIf(config.listeners, listeners);
+		return Ext.applyIf(config.listeners || {}, listeners);
 	},
 
 	setCropperAction: function (btn) {

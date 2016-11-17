@@ -1,5 +1,13 @@
 Changelog for UserFiles.
 
+2.2.12-beta (17.11.2016)
+==============
+- Fix "thumb default"
+
+2.2.11-beta (14.11.2016)
+==============
+- Small fix "window.js"
+
 2.2.10-beta (31.10.2016)
 ==============
 - Add "image_cropper_quality" setting

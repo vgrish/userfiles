@@ -95,20 +95,21 @@ class modUserFileGetListProcessor extends modObjectGetListProcessor
         }
         $sizeLike = implode(',', $sizeLike);
 
-
         $c->leftJoin('modMediaSource', 'Source');
         $c->leftJoin($this->classKey, 'Thumbnail',
             "{$this->classKey}.id = Thumbnail.parent AND Thumbnail.class = '{$this->classKey}' AND Thumbnail.properties LIKE '%{$sizeLike}%'");
+        $c->leftJoin($this->classKey, 'Thumbnails',
+            "{$this->classKey}.id = Thumbnails.parent AND Thumbnails.class = '{$this->classKey}'");
+
         $c->groupby($this->classKey . '.id');
 
 
         $c->select($this->modx->getSelectColumns($this->classKey, $this->classKey));
         $c->select(array(
             'source_name' => 'Source.name',
-            // 'source_properties' => 'Source.properties',
-
-            'thumbnail' => 'Thumbnail.url',
-            'size'      => 'UserFile.size'
+            'size'        => 'UserFile.size',
+            'thumbnail'   => 'Thumbnail.url',
+            'thumbnails'  => "GROUP_CONCAT(Thumbnails.url SEPARATOR '||')"
         ));
 
         $c->where(array("{$this->classKey}.class:!=" => $this->classKey));
@@ -176,6 +177,10 @@ class modUserFileGetListProcessor extends modObjectGetListProcessor
         $row['active'] = !empty($row['active']);
         $row['cls'] = $row['active'] ? 'active' : 'inactive';
 
+        if (isset($row['thumbnails']) AND empty($row['thumbnail'])) {
+            $row['thumbnails'] = explode('||', $row['thumbnails']);
+            $row['thumbnail'] = reset($row['thumbnails']);
+        }
 
         if (!empty($row['thumbnail'])) {
             $row['dyn_thumbnail'] = $row['thumbnail'] . '?t=' . $row['size'];
