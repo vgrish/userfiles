@@ -100,16 +100,20 @@ class modUserFileGetListProcessor extends modObjectGetListProcessor
             "{$this->classKey}.id = Thumbnail.parent AND Thumbnail.class = '{$this->classKey}' AND Thumbnail.properties LIKE '%{$sizeLike}%'");
         $c->leftJoin($this->classKey, 'Thumbnails',
             "{$this->classKey}.id = Thumbnails.parent AND Thumbnails.class = '{$this->classKey}'");
+        $c->leftJoin('modUser', 'modUser', "{$this->classKey}.createdby = modUser.id");
+        $c->leftJoin('modUserProfile', 'modUserProfile', "{$this->classKey}.createdby = modUserProfile.internalKey");
 
         $c->groupby($this->classKey . '.id');
 
 
         $c->select($this->modx->getSelectColumns($this->classKey, $this->classKey));
         $c->select(array(
-            'source_name' => 'Source.name',
-            'size'        => 'UserFile.size',
-            'thumbnail'   => 'Thumbnail.url',
-            'thumbnails'  => "GROUP_CONCAT(Thumbnails.url SEPARATOR '||')"
+            'source_name'      => 'Source.name',
+            'size'             => 'UserFile.size',
+            'thumbnail'        => 'Thumbnail.url',
+            'thumbnails'       => "GROUP_CONCAT(Thumbnails.url SEPARATOR '||')",
+            'creator_username' => 'modUser.username',
+            'creator_fullname' => 'modUserProfile.fullname',
         ));
 
         $c->where(array("{$this->classKey}.class:!=" => $this->classKey));

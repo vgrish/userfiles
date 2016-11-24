@@ -289,6 +289,9 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 				break;
 			case !!userfiles.config.user:
 				component2 = [];
+				/*component1.remove('spacer');
+				component1.push('class');
+				component1.push('spacer');*/
 				break;
 			default:
 				break;
@@ -518,6 +521,7 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 		var parent = this.getTopToolbar().findByType('combo').find(function (c) {
 			return (c.hiddenName == 'parent')
 		});
+
 		if (!!parent) {
 			parent.baseParams.class = cb.value;
 			parent.setValue();

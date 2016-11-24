@@ -212,6 +212,9 @@ span.userfiles-grid-color {
 .userfiles-window-thumb {border: 1px solid #efefef; border-radius: 2px;}
 
 .modx-browser-thumb-wrap.modx-pb-thumb-wrap.userfiles-thumb-wrap {width: 120px;height: 108px;}
+.modx-browser-thumb-wrap.modx-pb-thumb-wrap.userfiles-thumb-wrap.userfiles-createdby-show {
+	height: 125px;
+}
 
 .userfiles-qtip.x-tip {
 	background: rgba(87, 87, 87, 0.68);
@@ -400,3 +403,4 @@ div#msg-div {
 	margin-bottom: .3em;
 	margin-top: 0;
 }
+

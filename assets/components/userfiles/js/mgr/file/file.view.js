@@ -7,7 +7,7 @@ userfiles.view.Files = function (config) {
 		fields: [
 			'id', 'parent', 'name', 'description', 'url', 'createdon', 'createdby', 'file', 'thumbnail', 'thumbnails',
 			'size', 'format_size', 'source', 'source_name', 'type', 'mime', 'rank', 'active', 'properties', 'class',
-			'cls', 'actions', 'dyn_thumbnail', 'dyn_url'
+			'cls', 'actions', 'dyn_thumbnail', 'dyn_url', 'creator_username', 'creator_fullname'
 		],
 		id: 'userfiles-view-files',
 		cls: 'userfiles-files',
@@ -286,9 +286,14 @@ Ext.extend(userfiles.view.Files, MODx.DataView, {
 	},
 
 	_initTemplates: function () {
+
+		/*
+		 '<small>{shortName}</small>',
+		 '<div class="userfiles-createdby-link">{createdby:this.renderCreatedby}</div>',
+		 */
 		this.templates.thumb = new Ext.XTemplate(
 			'<tpl for=".">',
-			'<div class="modx-browser-thumb-wrap modx-pb-thumb-wrap userfiles-thumb-wrap {cls}" id="userfiles-resource-{id}">',
+			'<div class="modx-browser-thumb-wrap modx-pb-thumb-wrap userfiles-thumb-wrap {cls:this.renderCls}" id="userfiles-resource-{id}">',
 			'<tpl if="dyn_thumbnail">',
 			'<div class="modx-browser-thumb1 modx-pb-thumb userfiles-thumb">',
 			'<img src="{dyn_thumbnail}" ext:qtip="{qtip}" ext:qtitle="{qtitle}" ext:qclass="userfiles-qtip"/>',
@@ -301,10 +306,27 @@ Ext.extend(userfiles.view.Files, MODx.DataView, {
 			'</tpl>',
 			'<small>{shortName}</small>',
 			'</div>',
-			'</tpl>'
-		);
+			'</tpl>',
+			{
+				compiled: true,
+				renderCls: function (value, record) {
+					if (MODx.config['userfiles_thumb_show_createdby']) {
+						value += ' userfiles-createdby-show';
+					}
 
-		this.templates.thumb.compile();
+					return value;
+				},
+				renderCreatedby: function (value, record) {
+					if (MODx.config['userfiles_thumb_show_createdby']) {
+						var creator = record['creator_username'] || record['creator_fullname'];
+						var link = userfiles.tools.userLink(creator, value);
+						return link;
+					}
+
+					return '';
+				}
+			}
+		);
 	},
 
 	_showContextMenu: function (v, i, n, e) {

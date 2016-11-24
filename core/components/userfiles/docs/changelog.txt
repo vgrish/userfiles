@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.2.14 beta (24.11.2016)
+==============
+- Fix "profile cropper"
+
 2.2.12-13 beta (17.11.2016)
 ==============
 - Fix "thumb default"

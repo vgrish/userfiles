@@ -168,6 +168,16 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
 				cls: 'userfiles-cropper-profile',
 				width: 150,
 				listeners: {
+					/*afterrender: {
+						fn: function (combo) {
+
+							console.log(combo);
+							console.log(combo.data);
+
+							this.changeCropperProfile(combo.data[0]);
+						},
+						scope: this
+					},*/
 					select: {
 						fn: function (combo, value) {
 							this.changeCropperProfile(value.data);
@@ -227,6 +237,13 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
 						].join();
 					}.bind(this);
 					this.$cropperEl.cropper(cropperOptions);
+
+					var profileId = Ext.fly(this.id).child('[name=profile]').id;
+					var profileCombo = Ext.getCmp(profileId);
+					if (profileCombo && profileCombo.data) {
+						this.changeCropperProfile(profileCombo.data[0]);
+					}
+
 					this.$cropperEl.type = config.record.type;
 				},
 				scope: this

@@ -20,11 +20,6 @@ $tmp = array(
         'xtype' => 'textfield',
         'area'  => 'userfiles_main',
     ),
-    'image_thumb_default'     => array(
-        'value' => '120x90',
-        'xtype' => 'textfield',
-        'area'  => 'userfiles_main',
-    ),
     'process_msproduct'       => array(
         'xtype' => 'combo-boolean',
         'value' => false,
@@ -35,6 +30,17 @@ $tmp = array(
         'xtype' => 'textarea',
         'area'  => 'userfiles_main',
     ),
+
+    'image_thumb_default'  => array(
+        'value' => '120x90',
+        'xtype' => 'textfield',
+        'area'  => 'userfiles_thumb',
+    ),
+  /*  'thumb_show_createdby' => array(
+        'xtype' => 'combo-boolean',
+        'value' => false,
+        'area'  => 'userfiles_thumb',
+    ),*/
 
     /* 'salt' => array(
          'value' => '12345678',
@@ -77,7 +83,7 @@ $tmp = array(
         'xtype' => 'textarea',
         'area'  => 'userfiles_editor',
     ),
-    'image_cropper_quality'       => array(
+    'image_cropper_quality' => array(
         'value' => '60',
         'xtype' => 'numberfield',
         'area'  => 'userfiles_editor',

@@ -4,6 +4,8 @@ $_lang['area_userfiles_main'] = 'Основные';
 $_lang['area_userfiles_phpThumb'] = 'phpThumb';
 $_lang['area_userfiles_links'] = 'Ссылки';
 $_lang['area_userfiles_editor'] = 'Редактор';
+$_lang['area_userfiles_thumb'] = 'Превью';
+
 
 $_lang['setting_userfiles_source_default'] = 'Источник медиа для UserFiles';
 $_lang['setting_userfiles_source_default_desc'] = 'Выберите источник медиа, который будет использован по умолчанию для загрузки файлов пользователя.';
@@ -71,3 +73,6 @@ $_lang['setting_userfiles_duplicate_search_fields_desc'] = 'Список клю�
 
 $_lang['setting_userfiles_image_mime_type'] = 'Тип изображения';
 $_lang['setting_userfiles_image_mime_type_desc'] = 'Закодированный в JSON массив с типами изображений доступных для сохранения в редакторе.';
+
+$_lang['setting_userfiles_thumb_show_createdby'] = 'Показывать создателя';
+$_lang['setting_userfiles_thumb_show_createdby_desc'] = 'Показывать создателя файла на превью';
