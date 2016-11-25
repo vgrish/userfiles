@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.2.16 beta (24.11.2016)
+==============
+- Fix "size cropper wrapper"
+
 2.2.14 beta (24.11.2016)
 ==============
 - Fix "profile cropper"

@@ -9,13 +9,12 @@ userfiles.window.ImageEdit = function (config) {
 		layout: 'auto',
 		closeAction: 'close',
 		shadow: true,
-		resizable: true,
+		resizable: false,
 		collapsible: true,
 		maximizable: false,
 		autoHeight: false,
 		autoScroll: true,
 		allowDrop: true,
-
 		cls: 'userfiles-cropper-window',
 		items: this.getFields(config),
 		listeners: this.getListeners(config),
@@ -214,7 +213,33 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
 		var listeners = {
 			show: {
 				fn: function () {
+
 					var uf$ = jQuery.noConflict();
+					var $this = this;
+
+					window.setTimeout(function() {
+						$this.$cropperEl = uf$('#' + $this.id + ' ' + config.cropperSelector);
+						var cropperOptions = {};
+						cropperOptions.crop = function (data) {
+							$this.imageData = [
+								'{"x":' + data.x,
+								'"y":' + data.y,
+								'"height":' + data.height,
+								'"width":' + data.width,
+								'"rotate":' + data.rotate + '}'
+							].join();
+						}.bind($this);
+						$this.$cropperEl.cropper(cropperOptions);
+
+						var profileId = Ext.fly($this.id).child('[name=profile]').id;
+						var profileCombo = Ext.getCmp(profileId);
+						if (profileCombo && profileCombo.data) {
+							$this.changeCropperProfile(profileCombo.data[0]);
+						}
+						$this.$cropperEl.type = config.record.type;
+					}, 600);
+
+					/*var uf$ = jQuery.noConflict();
 					this.$cropperEl = uf$('#' + this.id + ' ' + config.cropperSelector);
 					var cropperOptions = {};
 					cropperOptions.crop = function (data) {
@@ -234,7 +259,7 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
 						this.changeCropperProfile(profileCombo.data[0]);
 					}
 
-					this.$cropperEl.type = config.record.type;
+					this.$cropperEl.type = config.record.type;*/
 				},
 				scope: this
 			}
@@ -267,7 +292,9 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
 
 
 	close: function () {
-		this.$cropperEl.cropper("destroy");
+		if (this.$cropperEl) {
+			this.$cropperEl.cropper("destroy");
+		}
 		userfiles.window.ImageEdit.superclass.close.call(this);
 	},
 
