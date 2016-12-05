@@ -25,6 +25,11 @@ $tmp = array(
         'value' => false,
         'area'  => 'userfiles_main',
     ),
+    'process_class'       => array(
+        'xtype' => 'combo-boolean',
+        'value' => true,
+        'area'  => 'userfiles_main',
+    ),
     'duplicate_search_fields' => array(
         'value' => 'parent,class,list,hash,source',
         'xtype' => 'textarea',

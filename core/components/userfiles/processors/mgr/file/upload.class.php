@@ -61,10 +61,22 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
         return true;
     }
 
+
     public function prepareClass()
     {
         $class = $this->UserFiles->explodeAndClean($this->getProperty('class', 'modResource'));
-        $class = end($class);
+
+        if ($this->UserFiles->getOption('process_class', null, true)) {
+            $class = end($class);
+            if ($parent = $this->modx->getObject($class, (int)$this->getProperty('parent'))) {
+                if ($classKey = $parent->get('class_key')) {
+                    $class = $classKey;
+                }
+            }
+        } else {
+            $class = reset($class);
+        }
+
         $this->setProperty('class', $class);
     }
 
@@ -243,9 +255,9 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
 
         $alias = '';
         if ($parent = $this->modx->getObject($this->getProperty('class'), (int)$this->getProperty('parent'))) {
-            if ($this->getProperty('class') == 'modResource' AND $classKey = $parent->get('class_key')) {
-                $this->setProperty('class', $classKey);
-            }
+            /* if ($this->getProperty('class') == 'modResource' AND $classKey = $parent->get('class_key')) {
+                 $this->setProperty('class', $classKey);
+             }*/
 
             if (!$alias = $parent->get('alias')) {
                 $alias = '';
@@ -373,7 +385,7 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
         } else {
             $errors = $this->mediaSource->getErrors();
             $this->modx->log(modX::LOG_LEVEL_ERROR, '[UserFiles] Could not load main image');
-            $this->modx->log(modX::LOG_LEVEL_ERROR, print_r($errors ,1));
+            $this->modx->log(modX::LOG_LEVEL_ERROR, print_r($errors, 1));
 
             return $this->UserFiles->lexicon('err_file_create');
         }

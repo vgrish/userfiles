@@ -19,6 +19,9 @@ $_lang['setting_userfiles_image_thumb_default_desc'] = 'Здесь вы може
 $_lang['setting_userfiles_process_msproduct'] = 'Обрабатывать продукты';
 $_lang['setting_userfiles_process_msproduct_desc'] = 'Обрабатывать продукты магазина, при включенной настройке заменяет поля "image", "thumb" таблицы "msProductData"';
 
+$_lang['setting_userfiles_process_class'] = 'Обрабатывать класс файла';
+$_lang['setting_userfiles_process_class_desc'] = 'Обрабатывать класс файла, при включенной настройке заменяет поля "class" на "class_key"';
+
 $_lang['setting_userfiles_image_cropper_profile'] = 'Профиль "Cropper"';
 $_lang['setting_userfiles_image_cropper_profile_desc'] = 'Закодированный в JSON массив с параметрами профиля "Cropper".';
 

@@ -1,5 +1,10 @@
 Changelog for UserFiles.
 
+2.2.17 beta (05.12.2016)
+==============
+- Add "process_class" setting
+- Improvement "prepareClass" method
+
 2.2.16 beta (24.11.2016)
 ==============
 - Fix "size cropper wrapper"
