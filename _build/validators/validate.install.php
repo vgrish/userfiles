@@ -122,7 +122,7 @@ if (!function_exists('downloadPackage')) {
 
 
 $packages = array(
-    'ModPNotify' => '1.0.0-beta',
+    'ModPNotify' => '1.0.1-beta',
 );
 
 foreach ($packages as $package_name => $version) {
