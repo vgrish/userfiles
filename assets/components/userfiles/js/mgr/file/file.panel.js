@@ -524,7 +524,7 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 
 		if (!!parent) {
 			parent.baseParams.class = cb.value;
-			parent.setValue();
+			parent.setValue(this.view.getStore().baseParams['parent'] || 0);
 			parent.store.load();
 
 			if (!!parent.pageTb) {
