@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.2.19 beta (31.12.2016)
+==============
+- Update "file.panel.js"
+
 2.2.18 beta (06.12.2016)
 ==============
 - Fix "vendors" resolver
