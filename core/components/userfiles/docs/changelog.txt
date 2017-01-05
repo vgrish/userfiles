@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.2.20 beta (05.01.2017)
+==============
+- Add "extension"
+
 2.2.19 beta (31.12.2016)
 ==============
 - Update "file.panel.js"
