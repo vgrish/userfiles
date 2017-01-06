@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.2.21 beta (06.01.2017)
+==============
+- Add "ufMs2Gallery" snippet
+
 2.2.20 beta (05.01.2017)
 ==============
 - Add "extension"

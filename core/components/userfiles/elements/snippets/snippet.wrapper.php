@@ -12,7 +12,8 @@ if (!$userfiles = $modx->getService($fqn, '', $path . 'model/',
 }
 
 $tpl = $scriptProperties['tpl'] = $modx->getOption('tpl', $scriptProperties, '', true);
-$parents = $scriptProperties['parents'] = $modx->getOption('parents', $scriptProperties, $modx->resource->id, true);
+$parents = $scriptProperties['parents'] = $modx->getOption('parents', $scriptProperties, 0, true);
+$resources = $scriptProperties['resources'] = $modx->getOption('resources', $scriptProperties, '', true);
 $class = $scriptProperties['class'] = $modx->getOption('class', $scriptProperties, 'modResource', true);
 $includeFilesThumbs = $scriptProperties['includeFilesThumbs'] = $modx->getOption('includeFilesThumbs',
     $scriptProperties, 0, true);
@@ -83,9 +84,9 @@ foreach (array('leftJoinFiles' => 'leftJoin', 'innerJoinFiles' => 'innerJoin') a
                     'class' => 'UserFile',
                     'on'    => "`{$thumb}`.class = 'UserFile' AND `{$thumb}`.parent = `{$var}`.id AND `{$thumb}`.list = '{$var}' AND `{$thumb}`.properties LIKE '%{$sizeLike}%'",
                 );
-                $select[$thumb][] = $modx->getSelectColumns('UserFile', $thumb, $thumb . '_');
+                $select[$thumb][] = $modx->getSelectColumns('UserFile', $thumb, $var. '_' .$thumb . '_');
                 if ($includeAllFiles) {
-                    $select[$thumb][] = "GROUP_CONCAT(`{$thumb}`.`url` SEPARATOR ',') as `{$thumb}`";
+                    $select[$thumb][] = "GROUP_CONCAT(`{$thumb}`.`url` SEPARATOR ',') as `{$var}_{$thumb}`";
                 }
             }
         }

@@ -3,8 +3,9 @@
 $snippets = array();
 
 $tmp = array(
-    'ufForm'    => array('file' => 'form'),
-    'ufWrapper' => array('file' => 'wrapper'),
+    'ufForm'       => array('file' => 'form'),
+    'ufWrapper'    => array('file' => 'wrapper'),
+    'ufMs2Gallery' => array('file' => 'ms2.gallery'),
 );
 
 foreach ($tmp as $k => $v) {
