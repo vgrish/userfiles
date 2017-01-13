@@ -51,14 +51,11 @@ $objectName = $scriptProperties['objectName'] = $UserFiles->getOption('objectNam
     true);
 $salt = $scriptProperties['salt'] = $UserFiles->getOption('salt', $scriptProperties, '12345678', true);
 
-$dropzone = trim($modx->getOption('dropzone', $scriptProperties, '{}'));
-$dropzone = $scriptProperties['dropzone'] = strpos($dropzone, '{') === 0
-    ? $modx->fromJSON($dropzone)
-    : array();
-$modal = trim($modx->getOption('modal', $scriptProperties, '{}'));
-$modal = $scriptProperties['modal'] = strpos($modal, '{') === 0
-    ? $modx->fromJSON($modal)
-    : array();
+$dropzone = $scriptProperties['dropzone'] = (array)json_decode($modx->getOption('dropzone', $scriptProperties, '{}'),
+    true);
+$cropper = $scriptProperties['cropper'] = (array)json_decode($modx->getOption('cropper', $scriptProperties, '{}'),
+    true);
+$modal = $scriptProperties['modal'] = (array)json_decode($modx->getOption('modal', $scriptProperties, '{}'), true);
 
 $propkey = $scriptProperties['propkey'] = $modx->getOption('propkey', $scriptProperties,
     sha1(serialize($scriptProperties)), true);

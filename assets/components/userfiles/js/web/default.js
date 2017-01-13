@@ -1,5 +1,5 @@
 /*
- * v 2.1.17
+ * v 2.2.22
  */
 
 var UserFilesTemplate = {
@@ -240,6 +240,10 @@ var UserFilesForm = {
             autoDiscover: false,
 
             errors: []
+        },
+        cropper: {
+
+            responsive: true
         }
     },
 
@@ -661,6 +665,7 @@ var UserFilesForm = {
 
     _fileEdit: function($this, config) {
         var id = $this.parents('.dz-preview').data('userfiles-id');
+        var cropperConfig = $.extend({}, UserFilesForm.config.cropper, config.cropper);
 
         $.ajax({
             type: 'GET',
@@ -695,8 +700,7 @@ var UserFilesForm = {
                                 'built.cropper': function(e) {
 
                                 }
-                            }).cropper({});
-
+                            }).cropper(cropperConfig);
                         },
                     }).getModalHeader().hide();
 

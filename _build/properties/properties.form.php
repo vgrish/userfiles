@@ -78,6 +78,10 @@ $tmp = array(
         'type'  => 'textarea',
         'value' => '{"addRemoveLinks":true,"template":"base"}',
     ),
+    'cropper' => array(
+        'type'  => 'textarea',
+        'value' => '{}',
+    ),
     'modal' => array(
         'type'  => 'textarea',
         'value' => '{"template":"base","buttons":"base"}',

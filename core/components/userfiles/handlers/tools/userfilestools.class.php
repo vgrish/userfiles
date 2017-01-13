@@ -181,6 +181,7 @@ class UserFilesTools implements UserFilesToolsInterface
             'assetsUrl'     => str_replace($pls['pl'], $pls['vl'], $opts['assetsUrl']),
             'actionUrl'     => str_replace($pls['pl'], $pls['vl'], $opts['actionUrl']),
             'dropzone'      => (array)$opts['dropzone'],
+            'cropper'       => (array)$opts['cropper'],
             'modal'         => (array)$opts['modal'],
             'propkey'       => "{$this->config['propkey']}",
             'ctx'           => "{$this->modx->context->get('key')}"
