@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.2.23 beta (21.01.2017)
+==============
+- Add "prepareOrientation"
+
 2.2.22 beta (13.01.2017)
 ==============
 - Add "cropper setting" snippet "ufForm"

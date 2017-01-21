@@ -148,7 +148,7 @@ class UserFiles
                             'dictDefaultMessage'           => '',
                             'dictMaxFilesExceeded'         => $this->lexicon('dz_dictMaxFilesExceeded'),
                             'dictFallbackMessage'          => $this->lexicon('dz_dictFallbackMessage'),
-                            'dictFileTooBig'                => $this->lexicon('dz_dictFileTooBig'),
+                            'dictFileTooBig'               => $this->lexicon('dz_dictFileTooBig'),
                             'dictInvalidFileType'          => $this->lexicon('dz_dictInvalidFileType'),
                             'dictResponseError'            => $this->lexicon('dz_dictResponseError'),
                             'dictCancelUpload'             => $this->lexicon('dz_dictCancelUpload'),
@@ -194,6 +194,59 @@ class UserFiles
         }
 
         return !empty($this->Tools) AND $this->Tools instanceof UserFilesToolsInterface;
+    }
+
+    public function loadPhpThumb()
+    {
+        if (!class_exists('modPhpThumb')) {
+            /** @noinspection PhpIncludeInspection */
+            require MODX_CORE_PATH . 'model/phpthumb/modphpthumb.class.php';
+        }
+        /** @noinspection PhpParamsInspection */
+        $phpThumb = new modPhpThumb($this->modx);
+        $phpThumb->initialize();
+
+        $cacheDir = $this->getOption('phpThumb_config_cache_directory', null,
+            MODX_CORE_PATH . 'cache/phpthumb/');
+        /* check to make sure cache dir is writable */
+        if (!is_writable($cacheDir)) {
+            if (!$this->modx->getCacheManager()->writeTree($cacheDir)) {
+                $this->modx->log(modX::LOG_LEVEL_ERROR, '[phpThumbOf] Cache dir not writable: ' . $cacheDir);
+
+                return false;
+            }
+        }
+
+        $phpThumb->setParameter('config_cache_directory', $cacheDir);
+        $phpThumb->setParameter('config_cache_disable_warning', true);
+        $phpThumb->setParameter('config_allow_src_above_phpthumb', true);
+        $phpThumb->setParameter('config_allow_src_above_docroot', true);
+        $phpThumb->setParameter('allow_local_http_src', true);
+        $phpThumb->setParameter('config_document_root', $this->modx->getOption('base_path', null, MODX_BASE_PATH));
+        $phpThumb->setParameter('config_temp_directory', $cacheDir);
+        $phpThumb->setParameter('config_max_source_pixels',
+            $this->modx->getOption('userfiles_phpThumb_config_max_source_pixels', null, '26843546'));
+
+        $phpThumb->setCacheDirectory();
+
+        return $phpThumb;
+    }
+
+    public function getTypeByData($data = array())
+    {
+        $mime = isset($data['mime']) ? $data['mime'] : '';
+        $type = explode('/', $mime);
+        $type = end($type);
+
+        switch ($type) {
+            case 'jpg':
+                $type = 'jpeg';
+                break;
+            default:
+                break;
+        }
+
+        return $type;
     }
 
     /**

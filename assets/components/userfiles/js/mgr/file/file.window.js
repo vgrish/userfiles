@@ -30,9 +30,9 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
 	cropperProfile: {name: ''},
 
 	changeCropperProfile: function (profile) {
-		var ratio;
+		var ratio = '';
 
-		if (profile.ratio != "") {
+		if (profile.ratio && profile.ratio != "") {
 			ratio = profile.ratio;
 			ratio.replace(/[^-:x()\d/*+.]/g, '');
 			ratio = eval(ratio) || NaN;
@@ -237,6 +237,7 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
 							$this.changeCropperProfile(profileCombo.data[0]);
 						}
 						$this.$cropperEl.type = config.record.type;
+
 					}, 600);
 
 					/*var uf$ = jQuery.noConflict();

@@ -1,5 +1,8 @@
 <?php
 
+//ini_set('display_errors', 1);
+//ini_set('error_reporting', -1);
+
 class modUserFileUploadProcessor extends modObjectCreateProcessor
 {
     public $classKey = 'UserFile';
@@ -45,6 +48,11 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
         $this->UserFiles->initialize();
         $this->Tools = $this->UserFiles->Tools;
 
+        $this->setDefaultProperties(array(
+            'process_orientation' => $this->UserFiles->getOption('process_image_orientation', null, true),
+            'process_quality'     => $this->UserFiles->getOption('process_image_quality', null, true),
+        ));
+
         $checkSource = $this->checkSource();
         if ($checkSource !== true) {
             return $this->UserFiles->lexicon('err_source_initialize');
@@ -56,11 +64,11 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
         }
 
         $this->mainThumbnail();
+        $this->prepareOrientation();
         $this->prepareClass();
 
         return true;
     }
-
 
     public function prepareClass()
     {
@@ -78,6 +86,64 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
         }
 
         $this->setProperty('class', $class);
+    }
+
+    public function prepareOrientation()
+    {
+        if ($this->getProperty('process_orientation')) {
+
+            $tnm = isset($this->data['tmp_name']) ? $this->data['tmp_name'] : null;
+            if (empty($tnm)) {
+                return false;
+            }
+
+            $exif = @exif_read_data($tnm);
+            if (!empty($exif['Orientation'])) {
+
+                switch ($exif['Orientation']) {
+                    case 1:
+                        $angle = 0;
+                        break;
+                    case 3:
+                        $angle = 180;
+                        break;
+                    case 6:
+                        $angle = 270;
+                        break;
+                    case 8:
+                        $angle = 90;
+                        break;
+                    default:
+                        $angle = null;
+                        break;
+                }
+
+                if (is_null($angle)) {
+                    $this->modx->log(modX::LOG_LEVEL_ERROR,
+                        '[' . __FILE__ . __LINE__ . '] EXIF auto-rotate failed because unknown $exif_data[Orientation] "' . $exif['Orientation']);
+
+                    return false;
+                }
+
+                $type = $this->UserFiles->getTypeByData($this->data);
+
+                $functionCreate = "imagecreatefrom{$type}";
+                $functionSave = "image{$type}";
+                if (function_exists($functionCreate) AND function_exists($functionSave)) {
+                    if ($source = $functionCreate($tnm)) {
+                        $rotate = imagerotate($source, $angle, 0);
+
+                        $result = $functionSave($rotate, $tnm);
+                        imagedestroy($source);
+
+                        return $result;
+                    }
+                }
+
+            }
+        }
+
+        return false;
     }
 
     /**

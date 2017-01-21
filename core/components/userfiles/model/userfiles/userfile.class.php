@@ -280,36 +280,11 @@ class UserFile extends xPDOSimpleObject
             return "[UserFiles] Could not retrieve file {$filename} from media source: " . $this->mediaSource->errors['file'];
         }
 
-        if (!class_exists('modPhpThumb')) {
-            /** @noinspection PhpIncludeInspection */
-            require MODX_CORE_PATH . 'model/phpthumb/modphpthumb.class.php';
+        if (!$phpThumb = $this->UserFiles->loadPhpThumb()) {
+            $this->xpdo->log(modX::LOG_LEVEL_ERROR, '[' . __FILE__ . __LINE__ . '] Could not load phpThumb "');
+
+            return false;
         }
-        /** @noinspection PhpParamsInspection */
-        $phpThumb = new modPhpThumb($this->xpdo);
-        $phpThumb->initialize();
-
-        $cacheDir = $this->xpdo->getOption('userfiles_phpThumb_config_cache_directory', null,
-            MODX_CORE_PATH . 'cache/phpthumb/');
-        /* check to make sure cache dir is writable */
-        if (!is_writable($cacheDir)) {
-            if (!$this->xpdo->cacheManager->writeTree($cacheDir)) {
-                $this->xpdo->log(modX::LOG_LEVEL_ERROR, '[phpThumbOf] Cache dir not writable: ' . $cacheDir);
-
-                return false;
-            }
-        }
-
-        $phpThumb->setParameter('config_cache_directory', $cacheDir);
-        $phpThumb->setParameter('config_cache_disable_warning', true);
-        $phpThumb->setParameter('config_allow_src_above_phpthumb', true);
-        $phpThumb->setParameter('config_allow_src_above_docroot', true);
-        $phpThumb->setParameter('allow_local_http_src', true);
-        $phpThumb->setParameter('config_document_root', $this->xpdo->getOption('base_path', null, MODX_BASE_PATH));
-        $phpThumb->setParameter('config_temp_directory', $cacheDir);
-        $phpThumb->setParameter('config_max_source_pixels',
-            $this->xpdo->getOption('userfiles_phpThumb_config_max_source_pixels', null, '26843546'));
-
-        $phpThumb->setCacheDirectory();
 
         $phpThumb->setSourceData($contents['content']);
         foreach ($options as $k => $v) {
