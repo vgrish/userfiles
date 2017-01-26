@@ -61,13 +61,22 @@ foreach (array('leftJoinFiles' => 'leftJoin', 'innerJoinFiles' => 'innerJoin') a
     if (!empty($scriptProperties[$k])) {
         ${$k} = $userfiles->explodeAndClean($scriptProperties[$k]);
         foreach (${$k} as $var) {
-            ${$v}[$var] = array(
+            $tmp = $userfiles->explodeAndClean($var, ':');
+
+            $list = array_shift($tmp);
+            if (empty($tmp)) {
+                $tmp = array($class);
+            }
+
+            $where[$list . '.class:IN'] = $tmp;
+            ${$v}[$list] = array(
                 'class' => 'UserFile',
-                'on'    => "`{$var}`.class = '{$class}' AND `{$var}`.parent = `{$class}`.id AND `{$var}`.list = '{$var}'",
+                'on'    => "`{$list}`.parent = `{$class}`.id AND `{$list}`.list = '{$list}'",
             );
-            $select[$var][] = $modx->getSelectColumns('UserFile', $var, $var . '_');
+
+            $select[$list][] = $modx->getSelectColumns('UserFile', $list, $list . '_');
             if ($includeAllFiles) {
-                $select[$var][] = "GROUP_CONCAT(`{$var}`.`url` SEPARATOR ',') as `{$var}`";
+                $select[$list][] = "GROUP_CONCAT(`{$list}`.`url` SEPARATOR ',') as `{$list}`";
             }
             foreach ($includeFilesThumbs as $thumb) {
                 $size = explode('x', $thumb);
@@ -82,11 +91,11 @@ foreach (array('leftJoinFiles' => 'leftJoin', 'innerJoinFiles' => 'innerJoin') a
 
                 ${$v}[$thumb] = array(
                     'class' => 'UserFile',
-                    'on'    => "`{$thumb}`.class = 'UserFile' AND `{$thumb}`.parent = `{$var}`.id AND `{$thumb}`.list = '{$var}' AND `{$thumb}`.properties LIKE '%{$sizeLike}%'",
+                    'on'    => "`{$thumb}`.class = 'UserFile' AND `{$thumb}`.parent = `{$list}`.id AND `{$thumb}`.list = '{$list}' AND `{$thumb}`.properties LIKE '%{$sizeLike}%'",
                 );
-                $select[$thumb][] = $modx->getSelectColumns('UserFile', $thumb, $var. '_' .$thumb . '_');
+                $select[$thumb][] = $modx->getSelectColumns('UserFile', $thumb, $list . '_' . $thumb . '_');
                 if ($includeAllFiles) {
-                    $select[$thumb][] = "GROUP_CONCAT(`{$thumb}`.`url` SEPARATOR ',') as `{$var}_{$thumb}`";
+                    $select[$thumb][] = "GROUP_CONCAT(`{$thumb}`.`url` SEPARATOR ',') as `{$list}_{$thumb}`";
                 }
             }
         }
