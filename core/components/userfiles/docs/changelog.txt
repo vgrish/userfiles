@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.2.24 beta (27.01.2017)
+==============
+- Fix "jQuery.noConflict"
+
 2.2.23 beta (26.01.2017)
 ==============
 - Add "prepareOrientation"

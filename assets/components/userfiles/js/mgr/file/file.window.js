@@ -214,10 +214,10 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
 			show: {
 				fn: function () {
 
-					var uf$ = jQuery.noConflict();
+					var uf$ = $.noConflict();
 					var $this = this;
 
-					window.setTimeout(function() {
+					window.setTimeout(function () {
 						$this.$cropperEl = uf$('#' + $this.id + ' ' + config.cropperSelector);
 						var cropperOptions = {};
 						cropperOptions.crop = function (data) {
@@ -229,6 +229,8 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
 								'"rotate":' + data.rotate + '}'
 							].join();
 						}.bind($this);
+
+
 						$this.$cropperEl.cropper(cropperOptions);
 
 						var profileId = Ext.fly($this.id).child('[name=profile]').id;
@@ -241,26 +243,26 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
 					}, 600);
 
 					/*var uf$ = jQuery.noConflict();
-					this.$cropperEl = uf$('#' + this.id + ' ' + config.cropperSelector);
-					var cropperOptions = {};
-					cropperOptions.crop = function (data) {
-						this.imageData = [
-							'{"x":' + data.x,
-							'"y":' + data.y,
-							'"height":' + data.height,
-							'"width":' + data.width,
-							'"rotate":' + data.rotate + '}'
-						].join();
-					}.bind(this);
-					this.$cropperEl.cropper(cropperOptions);
+					 this.$cropperEl = uf$('#' + this.id + ' ' + config.cropperSelector);
+					 var cropperOptions = {};
+					 cropperOptions.crop = function (data) {
+					 this.imageData = [
+					 '{"x":' + data.x,
+					 '"y":' + data.y,
+					 '"height":' + data.height,
+					 '"width":' + data.width,
+					 '"rotate":' + data.rotate + '}'
+					 ].join();
+					 }.bind(this);
+					 this.$cropperEl.cropper(cropperOptions);
 
-					var profileId = Ext.fly(this.id).child('[name=profile]').id;
-					var profileCombo = Ext.getCmp(profileId);
-					if (profileCombo && profileCombo.data) {
-						this.changeCropperProfile(profileCombo.data[0]);
-					}
+					 var profileId = Ext.fly(this.id).child('[name=profile]').id;
+					 var profileCombo = Ext.getCmp(profileId);
+					 if (profileCombo && profileCombo.data) {
+					 this.changeCropperProfile(profileCombo.data[0]);
+					 }
 
-					this.$cropperEl.type = config.record.type;*/
+					 this.$cropperEl.type = config.record.type;*/
 				},
 				scope: this
 			}
