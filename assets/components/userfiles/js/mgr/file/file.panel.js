@@ -123,6 +123,22 @@ userfiles.panel.Files = function (config) {
 	});
 	this.on('afterrender', function () {
 		this.initialize();
+
+		
+		var $this = this;
+		window.setTimeout(function () {
+			var hash = userfiles.tools.Hash.get();
+			$this.topToolbar.getEl().select('input', true).each(function(item){
+				var combo = Ext.getCmp(item.id);
+				if (combo) {
+					if (combo.name && hash[combo.name]) {
+						var value = hash[combo.name];
+						combo.setValue(value).fireEvent('select', combo);
+					}
+				}
+			},this);
+		}, 600);
+
 	});
 
 };
@@ -318,6 +334,7 @@ Ext.extend(userfiles.panel.Files, MODx.Panel, {
 					width: 190,
 					anchor: '99%',
 					allowBlank: false,
+					//forceSelection: true,
 					value: userfiles.config.source || 1,
 					listeners: {
 						select: {

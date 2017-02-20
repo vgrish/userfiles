@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.2.25 beta (20.02.2017)
+==============
+- Add read parameters from url [js]
+
 2.2.24 beta (27.01.2017)
 ==============
 - Fix "jQuery.noConflict"
