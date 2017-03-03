@@ -1,5 +1,5 @@
 /*
- * v 2.2.22
+ * v 2.2.26
  */
 
 var UserFilesTemplate = {
@@ -367,7 +367,9 @@ var UserFilesForm = {
 
                     var id = $(file.previewElement).attr('data-userfiles-id');
                     if (!id && ((_ref = file.previewElement) != null)) {
-                         _ref.parentNode.removeChild(file.previewElement);
+                        if (file.previewElement.parentNode) {
+                            _ref.parentNode.removeChild(file.previewElement);
+                        }
                         return thisDropzone._updateMaxFilesReachedClass();
                     }
 
@@ -385,7 +387,7 @@ var UserFilesForm = {
                             if (!r.success) {
                                 UserFilesMessage.error('', r.message);
                             } else {
-                                if ((_ref = file.previewElement) != null) {
+                                if (((_ref = file.previewElement) != null) && file.previewElement.parentNode) {
                                     _ref.parentNode.removeChild(file.previewElement);
                                 }
                                 return thisDropzone._updateMaxFilesReachedClass();
@@ -838,6 +840,18 @@ $(document).on('dropzone_init', function(e, dropzone, config) {
     });
 
     myDropzone.on('removedfile', function(file) {
+
+    });
+
+    myDropzone.on('thumbnail', function(file) {
+        /*if (file.accepted !== false) {
+            if (file.height > 500 || file.width > 500) {
+                myDropzone.removeFile(file);
+            }
+        }*/
+    });
+
+    myDropzone.on('success', function(file) {
 
     });
 
