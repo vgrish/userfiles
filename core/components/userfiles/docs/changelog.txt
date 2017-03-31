@@ -1,5 +1,9 @@
 Changelog for UserFiles.
 
+2.2.27 beta (31.03.2017)
+==============
+- Fix remove "UserFile"
+
 2.2.26 beta (03.03.2017)
 ==============
 - Fix removeFile [js]

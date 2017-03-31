@@ -71,8 +71,8 @@ class UserFile extends xPDOSimpleObject
 
         $filename = $this->get('path') . $this->get('file');
         if (!@$this->mediaSource->removeObject($filename)) {
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR,
-                '[UserFiles] Error remove the attachment file at: ' . $filename);
+            /*$this->modx->log(xPDO::LOG_LEVEL_ERROR,
+                '[UserFiles] Error remove the attachment file at: ' . $filename);*/
         }
 
         return parent::remove($ancestors);

@@ -9,6 +9,8 @@ $tmp = array(
         'events'      => array(
             'onDocFormPrerender'  => array(),
             'OnUserFormPrerender' => array(),
+            'OnBeforeEmptyTrash'  => array(),
+            'OnUserRemove'        => array(),
         )
     )
 
