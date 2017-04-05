@@ -43,8 +43,15 @@ class modWebUserFileSortProcessor extends modUserFileSortProcessor
             return $this->modx->error->failure();
         }
 
-        $this->setProperty('source', $ids[0]);
-        $this->setProperty('target', $ids[1]);
+        foreach ($ids as $idx => $id) {
+            if ($file = $this->modx->getObject($this->classKey, (int)$id)) {
+                $file->set('rank', $idx);
+                $file->save();
+            }
+        }
+
+        //$this->setProperty('source', $ids[0]);
+        //$this->setProperty('target', $ids[1]);
 
         return parent::process();
     }
