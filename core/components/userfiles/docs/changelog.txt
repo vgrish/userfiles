@@ -1,6 +1,6 @@
 Changelog for UserFiles.
 
-2.2.29 beta (22.06.2017)
+2.3.0 beta (22.06.2017)
 ==============
 - Fix "initialize" [js]
 - Add "file properties" [js]

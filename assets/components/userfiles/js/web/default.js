@@ -1,5 +1,5 @@
 /*
- * v 2.2.29
+ * v 2.3.0
  */
 
 var UserFilesTemplate = {
