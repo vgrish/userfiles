@@ -50,8 +50,6 @@ class modWebUserFileUploadProcessor extends modUserFileUploadProcessor
             return $this->UserFiles->lexicon('err_lock');
         }
 
-        //$this->modx->log(1, print_r($properties ,1));
-
         foreach (array('class', 'parent', 'list', 'source', 'anonym') as $key) {
             $this->setProperty($key, $properties[$key]);
         }

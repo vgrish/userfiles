@@ -214,7 +214,7 @@ Ext.extend(userfiles.window.ImageEdit, Ext.Window, {
 			show: {
 				fn: function () {
 
-					var uf$ = $.noConflict();
+					var uf$ = jQuery.noConflict();
 					var $this = this;
 
 					window.setTimeout(function () {

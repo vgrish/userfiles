@@ -4,11 +4,12 @@
 
 var UserFilesTemplate = {
 
-    get: function(name, data) {
+    get: function (name, data) {
 
         if (!data) {
             data = [];
         }
+
         var template = [];
         var all = {
             base: [
@@ -47,7 +48,9 @@ var UserFilesTemplate = {
                 '<div class="dz-image"><img data-dz-thumbnail /></div>',
                 '<div class="dz-details">',
                 '<div class="dz-size"><span data-dz-size></span></div>',
-                '<div class="dz-filename"><span data-dz-name></span></div>',
+                '<div class="dz-filename">',
+                '<span data-dz-name></span>',
+                '</div>',
                 '</div>',
                 '<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>',
                 '<div class="dz-error-message"><span data-dz-errormessage></span></div>',
@@ -84,16 +87,29 @@ var UserFilesTemplate = {
         return template.join('');
     },
 
-    getModal: function(name, data) {
+    getModal: function (name, data) {
         if (!data) {
             data = [];
         }
+
         var template = [];
         var all = {
             base: [
                 '<div class="user-files-img-container">',
                 '<img class="user-files-img-edit" src="' + data.dyn_url + '" alt="">',
                 '</div>'
+            ],
+            edit: [
+                '<div class="user-files-img-container">',
+                '<img class="user-files-img-edit" src="' + data.dyn_url + '" alt="">',
+                '</div>',
+                '<form id="file-properties" class="user-files-img-properties row">',
+                '<div class="form-group">',
+                '<div class="col-md-12">',
+                ' <textarea name="description" placeholder="Описание" class="form-control">' + (data.description ? data.description : '') + '</textarea>',
+                '</div>',
+                '</div>',
+                '</form>',
             ],
         };
 
@@ -103,7 +119,7 @@ var UserFilesTemplate = {
         return template.join('');
     },
 
-    getModalButtons: function(name, data) {
+    getModalButtons: function (name, data) {
         if (!data) {
             data = [];
         }
@@ -112,73 +128,73 @@ var UserFilesTemplate = {
             base: [{
                 label: '',
                 icon: 'fa fa-arrows',
-                cssClass: 'userfiles-modal-btn-action',
+                cssClass: 'userfiles-modal-btn-action pull-left',
                 hotkey: null,
-                action: function(d) {
+                action: function (d) {
                     UserFilesForm._setDragMode('setDragMode', 'move', this);
                 }
             }, {
                 label: '',
                 icon: 'fa fa-crop',
-                cssClass: 'userfiles-modal-btn-action',
+                cssClass: 'userfiles-modal-btn-action pull-left',
                 hotkey: null,
-                action: function(d) {
+                action: function (d) {
                     UserFilesForm._setDragMode('setDragMode', 'crop', this);
                 }
             }, {
                 label: '',
                 icon: 'fa fa-search-plus',
-                cssClass: 'userfiles-modal-btn-action',
+                cssClass: 'userfiles-modal-btn-action pull-left',
                 hotkey: null,
-                action: function(d) {
+                action: function (d) {
                     UserFilesForm._setDragMode('zoom', 0.1, this);
                 }
             }, {
                 label: '',
                 icon: 'fa fa-search-minus',
-                cssClass: 'userfiles-modal-btn-action',
+                cssClass: 'userfiles-modal-btn-action pull-left',
                 hotkey: null,
-                action: function(d) {
+                action: function (d) {
                     UserFilesForm._setDragMode('zoom', -0.1, this);
                 }
             }, {
                 label: '',
                 icon: 'fa fa-rotate-left',
-                cssClass: 'userfiles-modal-btn-action',
+                cssClass: 'userfiles-modal-btn-action pull-left',
                 hotkey: null,
-                action: function(d) {
+                action: function (d) {
                     UserFilesForm._setDragMode('rotate', -90, this);
                 }
             }, {
                 label: '',
                 icon: 'fa fa-rotate-right',
-                cssClass: 'userfiles-modal-btn-action',
+                cssClass: 'userfiles-modal-btn-action pull-left',
                 hotkey: null,
-                action: function(d) {
+                action: function (d) {
                     UserFilesForm._setDragMode('rotate', 90, this);
                 }
             }, {
                 label: '',
                 icon: 'fa fa-arrows-h',
-                cssClass: 'userfiles-modal-btn-action',
+                cssClass: 'userfiles-modal-btn-action pull-left',
                 hotkey: null,
-                action: function(d) {
+                action: function (d) {
                     UserFilesForm._setDragMode('scaleX', -1, this);
                 }
             }, {
                 label: '',
                 icon: 'fa fa-arrows-v',
-                cssClass: 'userfiles-modal-btn-action',
+                cssClass: 'userfiles-modal-btn-action pull-left',
                 hotkey: null,
-                action: function(d) {
+                action: function (d) {
                     UserFilesForm._setDragMode('scaleY', -1, this);
                 }
             }, {
                 label: '',
                 icon: 'fa fa-remove',
-                cssClass: 'userfiles-modal-btn-action',
+                cssClass: 'userfiles-modal-btn-action pull-left',
                 hotkey: null,
-                action: function(d) {
+                action: function (d) {
                     UserFilesForm._setDragMode('clear', null, this);
                 }
             }, {
@@ -186,18 +202,18 @@ var UserFilesTemplate = {
             }, {
                 label: '',
                 icon: 'fa fa-times',
-                cssClass: 'btn-danger',
+                cssClass: 'userfiles-modal-btn-action btn-danger pull-right',
                 hotkey: null,
-                action: function(d) {
+                action: function (d) {
                     d.close();
                 }
             }, {
                 label: '',
                 icon: 'fa fa-upload',
-                cssClass: 'btn-primary',
+                cssClass: 'userfiles-modal-btn-action btn-primary pull-right',
                 hotkey: null,
                 autospin: true,
-                action: function(d) {
+                action: function (d) {
                     d.enableButtons(false);
                     d.setClosable(false);
                     UserFilesForm._save(this);
@@ -242,55 +258,102 @@ var UserFilesForm = {
             errors: []
         },
         cropper: {
-
-            responsive: true
+            responsive: true,
+            minContainerWidth: 300,
+            minContainerHeight: 300
         }
     },
 
-    initialize: function(opts) {
+    initialize: function (opts) {
         var config = $.extend(true, {}, this.config, opts);
 
         var canvas = HTMLCanvasElement && HTMLCanvasElement.prototype;
 
         if (!jQuery().dropzone) {
-            document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/dropzone/dist/min/dropzone.min.css); </style>');
-            document.writeln('<script src="' + config.assetsUrl + 'vendor/dropzone/dist/dropzone.js"><\/script>');
+            $('<link/>', {
+                rel: 'stylesheet',
+                type: 'text/css',
+                href: config.assetsUrl + 'vendor/dropzone/dist/min/dropzone.min.css',
+            }).appendTo('head');
+            $('<script/>', {
+                type: 'text/javascript',
+                src: config.assetsUrl + 'vendor/dropzone/dist/dropzone.js',
+            }).appendTo('head');
         }
 
         if (typeof(PNotify) == 'undefined') {
-            document.writeln('<style data-compiled-css>@import url(' + config.assetsBaseUrl + 'components/modpnotify/build/pnotify.custom.css); </style>');
-            document.writeln('<script src="' + config.assetsBaseUrl + 'components/modpnotify/build/pnotify.custom.js"><\/script>');
+            $('<link/>', {
+                rel: 'stylesheet',
+                type: 'text/css',
+                href: config.assetsBaseUrl + 'components/modpnotify/build/pnotify.custom.css',
+            }).appendTo('head');
+            $('<script/>', {
+                type: 'text/javascript',
+                src: config.assetsBaseUrl + 'components/modpnotify/build/pnotify.custom.js',
+            }).appendTo('head');
         }
 
         if (!jQuery().sortable) {
-            document.writeln('<script src="' + config.assetsUrl + 'vendor/jqueryui/jquery-ui.min.js"><\/script>');
+            $('<script/>', {
+                type: 'text/javascript',
+                src: config.assetsUrl + 'vendor/jqueryui/jquery-ui.min.js',
+            }).appendTo('head');
         }
 
         if (!jQuery().cropper) {
-            document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/cropper/dist/cropper.min.css); </style>');
-            document.writeln('<script src="' + config.assetsUrl + 'vendor/cropper/dist/cropper.min.js"><\/script>');
+            $('<link/>', {
+                rel: 'stylesheet',
+                type: 'text/css',
+                href: config.assetsUrl + 'vendor/cropper/dist/cropper.min.css',
+            }).appendTo('head');
+            $('<script/>', {
+                type: 'text/javascript',
+                src: config.assetsUrl + 'vendor/cropper/dist/cropper.min.js',
+            }).appendTo('head');
         }
 
         if (!canvas.toBlob) {
-            document.writeln('<script src="' + config.assetsUrl + 'vendor/canvastoblob/js/canvas-to-blob.min.js"><\/script>');
+            $('<script/>', {
+                type: 'text/javascript',
+                src: config.assetsUrl + 'vendor/canvastoblob/js/canvas-to-blob.min.js',
+            }).appendTo('head');
         }
 
         if (!jQuery().modal) {
-            document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/bs3modal/dist/css/bootstrap-modal.css); </style>');
-            document.writeln('<script src="' + config.assetsUrl + 'vendor/bs3modal/dist/js/bootstrap-modal.js"><\/script>');
+            $('<link/>', {
+                rel: 'stylesheet',
+                type: 'text/css',
+                href: config.assetsUrl + 'vendor/bs3modal/dist/css/bootstrap-modal.css',
+            }).appendTo('head');
+            $('<script/>', {
+                type: 'text/javascript',
+                src: config.assetsUrl + 'vendor/bs3modal/dist/js/bootstrap-modal.js',
+            }).appendTo('head');
         }
 
-        if (!jQuery().dialog) {
-            document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/bs3dialog/dist/css/bootstrap-dialog.min.css); </style>');
-            document.writeln('<script src="' + config.assetsUrl + 'vendor/bs3dialog/dist/js/bootstrap-dialog.min.js"><\/script>');
+        if (typeof BootstrapDialog != 'function') {
+            $('<link/>', {
+                rel: 'stylesheet',
+                type: 'text/css',
+                href: config.assetsUrl + 'vendor/bs3dialog/dist/css/bootstrap-dialog.min.css',
+            }).appendTo('head');
+            $('<script/>', {
+                type: 'text/javascript',
+                src: config.assetsUrl + 'vendor/bs3dialog/dist/js/bootstrap-dialog.min.js',
+            }).appendTo('head');
         }
 
-        document.writeln('<style data-compiled-css>@import url(' + config.assetsUrl + 'vendor/fontawesome/css/font-awesome.min.css); </style>');
+        if (true) {
+            $('<link/>', {
+                rel: 'stylesheet',
+                type: 'text/css',
+                href: config.assetsUrl + 'vendor/fontawesome/css/font-awesome.min.css',
+            }).appendTo('head');
+        }
 
+        $(document).ready(function () {
 
-        $(document).ready(function() {
-
-            $('#' + config.propkey).each(function() {
+            $('#' + config.propkey).each(function () {
                 if (!this.id) {
                     console.log('[UserFiles:Error] Initialization Error. Id required');
                     return;
@@ -303,7 +366,7 @@ var UserFilesForm = {
 
                 dropzoneConfig.previewTemplate = UserFilesTemplate.get(dropzoneConfig.template || 'base');
 
-                dropzoneConfig.reload = function($this) {
+                dropzoneConfig.reload = function ($this) {
                     var thisDropzone = $this;
 
                     $.ajax({
@@ -316,12 +379,12 @@ var UserFilesForm = {
                         },
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
-                        success: function(r) {
+                        success: function (r) {
 
                             if (r.success && r.results) {
                                 thisDropzone.files = [];
 
-                                $.each(r.results, function(i, item) {
+                                $.each(r.results, function (i, item) {
 
                                     var addFile = {
                                         name: item.file,
@@ -330,18 +393,21 @@ var UserFilesForm = {
                                         accepted: true,
                                     };
 
-                                     thisDropzone.options.addedfile.call(thisDropzone, addFile);
-                                     if (item.dyn_thumbnail) {
-                                     thisDropzone.options.thumbnail.call(thisDropzone, addFile, item.dyn_thumbnail);
-                                     }
-                                     addFile.previewElement.classList.add('dz-complete');
-                                     $(addFile.previewElement).attr('data-userfiles-id', item.id);
+                                    thisDropzone.options.addedfile.call(thisDropzone, addFile);
+                                    if (item.dyn_thumbnail) {
+                                        thisDropzone.options.thumbnail.call(thisDropzone, addFile, item.dyn_thumbnail);
+                                    }
+                                    addFile.previewElement.classList.add('dz-complete');
+                                    $(addFile.previewElement).attr('data-userfiles-id', item.id);
 
-                                     if (/^image\/\w+$/.test(item.mime)) {
-                                     $(addFile.previewElement).find('a[data-action="fileEdit"]').removeClass('hidden');
-                                     }
+                                    if (/^image\/\w+$/.test(item.mime)) {
+                                        $(addFile.previewElement).find('a[data-action="fileEdit"]').removeClass('hidden');
+                                    }
 
-                                     thisDropzone.files.push(addFile);
+                                    var name = item.description ? item.description : item.name;
+                                    $(addFile.previewElement).find('span[data-dz-name]').text(name);
+
+                                    thisDropzone.files.push(addFile);
 
                                 });
                             } else if (!r.success) {
@@ -351,12 +417,12 @@ var UserFilesForm = {
                     });
                 };
 
-                dropzoneConfig.init = function() {
+                dropzoneConfig.init = function () {
                     dropzoneConfig.reload(this);
                     $(document).trigger('dropzone_init', [dropzoneConfig, config]);
                 };
 
-                dropzoneConfig.removedfile = function(file) {
+                dropzoneConfig.removedfile = function (file) {
 
                     var _ref;
                     var thisDropzone = this;
@@ -383,7 +449,7 @@ var UserFilesForm = {
                             ctx: this.options.params.ctx || ''
                         },
                         dataType: "json",
-                        success: function(r) {
+                        success: function (r) {
                             if (!r.success) {
                                 UserFilesMessage.error('', r.message);
                             } else {
@@ -393,13 +459,13 @@ var UserFilesForm = {
                                 return thisDropzone._updateMaxFilesReachedClass();
                             }
                         },
-                        failure: function(r) {
+                        failure: function (r) {
 
                         }
                     });
                 };
 
-                dropzoneConfig.canceled = function(file) {
+                dropzoneConfig.canceled = function (file) {
                     return this.emit("error", file, dropzoneConfig.dictDefaultCanceled);
                 };
 
@@ -412,12 +478,12 @@ var UserFilesForm = {
 
                 var dropzone = new Dropzone(this, dropzoneConfig);
                 var DropzoneEvents = Dropzone.prototype.events || ["drop", "dragstart", "dragend", "dragenter", "dragover", "dragleave", "addedfile",
-                    "addedfiles", "removedfile", "thumbnail", "error", "errormultiple", "processing", "processingmultiple",
-                    "uploadprogress", "totaluploadprogress", "sending", "sendingmultiple", "success", "successmultiple", "canceled",
-                    "canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached", "queuecomplete"
-                ];
+                        "addedfiles", "removedfile", "thumbnail", "error", "errormultiple", "processing", "processingmultiple",
+                        "uploadprogress", "totaluploadprogress", "sending", "sendingmultiple", "success", "successmultiple", "canceled",
+                        "canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached", "queuecomplete"
+                    ];
 
-                DropzoneEvents.filter(function(event) {
+                DropzoneEvents.filter(function (event) {
                     if (UserFilesForm['_' + event]) {
                         dropzone.on(event, UserFilesForm['_' + event]);
                     }
@@ -434,9 +500,9 @@ var UserFilesForm = {
                         distance: 20,
                         tolerance: 'pointer',
 
-                        start: function(e, ui) {
+                        start: function (e, ui) {
                             var start = [];
-                            $($(e.target).get(0)).children().each(function(i) {
+                            $($(e.target).get(0)).children().each(function (i) {
                                 var $this = $(this);
                                 if (!$this.data('userfilesId')) {
                                     return true;
@@ -447,11 +513,11 @@ var UserFilesForm = {
                             $(this).data('ui-sortable').start = start;
                         },
 
-                        update: function(e, ui) {
+                        update: function (e, ui) {
                             var start = $(this).data('ui-sortable').start || [];
                             var end = [];
 
-                            $($(e.target).get(0)).children().each(function(i) {
+                            $($(e.target).get(0)).children().each(function (i) {
                                 var $this = $(this);
 
                                 if (!$this.data('userfilesId')) {
@@ -476,12 +542,12 @@ var UserFilesForm = {
                                         ctx: dropzoneConfig.params.ctx || ''
                                     },
                                     dataType: "json",
-                                    success: function(r) {
+                                    success: function (r) {
                                         if (!r.success) {
                                             UserFilesMessage.error('', r.message);
                                         }
                                     },
-                                    failure: function(r) {
+                                    failure: function (r) {
 
                                     }
                                 });
@@ -499,7 +565,7 @@ var UserFilesForm = {
         });
 
 
-        $(document).on('click', '#' + config.propkey + ' a.user-files-action', function(e) {
+        $(document).on('click', '#' + config.propkey + ' a.user-files-action', function (e) {
             var $this = $(this);
             var action = $this.data('action');
 
@@ -512,7 +578,7 @@ var UserFilesForm = {
         });
     },
 
-    _addedfile: function(file) {
+    _addedfile: function (file) {
 
         if (/^image\/\w+$/.test(file.type)) {
             $(file.previewElement).find('a[data-action="fileEdit"]').removeClass('hidden');
@@ -521,49 +587,49 @@ var UserFilesForm = {
         this.errors = [];
     },
 
-    _queuecomplete: function() {
+    _queuecomplete: function () {
         if (this.errors.length > 0) {
             UserFilesMessage.error('', this.errors.join('<br>'));
         }
     },
 
-    _error: function(file, message) {
+    _error: function (file, message) {
         UserFilesMessage.error('', message);
 
-        setTimeout(function() {
+        setTimeout(function () {
             this.removeFile(file);
         }.bind(this), 1000);
     },
 
-    _success: function(file, response) {
+    _success: function (file, response) {
         response = response ? JSON.parse(response) : {};
         if (response.success == false && response.message != '') {
             this.errors.push(file.name + ': ' + response.message);
-            setTimeout(function() {
+            setTimeout(function () {
                 this.removeFile(file);
             }.bind(this), 1000);
-        } else if (response.object && response.object.id){
+        } else if (response.object && response.object.id) {
             $(file.previewElement).attr('data-userfiles-id', response.object.id);
         }
     },
 
-    _processing: function(file) {
+    _processing: function (file) {
 
     },
 
-    _uploadprogress: function(file, progress, bytesSent) {
+    _uploadprogress: function (file, progress, bytesSent) {
 
     },
 
-    _complete: function(file) {
+    _complete: function (file) {
 
     },
 
-    _removedfile: function(file) {
+    _removedfile: function (file) {
 
     },
 
-    _array_diff_assoc: function(arr1, arr2) {
+    _array_diff_assoc: function (arr1, arr2) {
         var results = [];
         for (var i = 0; i < arr1.length; i++) {
             if (arr1[i] != arr2[i]) {
@@ -574,7 +640,7 @@ var UserFilesForm = {
     },
 
 
-    _setDragMode: function(action, param, $this) {
+    _setDragMode: function (action, param, $this) {
         var $param = $this.dialog.options.$cropperEl.data(action);
 
         switch (true) {
@@ -596,7 +662,7 @@ var UserFilesForm = {
         $this.dialog.options.$cropperEl.cropper(action, param);
     },
 
-    _save: function($this) {
+    _save: function ($this) {
 
         var data = $this.dialog.options.$cropperEl.cropper('getData');
         var config = $this.dialog.options.config;
@@ -608,10 +674,22 @@ var UserFilesForm = {
 
         var type = record.type || 'png';
 
-        $this.dialog.options.$cropperEl.cropper('getCroppedCanvas', data).toBlob(function(file) {
-            file = new Blob([file], { type: 'image/'+type});
+        $this.dialog.options.$cropperEl.cropper('getCroppedCanvas', data).toBlob(function (file) {
+            file = new Blob([file], {type: 'image/' + type});
 
             var formData = new FormData();
+
+            /* add file properties from form */
+            if ($this.dialog && $this.dialog.$modalBody) {
+                var tmp = $this.dialog.$modalBody.find('#file-properties').serializeArray();
+                for (key in tmp) {
+                    if (!tmp.hasOwnProperty(key)) {
+                        continue;
+                    }
+                    formData.append(tmp[key]['name'], tmp[key]['value']);
+                }
+            }
+
             formData.append('action', 'file/image/update');
             formData.append('crop', true);
             formData.append('data', JSON.stringify(data));
@@ -619,7 +697,7 @@ var UserFilesForm = {
             formData.append('id', record.id);
             formData.append('propkey', config.propkey);
             formData.append('ctx', config.ctx);
-            formData.append('file', file, 'file.'+type);
+            formData.append('file', file, 'file.' + type);
 
             $.ajax({
                 url: config.actionUrl,
@@ -630,16 +708,16 @@ var UserFilesForm = {
                 data: formData,
                 processData: false,
                 contentType: false,
-                success: function(response) {
+                success: function (response) {
                     $('#' + config.propkey).find('.dz-preview').remove();
                     Dropzone.options[config.propkey].options.reload(Dropzone.options[config.propkey]);
                     $this.dialog.close();
                 }
             });
-        }, 'image/'+type);
+        }, 'image/' + type);
     },
 
-    _fileShow: function($this, config) {
+    _fileShow: function ($this, config) {
         var id = $this.parents('.dz-preview').data('userfiles-id');
 
         $.ajax({
@@ -653,7 +731,7 @@ var UserFilesForm = {
             },
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: function(r) {
+            success: function (r) {
                 if (r.success && r.object) {
                     if (r.object.dyn_url) {
                         window.open(r.object.dyn_url);
@@ -665,7 +743,8 @@ var UserFilesForm = {
         });
     },
 
-    _fileEdit: function($this, config) {
+    _fileEdit: function ($this, config) {
+
         var id = $this.parents('.dz-preview').data('userfiles-id');
         var cropperConfig = $.extend({}, UserFilesForm.config.cropper, config.cropper);
 
@@ -680,7 +759,7 @@ var UserFilesForm = {
             },
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: function(r) {
+            success: function (r) {
                 if (r.success && r.object) {
 
                     BootstrapDialog.show({
@@ -689,20 +768,34 @@ var UserFilesForm = {
                         buttons: UserFilesTemplate.getModalButtons(config.modal.buttons || 'base', config),
                         config: config,
                         record: r.object,
-                        onshown: function(dialogRef) {
+                        onshown: function (dialogRef) {
                             this.$cropperEl = $('.user-files-img-edit');
-                            this.$cropperEl.cropper('destroy');
+                            this.$cropperEl.cropper('destroy').cropper(cropperConfig);
 
                             this.$cropperEl.on({
-                                'build.cropper': function(e) {
+                                ready: function (e) {
+                                    var height = $(window).height() / 2;
+                                    if (cropperConfig.minContainerHeight && height < cropperConfig.minContainerHeight) {
+                                        height = cropperConfig.minContainerHeight;
+                                    }
+
+                                    var width = $(window).width() / 2;
+                                    if (cropperConfig.minContainerWidth && width < cropperConfig.minContainerWidth) {
+                                        width = cropperConfig.minContainerWidth;
+                                    }
+
+                                    $('.user-files-img-container').css({
+                                        'height': height,
+                                        'width': width
+                                    });
+                                },
+                                'build.cropper': function (e) {
                                     $('.user-files-img-container').css({
                                         'height': $(window).height() / 2
                                     });
                                 },
-                                'built.cropper': function(e) {
+                            });
 
-                                }
-                            }).cropper(cropperConfig);
                         },
                     }).getModalHeader().hide();
 
@@ -722,7 +815,7 @@ var UserFilesMessage = {
         delay: 4000,
         addclass: 'userfiles-message'
     },
-    success: function(title, message) {
+    success: function (title, message) {
         if (!message) return false;
         var notify = {};
         notify.type = 'success';
@@ -730,7 +823,7 @@ var UserFilesMessage = {
         notify.title = (!title) ? UserFilesLexicon.defaults.message.title.success : title;
         new PNotify($.extend({}, this.defaults, notify));
     },
-    error: function(title, message) {
+    error: function (title, message) {
         if (!message) return false;
         var notify = {};
         notify.type = 'error';
@@ -738,7 +831,7 @@ var UserFilesMessage = {
         notify.title = (!title) ? UserFilesLexicon.defaults.message.title.error : title;
         new PNotify($.extend({}, this.defaults, notify));
     },
-    info: function(title, message) {
+    info: function (title, message) {
         if (!message) return false;
         var notify = {};
         notify.type = 'info';
@@ -746,7 +839,7 @@ var UserFilesMessage = {
         notify.title = (!title) ? UserFilesLexicon.defaults.message.title.info : title;
         new PNotify($.extend({}, this.defaults, notify));
     },
-    remove: function() {
+    remove: function () {
         PNotify.removeAll();
     }
 };
@@ -776,7 +869,7 @@ var UserFilesConfirm = {
             history: false
         }
     },
-    success: function(title, message) {
+    success: function (title, message) {
         if (!message) return false;
         var notify = {};
         notify.type = 'success';
@@ -784,7 +877,7 @@ var UserFilesConfirm = {
         notify.title = (!title) ? UserFilesLexicon.defaults.confirm.title.success : title;
         return new PNotify($.extend({}, this.defaults, notify));
     },
-    error: function(title, message) {
+    error: function (title, message) {
         if (!message) return false;
         var notify = {};
         notify.type = 'error';
@@ -792,7 +885,7 @@ var UserFilesConfirm = {
         notify.title = (!title) ? UserFilesLexicon.defaults.confirm.title.error : title;
         return new PNotify($.extend({}, this.defaults, notify));
     },
-    info: function(title, message) {
+    info: function (title, message) {
         if (!message) return false;
         var notify = {};
         notify.type = 'info';
@@ -800,14 +893,14 @@ var UserFilesConfirm = {
         notify.title = (!title) ? UserFilesLexicon.defaults.confirm.title.info : title;
         return new PNotify($.extend({}, this.defaults, notify));
     },
-    form: function(form, type, title, message) {
+    form: function (form, type, title, message) {
         if (!type) return false;
         if (form) {
             $.extend(this.defaults, {
-                before_init: function(opts) {
+                before_init: function (opts) {
                     $(form).find('input[type="button"], button, a').attr('disabled', true);
                 },
-                after_close: function(PNotify, timer_hide) {
+                after_close: function (PNotify, timer_hide) {
                     $(form).find('input[type="button"], button, a').attr('disabled', false);
                 }
             });
@@ -823,35 +916,34 @@ var UserFilesConfirm = {
                 return this.info(title, message);
         }
     },
-    remove: function() {
+    remove: function () {
         return PNotify.removeAll();
     }
 };
 
 
-
 /* process events */
-$(document).on('dropzone_init', function(e, dropzone, config) {
+$(document).on('dropzone_init', function (e, dropzone, config) {
 
-    var myDropzone = $('#'+config.propkey).get(0).dropzone;
+    var myDropzone = $('#' + config.propkey).get(0).dropzone;
 
-    myDropzone.on('addedfile', function(file) {
-
-    });
-
-    myDropzone.on('removedfile', function(file) {
+    myDropzone.on('addedfile', function (file) {
 
     });
 
-    myDropzone.on('thumbnail', function(file) {
+    myDropzone.on('removedfile', function (file) {
+
+    });
+
+    myDropzone.on('thumbnail', function (file) {
         /*if (file.accepted !== false) {
-            if (file.height > 500 || file.width > 500) {
-                myDropzone.removeFile(file);
-            }
-        }*/
+         if (file.height > 500 || file.width > 500) {
+         myDropzone.removeFile(file);
+         }
+         }*/
     });
 
-    myDropzone.on('success', function(file) {
+    myDropzone.on('success', function (file) {
 
     });
 

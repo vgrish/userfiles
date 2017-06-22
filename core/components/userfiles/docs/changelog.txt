@@ -1,5 +1,11 @@
 Changelog for UserFiles.
 
+2.2.29 beta (22.06.2017)
+==============
+- Fix "initialize" [js]
+- Add "file properties" [js]
+- Fix "hash" on "update image" [UserFileImageUpdateProcessor]
+
 2.2.28 beta (05.04.2017)
 ==============
 - Fix sort "UserFile"

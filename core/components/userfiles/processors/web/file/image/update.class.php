@@ -12,9 +12,10 @@ class modWebUserFileImageUpdateProcessor extends modWebUserFileUploadProcessor
 
             $file = $this->object->get('name');
             $type = $this->getProperty('type', 'png');
-            
+
             $this->data['name'] = $file;
             $this->data['type'] = $type;
+            $this->data['hash'] = sha1(time());
             $this->data['properties'] = str_replace('blob', $type, $this->data['properties']);
 
             $this->setProperty('parent', $this->object->get('parent'));

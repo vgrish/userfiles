@@ -36,16 +36,17 @@
     display: block;
 }
 
-/*.modal .bootstrap-dialog-footer-buttons {
-    display: inline-flex;
-}*/
+.modal .user-files-img-properties {
+    margin: 20px -15px 0px -15px;
+}
+
+.bootstrap-dialog .userfiles-modal-btn-action .bootstrap-dialog-button-icon {
+    margin-right: 0;
+}
+
 
 .modal .bootstrap-dialog-footer-buttons .btn.userfiles-modal-btn-action {
     width: 38px;
-    margin: 0;
-    background: none;
-    box-shadow: none;
-    float: left;
 }
 
 .modal .bootstrap-dialog-footer-buttons .btn.userfiles-modal-btn-break {
@@ -58,6 +59,7 @@
 
 .modal .user-files-img-container {
     overflow: hidden;
+    max-height: 100%;
 }
 
 

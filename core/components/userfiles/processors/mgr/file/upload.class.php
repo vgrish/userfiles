@@ -196,6 +196,8 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
     {
         $tnm = $this->modx->getOption('tmp_name', $file);
         $name = $this->modx->getOption('name', $file);
+
+        clearstatcache(true, $tnm);
         if (!file_exists($tnm)) {
             return $this->UserFiles->lexicon('err_file_ns');
         }
@@ -217,7 +219,10 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
         $type = explode('.', $name);
         $type = end($type);
         $name = rtrim(str_replace($type, '', $name), '.');
-        $hash = hash_file('sha1', $tnm);
+
+        $res = fopen($tnm, 'r');
+        $hash = sha1(fread($res, 8192).$size);
+        fclose($res);
 
         $data = array(
             'tmp_name'   => $tnm,
@@ -283,6 +288,13 @@ class modUserFileUploadProcessor extends modObjectCreateProcessor
 
         foreach (array('tmp_name', 'size', 'mime', 'type', 'name', 'width', 'height', 'hash', 'properties') as $key) {
             $this->setProperty($key, strtolower($this->data[$key]));
+        }
+
+        // strip fields
+        $stripFields = $this->UserFiles->explodeAndClean($this->getProperty('requiredFields', 'name,description'));
+        foreach ($stripFields as $field) {
+            $value = $this->modx->stripTags(trim($this->getProperty($field)));
+            $this->setProperty($field, $value);
         }
 
         $maxUploadSize = $this->modx->getOption('maxUploadSize', $this->mediaSourceProperties, 0, true);
