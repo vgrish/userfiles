@@ -1,5 +1,5 @@
 /*
- * v 2.2.26
+ * v 2.2.29
  */
 
 var UserFilesTemplate = {
@@ -260,7 +260,7 @@ var UserFilesForm = {
         cropper: {
             responsive: true,
             minContainerWidth: 300,
-            minContainerHeight: 300
+            minContainerHeight: 200
         }
     },
 
