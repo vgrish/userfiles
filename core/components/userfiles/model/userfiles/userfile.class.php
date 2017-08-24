@@ -21,7 +21,7 @@ class UserFile extends xPDOSimpleObject
     public $imageDefaultThumbnail = array(
         'q'  => 90,
         'bg' => 'fff',
-        'f'  => 'jpg'
+        'f'  => 'jpg',
     );
 
     /**
@@ -42,7 +42,7 @@ class UserFile extends xPDOSimpleObject
             'UserFiles',
             $corePath . 'model/userfiles/',
             array(
-                'core_path' => $corePath
+                'core_path' => $corePath,
             )
         );
 
@@ -53,7 +53,7 @@ class UserFile extends xPDOSimpleObject
      * @param       $n
      * @param array $p
      */
-    public function __call($n, array$p)
+    public function __call($n, array $p)
     {
         echo __METHOD__ . ' says: ' . $n;
     }
@@ -104,8 +104,8 @@ class UserFile extends xPDOSimpleObject
 
     /**
      * @param array|string $k
-     * @param null         $format
-     * @param null         $formatTemplate
+     * @param null $format
+     * @param null $formatTemplate
      *
      * @return mixed|string
      */
@@ -276,7 +276,7 @@ class UserFile extends xPDOSimpleObject
 
         if (!is_array($contents)) {
             return "[UserFiles] Could not retrieve contents of file {$filename} from media source.";
-        } elseif (!empty($this->mediaSource->errors['file'])) {
+        } else if (!empty($this->mediaSource->errors['file'])) {
             return "[UserFiles] Could not retrieve file {$filename} from media source: " . $this->mediaSource->errors['file'];
         }
 
@@ -332,7 +332,7 @@ class UserFile extends xPDOSimpleObject
                 '{zc}',
                 '{bg}',
                 '{ext}',
-                '{rand}'
+                '{rand}',
             ),
             'vl' => array(
                 rtrim(str_replace($this->get('type'), '', $this->get('file')), '.'),
@@ -349,8 +349,8 @@ class UserFile extends xPDOSimpleObject
                 $options['zc'],
                 $options['bg'],
                 $options['f'],
-                strtolower(strtr(base64_encode(openssl_random_pseudo_bytes(2)), '+/=', 'zzz'))
-            )
+                strtolower(strtr(base64_encode(openssl_random_pseudo_bytes(2)), '+/=', 'zzz')),
+            ),
         );
 
         $thumbnailName = $this->getThumbnailName();
@@ -364,7 +364,7 @@ class UserFile extends xPDOSimpleObject
                 'class'  => 'UserFile',
                 'parent' => $this->get('id'),
                 'file'   => $filename,
-                'hash'   => sha1($thumbnail)
+                'hash'   => sha1($thumbnail),
             )
         ));
 
@@ -475,6 +475,17 @@ class UserFile extends xPDOSimpleObject
                     $this->set('createdby', $this->modx->user->get('id'));
                 }
             }
+
+            if (!$this->get('rank')) {
+                $rank = $this->xpdo->getCount('UserFile', array(
+                    "parent"  => $this->get('parent'),
+                    "class"   => $this->get('class'),
+                    "list"    => $this->get('list'),
+                    "source"  => $this->get('source'),
+                    "context" => $this->get('context'),
+                ));
+                $this->set('rank', $rank);
+            }
         }
 
         if ($this->isMove() AND $this->initialized()) {
@@ -486,7 +497,7 @@ class UserFile extends xPDOSimpleObject
 
             if (!is_array($contents)) {
                 return "[UserFiles] Could not retrieve contents of file {$filename} from media source.";
-            } elseif (!empty($this->mediaSource->errors['file'])) {
+            } else if (!empty($this->mediaSource->errors['file'])) {
                 return "[UserFiles] Could not retrieve file {$filename} from media source: " . $this->mediaSource->errors['file'];
             }
 
@@ -509,8 +520,8 @@ class UserFile extends xPDOSimpleObject
 
     /**
      * @param string $alias
-     * @param null   $criteria
-     * @param bool   $cacheFlag
+     * @param null $criteria
+     * @param bool $cacheFlag
      *
      * @return array
      */
@@ -532,7 +543,7 @@ class UserFile extends xPDOSimpleObject
             "class"   => $this->get('class'),
             "list"    => $this->get('list'),
             "source"  => $this->get('source'),
-            "context" => $this->get('context')
+            "context" => $this->get('context'),
         ));
         $q->select('id');
         $q->sortby('rank ASC, id', 'ASC');
@@ -620,7 +631,7 @@ class UserFile extends xPDOSimpleObject
             "class"   => $instance->get('class'),
             "list"    => $instance->get('list'),
             "source"  => $instance->get('source'),
-            "context" => $instance->get('context')
+            "context" => $instance->get('context'),
         ));
         $q->sortby('rank', 'ASC');
 

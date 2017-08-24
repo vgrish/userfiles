@@ -158,7 +158,7 @@ class UserFiles
                         )
                     ));
 
-                    $script = "<script type=\"text/javascript\">UserFilesLexicon={$config}</script>";
+                    $script = "<script type=\"text/javascript\">UserFilesLexicon={$config};</script>";
                     if (!isset($this->modx->jscripts[$script])) {
                         $this->modx->regClientStartupScript($script, true);
                     }
