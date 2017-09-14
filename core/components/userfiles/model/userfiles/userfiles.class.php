@@ -109,7 +109,7 @@ class UserFiles
     public function initialize($ctx = 'web', $scriptProperties = array())
     {
         $this->config = array_merge($this->config, $scriptProperties, array('ctx' => $ctx));
-        $this->modx->error->reset();
+
         if (!$this->Tools) {
             $this->loadTools();
         }
@@ -390,7 +390,9 @@ class UserFiles
 
     public function runProcessor($action = '', $data = array())
     {
-        $this->modx->error->reset();
+        if ($error = $this->modx->getService('error', 'error.modError')) {
+            $error->reset();
+        }
         $processorsPath = !empty($this->config['processorsPath']) ? $this->config['processorsPath'] : MODX_CORE_PATH;
         /* @var modProcessorResponse $response */
         $response = $this->modx->runProcessor($action, $data, array('processors_path' => $processorsPath));
