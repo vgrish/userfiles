@@ -393,13 +393,18 @@ var UserFilesForm = {
                                         accepted: true,
                                     };
 
+                                    if (true) {
+                                        thisDropzone.options.previewTemplate = UserFilesTemplate.get(dropzoneConfig.template || 'base', item);
+                                    }
                                     thisDropzone.options.addedfile.call(thisDropzone, addFile);
+
                                     if (item.dyn_thumbnail) {
                                         thisDropzone.options.thumbnail.call(thisDropzone, addFile, item.dyn_thumbnail);
                                     }
                                     addFile.previewElement.classList.add('dz-complete');
                                     $(addFile.previewElement).attr('data-userfiles-id', item.id);
 
+                                    // todo
                                     if (/^image\/\w+$/.test(item.mime)) {
                                         $(addFile.previewElement).find('a[data-action="fileEdit"]').removeClass('hidden');
                                     }
