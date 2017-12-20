@@ -74,7 +74,7 @@ var UserFilesTemplate = {
                 '</g>',
                 '</svg>',
                 '</div>',
-                '<a class="dz-edit user-files-action" href="javascript:undefined;" data-action="fileShow">Открыть "'+data.id+'"</a>',
+                '<a class="dz-edit user-files-action" href="javascript:undefined;" data-action="fileShow">Открыть</a>',
                 '<a class="dz-edit user-files-action hidden" href="javascript:undefined;" data-action="fileEdit">Редактировать</a>',
                 '</div>',
             ]
