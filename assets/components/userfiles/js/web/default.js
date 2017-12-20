@@ -74,7 +74,7 @@ var UserFilesTemplate = {
                 '</g>',
                 '</svg>',
                 '</div>',
-                '<a class="dz-edit user-files-action" href="javascript:undefined;" data-action="fileShow">Открыть</a>',
+                '<a class="dz-edit user-files-action" href="javascript:undefined;" data-action="fileShow">Открыть "'+data.id+'"</a>',
                 '<a class="dz-edit user-files-action hidden" href="javascript:undefined;" data-action="fileEdit">Редактировать</a>',
                 '</div>',
             ]
@@ -519,44 +519,35 @@ var UserFilesForm = {
                         },
 
                         update: function (e, ui) {
-                            var start = $(this).data('ui-sortable').start || [];
-                            var end = [];
+                            var rank = {};
 
                             $($(e.target).get(0)).children().each(function (i) {
                                 var $this = $(this);
-
                                 if (!$this.data('userfilesId')) {
                                     return true;
                                 }
-
-                                end.push($this.data('userfilesId'));
+                                rank[i-1] = $this.data('userfilesId')
                             });
 
-                            var ids = UserFilesForm._array_diff_assoc(
-                                start, end
-                            );
-
-                            if (ids.length >= 2) {
-                                $.ajax({
-                                    type: 'POST',
-                                    url: dropzoneConfig.url,
-                                    data: {
-                                        action: 'file/sort',
-                                        ids: ids,
-                                        propkey: dropzoneConfig.params.propkey || '',
-                                        ctx: dropzoneConfig.params.ctx || ''
-                                    },
-                                    dataType: "json",
-                                    success: function (r) {
-                                        if (!r.success) {
-                                            UserFilesMessage.error('', r.message);
-                                        }
-                                    },
-                                    failure: function (r) {
-
+                            $.ajax({
+                                type: 'POST',
+                                url: dropzoneConfig.url,
+                                data: {
+                                    action: 'file/sort',
+                                    rank: rank,
+                                    propkey: dropzoneConfig.params.propkey || '',
+                                    ctx: dropzoneConfig.params.ctx || ''
+                                },
+                                dataType: "json",
+                                success: function (r) {
+                                    if (!r.success) {
+                                        UserFilesMessage.error('', r.message);
                                     }
-                                });
-                            }
+                                },
+                                failure: function (r) {
+
+                                }
+                            });
                         }
                     });
                 }

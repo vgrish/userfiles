@@ -20,7 +20,7 @@ class modWebUserFileGetListProcessor extends modUserFileGetListProcessor
     /** {@inheritDoc} */
     public function initialize()
     {
-        $initialize =  parent::initialize();
+        $initialize = parent::initialize();
 
         $propKey = $this->getProperty('propkey');
         if (empty($propKey)) {
@@ -42,11 +42,11 @@ class modWebUserFileGetListProcessor extends modUserFileGetListProcessor
             return $this->UserFiles->lexicon('err_lock');
         }
 
-        foreach (array('class', 'parent', 'list', 'createdby', 'source', 'active', 'anonym', 'session') as $key) {
+        foreach (array('class', 'parent', 'list', 'createdby', 'source', 'active', 'anonym', 'session', 'limit') as $key) {
             $this->setProperty($key, $properties[$key]);
         }
 
-        if(empty($this->modx->user->id)) {
+        if (empty($this->modx->user->id)) {
             $this->setProperty('session', session_id());
         }
 
@@ -63,7 +63,7 @@ class modWebUserFileGetListProcessor extends modUserFileGetListProcessor
             $row['thumbnails'] = explode('||', $row['thumbnails']);
             $row['thumbnail'] = reset($row['thumbnails']);
         }
-        
+
         if (!empty($row['thumbnail'])) {
             $row['dyn_thumbnail'] = $row['thumbnail'] . '?t=' . $row['size'];
         }

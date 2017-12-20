@@ -38,22 +38,14 @@ class modWebUserFileSortProcessor extends modUserFileSortProcessor
             return $this->UserFiles->lexicon('err_lock');
         }
 
-        $ids = $this->getProperty('ids', array());
-        if (count($ids) < 2) {
-            return $this->modx->error->failure();
+        $table = $this->modx->getTableName($this->classKey);
+        $rank = $this->getProperty('rank');
+        foreach ($rank as $k => $id) {
+            $update = $this->modx->prepare("UPDATE {$table} SET rank = ? WHERE (id = ? OR (parent = ? AND class = 'UserFile'))");
+            $update->execute(array($k, $id, $id));
         }
 
-        foreach ($ids as $idx => $id) {
-            if ($file = $this->modx->getObject($this->classKey, (int)$id)) {
-                $file->set('rank', $idx);
-                $file->save();
-            }
-        }
-
-        //$this->setProperty('source', $ids[0]);
-        //$this->setProperty('target', $ids[1]);
-
-        return parent::process();
+        return $this->success('', array());
     }
 
 }

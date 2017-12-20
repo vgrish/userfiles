@@ -457,7 +457,7 @@ class UserFile extends xPDOSimpleObject
      */
     public function save($cacheFlag = null)
     {
-        if ($this->isNew()) {
+        if ($isNew = $this->isNew()) {
             if (!$this->get('list')) {
                 $this->set('list', $this->xpdo->getOption('userfiles_list_default', null, 'default', true));
             }
@@ -476,7 +476,12 @@ class UserFile extends xPDOSimpleObject
                 }
             }
 
-            if (!$this->get('rank')) {
+            $rank = 0;
+            if ($this->get('class') == 'UserFile') {
+                if ($parent = $this->getOne('Parent')) {
+                    $rank = $parent->get('rank');
+                }
+            } else {
                 $rank = $this->xpdo->getCount('UserFile', array(
                     "parent"  => $this->get('parent'),
                     "class"   => $this->get('class'),
@@ -484,11 +489,11 @@ class UserFile extends xPDOSimpleObject
                     "source"  => $this->get('source'),
                     "context" => $this->get('context'),
                 ));
-                $this->set('rank', $rank);
             }
+            $this->set('rank', $rank);
         }
 
-        if ($this->isMove() AND $this->initialized()) {
+        if ($isMove = $this->isMove() AND $this->initialized()) {
 
             $this->set('move', true);
             $this->mediaSource->errors = array();
@@ -513,6 +518,9 @@ class UserFile extends xPDOSimpleObject
         }
 
         $saved = parent:: save($cacheFlag);
+        if ($saved) {
+           $this->updateRanks(false);
+        }
 
         return $saved;
     }
@@ -536,27 +544,57 @@ class UserFile extends xPDOSimpleObject
 
     public function updateRanks($getProductThumb = true)
     {
-        $class = 'UserFile';
-        $q = $this->xpdo->newQuery($class);
-        $q->where(array(
-            "parent"  => $this->get('parent'),
-            "class"   => $this->get('class'),
-            "list"    => $this->get('list'),
-            "source"  => $this->get('source'),
-            "context" => $this->get('context'),
-        ));
-        $q->select('id');
-        $q->sortby('rank ASC, id', 'ASC');
+        $update = false;
 
-        if ($q->prepare() AND $q->stmt->execute()) {
-            $table = $this->xpdo->getTableName($class);
-            $ids = $q->stmt->fetchAll(PDO::FETCH_COLUMN);
-            $sql = '';
-            foreach ($ids as $k => $id) {
-                $sql .= "UPDATE {$table} SET `rank` = '{$k}' WHERE `id` = '{$id}';";
+        $class = 'UserFile';
+        $c = $this->xpdo->newQuery($class);
+        $c->where(array(
+            "class:!=" => $class,
+            "parent"   => $this->get('parent'),
+            "class"    => $this->get('class'),
+            "list"     => $this->get('list'),
+            "source"   => $this->get('source'),
+            "context"  => $this->get('context'),
+        ));
+        $c->select('MAX(rank) + 1 as max');
+        $c->select('COUNT(id) as total');
+        $c->having('max <> total');
+        if ($c->prepare() AND $c->stmt->execute()) {
+            if ($c->stmt->rowCount()) {
+                $update = true;
             }
-            $sql .= "ALTER TABLE {$table} ORDER BY rank ASC;";
-            $this->xpdo->exec($sql);
+        }
+
+        $update = true;
+        // update ranks
+        if ($update) {
+
+            $c = $this->xpdo->newQuery($class, array(
+                "class:!=" => $class,
+                "parent"   => $this->get('parent'),
+                "class"    => $this->get('class'),
+                "list"     => $this->get('list'),
+                "source"   => $this->get('source'),
+                "context"  => $this->get('context'),
+            ));
+
+            $c->select('id');
+            $c->sortby('rank ASC, createdon', 'ASC');
+            $ids = array();
+            if ($c->prepare() AND $c->stmt->execute()) {
+                if (!$ids = $c->stmt->fetchAll(PDO::FETCH_COLUMN)) {
+                    $ids = array();
+                }
+            }
+
+            $table = $this->xpdo->getTableName($class);
+            foreach ($ids as $k => $id) {
+                $update = $this->xpdo->prepare("UPDATE {$table} SET rank = ? WHERE (id = ? OR (parent = ? AND class = 'UserFile'))");
+                $update->execute(array($k, $id, $id));
+            }
+
+            $alter = $this->xpdo->prepare("ALTER TABLE {$table} ORDER BY rank ASC");
+            $alter->execute();
         }
 
         $thumb = null;

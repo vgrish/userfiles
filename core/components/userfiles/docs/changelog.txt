@@ -1,5 +1,12 @@
 Changelog for UserFiles.
 
+2.3.3 beta (20.12.2017)
+==============
+- Change "sorting" [js]
+- Change "modWebUserFileGetListProcessor"
+- Change "modWebUserFileSortProcessor"
+- Change "updateRanks","save" [UserFile]
+
 2.3.2 beta (14.09.2017)
 ==============
 - Change "initialize,runProcessor" [UserFiles]
